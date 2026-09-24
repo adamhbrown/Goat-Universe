@@ -27,21 +27,6 @@ jobs:
           fi
           echo "Supabase access token is present."
 
-      - name: Verify project access
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: |
-          supabase projects list --output json > /tmp/projects.json
-          python3 - <<'PY'
-          import json
-          with open('/tmp/projects.json', 'r', encoding='utf-8') as f:
-              data = json.load(f)
-          target = next((p for p in data if p.get('id') == 'opvoemihfyxidzbdyory'), None)
-          if target is None:
-              raise SystemExit("Target GOAT Universe project opvoemihfyxidzbdyory was not returned for this token.")
-          print("Target GOAT Universe project is visible to this token.")
-          PY
-
       - name: Migration dry run
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
