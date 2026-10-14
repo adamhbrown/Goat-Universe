@@ -1,2 +1,13 @@
 :root{color-scheme:dark;font:16px/1.5 system-ui,sans-serif;background:#101010;color:#f4f4f4;--gold:#f0c75e}*{box-sizing:border-box}body{margin:0}header,footer{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;padding:1.25rem;background:#191919}header a{font-weight:900;letter-spacing:.1em;color:var(--gold)}header span{flex:1}main{max-width:1100px;margin:auto;padding:1rem}section,.card{background:#191919;border:1px solid #3b3b3b;border-radius:.7rem;padding:1.2rem;margin:1rem 0}h1,h2,h3{line-height:1.2}h2,h3{color:var(--gold)}label{display:block;margin:.7rem 0}input,select,textarea,button{font:inherit;min-height:44px;border-radius:.3rem;border:1px solid #686868;padding:.6rem;background:#242424;color:#fff}input,select,textarea{display:block;width:100%;margin-top:.25rem}textarea{min-height:8rem}button{cursor:pointer;border-color:var(--gold)}button:disabled{opacity:.5;cursor:wait}button:hover{background:#403723}.actions{display:flex;gap:.6rem;flex-wrap:wrap}form{max-width:650px}a{color:var(--gold)}small,#environment{color:#bbb}#message{position:sticky;top:0;background:#222;z-index:2;padding:.8rem;border-left:4px solid var(--gold)}#message:empty{display:none}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:.7rem}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{padding:.6rem;text-align:left;border-bottom:1px solid #444}pre{white-space:pre-wrap;overflow-wrap:anywhere}details{padding:.7rem 0}summary{cursor:pointer;font-weight:700}input:focus,button:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:2px}[hidden]{display:none!important}@media(max-width:500px){header span{width:100%;flex:auto}section{padding:.8rem}main{padding:.6rem}}
 :root input[type=checkbox]{width:auto}
+
+
+/* Championship entry: one compact, keyboard-accessible round at a time.
+   Retains native HTML form semantics (all 63 choices submit together). */
+.bracket-round{border:1px solid #555;border-radius:.6rem;margin:.85rem 0;padding:.4rem .9rem;background:#202020}
+.bracket-round>summary{padding:.65rem .15rem;min-height:44px;display:list-item;color:var(--gold);cursor:pointer;font-weight:800}
+.bracket-round[open]>summary{border-bottom:1px solid #444;margin-bottom:.65rem}
+.bracket-round label{margin:.65rem 0}
+.bracket-round select{max-width:100%}
+.bracket-round:focus-within{border-color:var(--gold)}
+@media(max-width:500px){.bracket-round{padding:.35rem .65rem;margin:.6rem 0}.bracket-round>summary{font-size:.94rem}}
