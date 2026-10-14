@@ -1,0 +1,223 @@
+// GOAT Games participant portal. No tokens in localStorage or analytics by default.
+let accessToken = '';
+let myUserId = '';
+let activeLeagueId = '';
+const el = id => document.getElementById(id);
+const node = (tag, text, className) => {
+  const item = document.createElement(tag);
+  if (text !== undefined && text !== null) item.textContent = String(text);
+  if (className) item.className = className;
+  return item;
+};
+function notice(message, type = '') {
+  el('notice').textContent = message;
+  el('notice').className = 'notice ' + type;
+}
+async function send(path, payload, authenticated = true) {
+  const response = await fetch('/' + path, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(authenticated && accessToken ? { Authorization: 'Bearer ' + accessToken } : {})
+    },
+    body: JSON.stringify(payload)
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || 'request_failed');
+  return result;
+}
+async function query(op, extras = {}) { return send('query', { op, ...extras }); }
+async function command(op, extras = {}) { return send('commands', { op, ...extras }); }
+function showSignedOut() {
+  accessToken = ''; myUserId = ''; activeLeagueId = '';
+  el('account-panel').hidden = false;
+  el('member-panel').hidden = true;
+  el('league-panel').hidden = true;
+}
+async function showSignedIn() {
+  const me = await query('me');
+  myUserId = me.profile.user_id;
+  el('member-name').textContent = 'Welcome, ' + me.profile.display_name;
+  el('account-panel').hidden = true;
+  el('member-panel').hidden = false;
+  el('league-panel').hidden = true;
+  await loadLeagues();
+}
+async function loadLeagues() {
+  const leagues = await query('leagues');
+  const list = el('leagues');
+  list.replaceChildren();
+  if (!leagues.length) {
+    list.append(node('p', 'No approved leagues yet. Your commissioner can invite you to join a private GOAT competition.', 'small'));
+    return;
+  }
+  for (const league of leagues) {
+    const card = node('article', null, 'card');
+    card.append(node('h4', league.name), node('p', league.sport + ' · ' + league.season), node('p', 'Status: ' + league.status));
+    const open = node('button', 'View competition');
+    open.type = 'button';
+    open.addEventListener('click', async () => {
+      try { await openLeague(league.id); } catch (error) { notice(error.message, 'error'); }
+    });
+    card.append(open);
+    list.append(card);
+  }
+}
+function addCell(row, value) { row.append(node('td', value)); }
+function formatDeadline(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? 'TBD' : date.toLocaleString();
+}
+async function openLeague(id) {
+  const [details, standings] = await Promise.all([query('league', { league_id: id }), query('standings', { league_id: id })]);
+  activeLeagueId = id;
+  el('league-name').textContent = details.league.name;
+  el('league-details').textContent = details.league.sport + ' · ' + details.league.season + ' · ' + details.league.status;
+  const board = el('standings');
+  board.replaceChildren();
+  if (!standings.length) {
+    const row = node('tr');
+    const cell = node('td', 'No standings yet');
+    cell.colSpan = 4; row.append(cell); board.append(row);
+  } else standings.forEach((person, index) => {
+    const row = node('tr');
+    addCell(row, index + 1);
+    addCell(row, person.display_name || 'Competitor');
+    addCell(row, person.points ?? 0);
+    addCell(row, person.wins ?? 0);
+    board.append(row);
+  });
+  const rounds = el('rounds');
+  rounds.replaceChildren();
+  const ordered = [...details.rounds].sort((a, b) => new Date(a.lock_at) - new Date(b.lock_at));
+  for (const round of ordered) {
+    const card = node('article', null, 'card');
+    card.append(node('h4', round.name), node('p', 'Deadline: ' + formatDeadline(round.lock_at)), node('p', 'Status: ' + round.status));
+    const games = details.games.filter(g => g.round_id === round.id);
+    const isOpen = round.status === 'open' && new Date(round.lock_at).getTime() > Date.now();
+    if (games.length && isOpen) card.append(createPickForm(round, games, details.picks.filter(p => p.user_id === myUserId)));
+    else if (games.length) {
+      for (const game of games) {
+        const pick = details.picks.find(p => p.user_id === myUserId && p.game_id === game.id);
+        const description = game.away + ' at ' + game.home + (pick ? ' · Your pick: ' + pick.side + ' (' + pick.weight + ')' : '');
+        card.append(node('p', description, 'small'));
+      }
+    } else card.append(node('p', 'Games have not been announced.', 'small'));
+    rounds.append(card);
+  }
+  if (!ordered.length) rounds.append(node('p', 'The commissioner has not published any rounds yet.', 'small'));
+  el('member-panel').hidden = true;
+  el('league-panel').hidden = false;
+  notice('Viewing ' + details.league.name, 'success');
+}
+function createPickForm(round, games, ownPicks) {
+  const form = node('form');
+  const choices = Array.isArray(round.weight_options) && round.weight_options.length ? round.weight_options : [round.weights];
+  const allocation = node('label', 'Ranking weights');
+  const weightSet = node('select');
+  weightSet.name = 'allocation';
+  choices.forEach((option, index) => {
+    const label = node('option', option.join(' + '));
+    label.value = String(index);
+    weightSet.append(label);
+  });
+  allocation.append(weightSet);
+  form.append(allocation);
+  const fields = [];
+  games.forEach((game, index) => {
+    const pick = ownPicks.find(p => p.game_id === game.id);
+    const line = node('div', null, 'pick-row');
+    line.append(node('strong', game.away + ' at ' + game.home));
+    line.append(node('p', 'Home spread: ' + game.home_spread, 'small'));
+    const pair = node('div', null, 'pick-fields');
+    const team = node('label', 'ATS pick');
+    const side = node('select');
+    side.name = 'side-' + index;
+    for (const value of ['home','away']) {
+      const option = node('option', value === 'home' ? game.home : game.away);
+      option.value = value;
+      side.append(option);
+    }
+    side.value = pick?.side || 'home';
+    team.append(side);
+    const rank = node('label', 'Confidence points');
+    const weight = node('select');
+    weight.name = 'weight-' + index;
+    rank.append(weight);
+    pair.append(team, rank); line.append(pair); form.append(line);
+    fields.push({ game_id: game.id, side, weight, savedWeight: pick?.weight });
+  });
+  function updateWeights() {
+    const list = choices[Number(weightSet.value)] || choices[0];
+    fields.forEach((field, index) => {
+      const previous = field.weight.value ? Number(field.weight.value) : field.savedWeight;
+      field.weight.replaceChildren();
+      for (const value of list) {
+        const option = node('option', value);
+        option.value = String(value);
+        field.weight.append(option);
+      }
+      field.weight.value = list.includes(previous) ? String(previous) : String(list[index]);
+    });
+  }
+  weightSet.addEventListener('change', updateWeights);
+  updateWeights();
+  let mvp;
+  if (round.mvp_bonus > 0) {
+    const label = node('label', 'Super Bowl MVP pick');
+    mvp = node('input'); mvp.name = 'mvp'; mvp.maxLength = 100; mvp.required = true; mvp.placeholder = 'Player name';
+    label.append(mvp); form.append(label);
+  }
+  const button = node('button', 'Submit / replace picks');
+  button.type = 'submit'; form.append(button);
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const picks = fields.map(field => ({ game_id: field.game_id, side: field.side.value, weight: Number(field.weight.value) }));
+    if (new Set(picks.map(p => p.weight)).size !== picks.length) {
+      notice('Use each confidence weight once per round.', 'error'); return;
+    }
+    button.disabled = true;
+    try {
+      await command('picks_submit', { round_id: round.id, picks, ...(mvp ? { mvp_pick: mvp.value.trim() } : {}) });
+      notice('Your picks were saved. You can change them until the deadline.', 'success');
+      await openLeague(activeLeagueId);
+      notice('Your picks were saved. You can change them until the deadline.', 'success');
+    } catch (error) { notice(error.message, 'error'); }
+    finally { button.disabled = false; }
+  });
+  return form;
+}
+el('account-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const action = event.submitter?.value || 'login';
+  try {
+    const result = await send('auth/' + action, {
+      email: el('email').value.trim(),
+      password: el('password').value,
+      ...(action === 'signup' ? { display_name: el('display-name').value.trim() || undefined } : {})
+    }, false);
+    el('password').value = '';
+    accessToken = result.access_token || result.session?.access_token || '';
+    if (!accessToken) {
+      notice('Account created. Check your email for a confirmation link, then sign in.', 'success');
+      return;
+    }
+    await showSignedIn();
+    notice('Welcome to GOAT Games!', 'success');
+  } catch (error) { el('password').value = ''; notice(error.message, 'error'); }
+});
+el('reload').addEventListener('click', async () => {
+  try { await loadLeagues(); notice('Your leagues are up to date.', 'success'); }
+  catch (error) { notice(error.message, 'error'); }
+});
+el('back').addEventListener('click', () => {
+  activeLeagueId = '';
+  el('league-panel').hidden = true;
+  el('member-panel').hidden = false;
+});
+el('signout').addEventListener('click', async () => {
+  try { if (accessToken) await send('auth/logout', {}); }
+  catch { /* Clear the browser session even if the server is unreachable. */ }
+  finally { showSignedOut(); notice('Signed out. See you at the next game.'); }
+});
+showSignedOut();
