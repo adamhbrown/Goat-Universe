@@ -1,5 +1,6 @@
 // GOAT Games participant portal. No tokens in localStorage or analytics by default.
 let accessToken = '';
+let refreshToken = '';
 let myUserId = '';
 let activeLeagueId = '';
 const el = id => document.getElementById(id);
@@ -13,7 +14,7 @@ function notice(message, type = '') {
   el('notice').textContent = message;
   el('notice').className = 'notice ' + type;
 }
-async function send(path, payload, authenticated = true) {
+async function send(path, payload, authenticated = true, allowRefresh = true) {
   const response = await fetch('/' + path, {
     method: 'POST',
     headers: {
@@ -22,6 +23,17 @@ async function send(path, payload, authenticated = true) {
     },
     body: JSON.stringify(payload)
   });
+  if (response.status === 401 && authenticated && allowRefresh && refreshToken) {
+    try {
+      const session = await send('auth/refresh', { refresh_token: refreshToken }, false, false);
+      accessToken = session.access_token;
+      refreshToken = session.refresh_token;
+      return await send(path, payload, true, false);
+    } catch {
+      showSignedOut();
+      throw new Error('session_expired_please_sign_in');
+    }
+  }
   const result = await response.json();
   if (!response.ok) throw new Error(result.error || 'request_failed');
   return result;
@@ -29,7 +41,7 @@ async function send(path, payload, authenticated = true) {
 async function query(op, extras = {}) { return send('query', { op, ...extras }); }
 async function command(op, extras = {}) { return send('commands', { op, ...extras }); }
 function showSignedOut() {
-  accessToken = ''; myUserId = ''; activeLeagueId = '';
+  accessToken = ''; refreshToken = ''; myUserId = ''; activeLeagueId = '';
   el('account-panel').hidden = false;
   el('member-panel').hidden = true;
   el('league-panel').hidden = true;
@@ -230,6 +242,7 @@ el('account-form').addEventListener('submit', async event => {
     }, false);
     el('password').value = '';
     accessToken = result.access_token || result.session?.access_token || '';
+    refreshToken = result.refresh_token || result.session?.refresh_token || '';
     if (!accessToken) {
       notice('Account created. Check your email for a confirmation link, then sign in.', 'success');
       return;
