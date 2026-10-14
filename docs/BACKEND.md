@@ -6,7 +6,7 @@ Run `npm ci --ignore-scripts`, then `npm run dev`. No hosted credentials are
 needed for local development. The database is saved under `.local/postgres`,
 which Git ignores. The server binds to loopback by default.
 
-`GET /health` checks the database RPC; failure returns 503. `GET /admin` is an
+`GET /play` serves the new responsive participant portal on the backend origin. It supports signup, sign-in, in-memory session refresh, viewing approved leagues, private join requests, commissioner entry approvals, standings and ranked ATS submissions. It is a development implementation; it is not published on GitHub Pages. The browser does not persist tokens to localStorage.\n\n`GET /health` checks the database RPC; failure returns 503. `GET /admin` is an
 initial administrative API console, not a replacement for the public website.
 Create an account, sign in, and use the JSON actions/reports below.
 
@@ -105,7 +105,7 @@ Approval records alone do not authorize campaign launch.
 
 ## 4. Supabase development configuration
 
-The old dry run attempted an unlinked connection and failed because IPv6 was
+See docs/SUPABASE_RECOVERY.md for the October 14 read-only investigation. The ChatGPT Supabase connector can query the existing database, but the project's management status is COMING_UP with managed-service errors. It is not a development migration target. The GitHub 401 credential problem is separate.\n\nThe old dry run attempted an unlinked connection and failed because IPv6 was
 unavailable. The development workflow now performs `supabase link` using the
 default pooler before `supabase db push --dry-run`.
 
@@ -154,8 +154,7 @@ directly.
   rate limiting, logs, monitoring, backup/restore verification and release gates.
 - Review current database objects before any production migration. Existing
   Supabase database contents and pause status have not been inspected.
-- Integrate approved registration/competition screens into the preserved public
-  website after backend acceptance. Public visitors currently still see the demo.
+- Browser-test the development /play portal on phones and desktops, especially account confirmation, session expiry, enrollment approvals, alternate confidence-weight allocations and deadline locks.\n- Integrate approved registration/competition screens into the preserved public\n  website after backend acceptance. Public visitors currently still see the demo.
 
 Production requires `PRODUCTION_LAUNCH_APPROVED=true` and a hosted database.
 Changing that flag is a release decision, not proof of readiness.
