@@ -73,6 +73,32 @@ async function openLeague(id) {
   activeLeagueId = id;
   el('league-name').textContent = details.league.name;
   el('league-details').textContent = details.league.sport + ' · ' + details.league.season + ' · ' + details.league.status;
+  const isCommissioner = details.league.owner_id === myUserId;
+  el('commissioner-panel').hidden = !isCommissioner;
+  const requests = el('entry-requests');
+  requests.replaceChildren();
+  if (isCommissioner) {
+    const pending = details.entries.filter(entry => entry.status === 'pending');
+    if (!pending.length) requests.append(node('p', 'No pending entry requests.', 'small'));
+    for (const entry of pending) {
+      const card = node('article', null, 'card');
+      card.append(node('p', 'Member ID: ' + entry.user_id));
+      for (const approved of [true, false]) {
+        const control = node('button', approved ? 'Approve entry' : 'Decline entry', approved ? '' : 'secondary');
+        control.type = 'button';
+        control.addEventListener('click', async () => {
+          control.disabled = true;
+          try {
+            await command('entry_decide', { league_id: id, user_id: entry.user_id, approved });
+            await openLeague(id);
+            notice(approved ? 'Entry approved.' : 'Entry declined.', 'success');
+          } catch (error) { control.disabled = false; notice(error.message, 'error'); }
+        });
+        card.append(control);
+      }
+      requests.append(card);
+    }
+  }
   const board = el('standings');
   board.replaceChildren();
   if (!standings.length) {
