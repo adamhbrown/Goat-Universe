@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { GOAT_GAMES, publicCatalog, getGoatGame, validateBaasPolicy, buildAnnualBaasStandings, homeAdjustedFantasyScore, leagueOfGreatnessPlayoffSeeds } from '../rules/goat-games.mjs';
+import { GOAT_GAMES, publicCatalog, getGoatGame, validateBaasPolicy, buildAnnualBaasStandings, homeAdjustedFantasyScore, leagueOfGreatnessPlayoffSeeds, leagueOfGreatnessSemifinalMatchups } from '../rules/goat-games.mjs';
 
 function examplePolicy() {
   // TEST FIXTURE ONLY: These values are not official Baas allocations.
@@ -68,4 +68,16 @@ test('League of Greatness seven-seed Wildcat playoffs are week 15, reseed week 1
   assert.equal(b.semifinal_week,16);
   assert.equal(b.championship_week,17);
   assert.throws(()=>leagueOfGreatnessPlayoffSeeds([1,2,3,4,5,6,6]),/fantasy_seven_unique_seeds_required/);
+});
+
+test('2026 League of Greatness Wildcat winners reseed for Week 16', () => {
+  const seeds = [1,2,3,4,5,6,7];
+  const chalk = leagueOfGreatnessSemifinalMatchups(seeds,[2,3,4]);
+  assert.deepEqual(chalk.matchups,[[1,4],[2,3]]);
+  assert.equal(chalk.protected_seed,1);
+  assert.equal(chalk.championship_week,17);
+  const upset = leagueOfGreatnessSemifinalMatchups(seeds,[7,6,5]);
+  assert.deepEqual(upset.matchups,[[1,7],[5,6]]);
+  assert.throws(() => leagueOfGreatnessSemifinalMatchups(seeds,[7,7,5]),/fantasy_three_unique_winners_required/);
+  assert.throws(() => leagueOfGreatnessSemifinalMatchups(seeds,[4,6,5]),/fantasy_wildcat_winner_invalid/);
 });
