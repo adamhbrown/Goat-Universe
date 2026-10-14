@@ -23,10 +23,11 @@ export async function application(config = configuration()) {
         try { return respond(200, { status: 'ok', environment: config.appEnv, database: config.mode, ...(await db.health()), payments_enabled: config.paymentsEnabled }); }
         catch { return respond(503, { status: 'unavailable', environment: config.appEnv }); }
       }
-      if (req.method === 'GET' && ['/admin','/admin.mjs','/admin.css'].includes(url.pathname)) {
-        const file = url.pathname === '/admin' ? 'admin.html' : url.pathname.slice(1);
+      if (req.method === 'GET' && ['/admin','/admin.mjs','/admin.css','/play','/play.mjs','/play.css'].includes(url.pathname)) {
+        const file = url.pathname === '/admin' ? 'admin.html' : url.pathname === '/play' ? 'play.html' : url.pathname.slice(1);
         headers['Content-Type'] = file.endsWith('.mjs') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : 'text/html';
-        res.writeHead(200, headers); return res.end(await readFile(new URL('./console/' + file, import.meta.url)));
+        const content = await readFile(new URL('./console/' + file, import.meta.url));
+        res.writeHead(200, headers); return res.end(content);
       }
       if (req.method !== 'POST') return respond(404, { error: 'route_not_found' });
       const key = req.socket.remoteAddress;
