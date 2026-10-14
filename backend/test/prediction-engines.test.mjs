@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {scoreVerifiedPredictions, fantasyHeadToHeadWinner} from '../rules/prediction-engines.mjs';
+import {scoreVerifiedPredictions, fantasyHeadToHeadWinner, validatePredictionBatch} from '../rules/prediction-engines.mjs';
 
 const locked_at='2027-03-15T17:00:00Z';
 const submitted_at='2027-03-15T16:59:00Z';
@@ -70,4 +70,59 @@ test('League of Greatness uses provider official fantasy scores without bonus tw
   assert.equal(older.winner,'AWAY');
   assert.match(older.note,/not retroactively/);
   assert.equal(fantasyHeadToHeadWinner({season:2026,home_team_id:'H',away_team_id:'A',home_official_score:100,away_official_score:100}).tied,true);
+});
+
+
+const nextTip='2027-04-16T18:00:00Z';
+const earlyReceipt='2027-04-16T17:59:59Z';
+const scheduled=(id,sport)=>({
+  id,sport,round:'Opening',options:['First Club','Second Club'],
+  locked_at:nextTip,source_url:'https://official.example.org/schedule'
+});
+const entryPolicy=(game_id,points_by_sport)=>policy(game_id,points_by_sport);
+
+test('GOAT Crossover validates one member atomic pick batch using trusted server receipt and BOTH sports',()=>{
+  const p=entryPolicy('goat-crossover',{NBA:{Opening:3},NHL:{Opening:5}});
+  const events=[scheduled('NBA-1','NBA'),scheduled('NHL-1','NHL')];
+  const base={game_id:'goat-crossover',season:2027,policy:p,member_id:'competitor-1',
+    events,picks:[{event_id:'NBA-1',selection:'First Club'},{event_id:'NHL-1',selection:'Second Club'}],
+    received_at:earlyReceipt};
+  const original=JSON.stringify(base);
+  const result=validatePredictionBatch(base);
+  assert.equal(result.picks.length,2);
+  assert.deepEqual(result.picks.map(x=>x.member_id),['competitor-1','competitor-1']);
+  assert.equal(result.received_at,earlyReceipt);
+  assert.equal(JSON.stringify(base),original,'input must remain unchanged');
+  assert.equal(result.picks[0].selection,'First Club');
+  // A participant may submit a partial batch; unselected future series can be entered later.
+  assert.equal(validatePredictionBatch({...base,picks:[base.picks[0]]}).picks.length,1);
+  assert.throws(()=>validatePredictionBatch({...base,events:[events[0]]}),/goat_required_sport_missing/);
+  assert.throws(()=>validatePredictionBatch({...base,policy:{...p,approved:false}}),/goat_scoring_policy_not_approved/);
+});
+
+test('GOAT Classic rejects duplicates, invalid entrants, fabricated schedule, and nonexistent teams',()=>{
+  const p=entryPolicy('goat-classic',{MLB:{Opening:7}});
+  const base={game_id:'goat-classic',season:2027,policy:p,member_id:'competitor',
+    events:[scheduled('MLB-1','MLB')],picks:[{event_id:'MLB-1',selection:'First Club'}],
+    received_at:earlyReceipt};
+  assert.equal(validatePredictionBatch(base).picks.length,1);
+  assert.throws(()=>validatePredictionBatch({...base,picks:[...base.picks,base.picks[0]]}),/goat_entry_pick_invalid/);
+  assert.throws(()=>validatePredictionBatch({...base,picks:[{event_id:'MLB-1',selection:'Third Club'}]}),/goat_entry_pick_invalid/);
+  assert.throws(()=>validatePredictionBatch({...base,picks:[{event_id:'fictional',selection:'First Club'}]}),/goat_entry_pick_invalid/);
+  assert.throws(()=>validatePredictionBatch({...base,member_id:''}),/goat_entry_input_invalid/);
+  assert.throws(()=>validatePredictionBatch({...base,events:[{...base.events[0],source_url:'javascript:alert(1)'}]}),/goat_entry_schedule_invalid/);
+  assert.throws(()=>validatePredictionBatch({...base,events:[{...base.events[0],options:['First Club','First Club']}]}),/goat_entry_schedule_invalid/);
+  assert.throws(()=>validatePredictionBatch({...base,events:[{...base.events[0],sport:'NBA'}]}),/goat_entry_schedule_invalid/);
+});
+
+test('NFL-style deadline semantics: batch fails at lock or later, passes one second before lock',()=>{
+  const p=entryPolicy('goat-classic',{MLB:{Opening:7}});
+  const base={game_id:'goat-classic',season:2027,policy:p,member_id:'competitor',
+    events:[scheduled('MLB-1','MLB')],picks:[{event_id:'MLB-1',selection:'Second Club'}],
+    received_at:earlyReceipt};
+  assert.equal(validatePredictionBatch(base).picks.length,1);
+  assert.throws(()=>validatePredictionBatch({...base,received_at:nextTip}),/goat_prediction_after_deadline/);
+  assert.throws(()=>validatePredictionBatch({...base,received_at:'2027-04-16T18:00:01Z'}),/goat_prediction_after_deadline/);
+  assert.throws(()=>validatePredictionBatch({...base,received_at:'not a date'}),/goat_invalid_timestamp/);
+  assert.throws(()=>validatePredictionBatch({...base,events:[{...base.events[0],locked_at:'invalid'}]}),/goat_invalid_timestamp/);
 });
