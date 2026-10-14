@@ -104,8 +104,17 @@ test('actual full-bracket form propagates winners, saves all 63 picks and immuta
  findButton('Request your own competitor entry','#league').click();await until(()=>!!findButton('Approve Executive DOM fixture','#league'));
  findButton('Approve Executive DOM fixture','#league').click();await until(()=>!!findForm('Save complete bracket','#league'));
  const f=findForm('Save complete bracket','#league');
+ const rounds=[...f.querySelectorAll('details.bracket-round')];
+ assert.equal(rounds.length,6,'one accessible group for every championship round');
+ assert.deepEqual(rounds.map(r=>r.querySelectorAll('select').length),[32,16,8,4,2,1]);
+ assert.equal(rounds[0].open,true,'the first round is open by default');
+ assert.equal(rounds[1].open,false,'future rounds are collapsed on mobile');
+ assert.match(rounds[0].querySelector('summary').textContent,/0 of 32 selected/);
+ assert.match(f.querySelector('[role=status]').textContent,/0 of 63 winners selected/);
  const choices=[...f.querySelectorAll('select')];assert.equal(choices.length,63);
  for(const select of choices){assert.ok(select.options.length>=2);select.value=select.options[1].value;select.dispatchEvent(new dom.window.Event('change',{bubbles:true}));}
+ assert.match(f.querySelector('[role=status]').textContent,/63 of 63 winners selected/);
+ assert.match(rounds[5].querySelector('summary').textContent,/1 of 1 selected/);
  f.elements.championship_total.value='151';submit(f);
  await until(()=>$('#league').textContent.includes('Your main bracket was saved at'));
  await until(()=>!f.querySelector('button[type=submit]').disabled);
