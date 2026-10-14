@@ -306,7 +306,7 @@ el('recovery-form').addEventListener('submit',async event=>{
 });
 el('join-form').addEventListener('submit', async event => {
   event.preventDefault();
-  const button = el('join-form').querySelector('button[type=submit]');
+  const button = el('join-submit');
   if (button.disabled) return;
   const league_id = el('invite-id').value.trim().toLowerCase();
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(league_id)) {
