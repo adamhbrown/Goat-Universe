@@ -127,3 +127,21 @@ commercial integration gaps. No public hierarchy or design was changed.
 
 Local code is testable now; hosted registration is not live. No claim is made
 that the existing Supabase service has been restored.
+
+## Subsequent account-readiness batch
+
+Added `/auth/callback`, explicit confirmation and reset submissions, generic
+recovery requests, current-password reauthentication and global session
+revocation. Local password changes also deny concurrent changes and prevent a
+racing old-password login from minting a surviving session. Email-generating
+Supabase signup/recovery requests are disabled until `AUTH_EMAIL_ENABLED=true`
+is deliberately configured. No emails were sent.
+
+`npm run check:deployment` is a read-only staging preflight; this environment
+returned **blocked**, missing development URL and publishable key. That is not a
+hosted pass. Supabase confirmation/recovery transport tests use mocks; actual
+provider delivery, token expiry/reuse and hosted revocation still need acceptance.
+See `ACCOUNT_ACTIVATION.md` for exact callback templates and setup requirements.
+
+Account additions expanded the local suite to **59 passing tests**. Updated
+current-commit CI must still be checked after saving this batch.

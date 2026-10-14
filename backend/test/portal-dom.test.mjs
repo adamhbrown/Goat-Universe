@@ -115,3 +115,13 @@ test('actual full-bracket form propagates winners, saves all 63 picks and immuta
  const current=findForm('Save complete bracket','#league'),first=current.querySelector('select');first.value=first.options[2].value;first.dispatchEvent(new dom.window.Event('change',{bubbles:true}));
  const champ=[...current.querySelectorAll('select')].at(-1);assert.equal(champ.value,'');
 });
+
+test('actual password form requires confirmation, changes credentials and clears all protected panels',async()=>{
+ const f=findForm('Change password and sign out');assert.ok(f);
+ f.elements.current_password.value='CRM-DOM-Fixture-Password-1234';f.elements.new_password.value='DOM-Changed-Password-5678';f.elements.repeat_password.value='Does-Not-Match-Password-9999';submit(f);
+ await until(()=>$('#message').textContent==='The new passwords do not match.');assert.equal($('#auth').hidden,true);
+ f.elements.repeat_password.value='DOM-Changed-Password-5678';submit(f);await until(()=>$('#message').textContent.includes('All previous sessions were revoked'));
+ assert.equal($('#auth').hidden,false);for(const id of ['dashboard','league','commercial'])assert.equal($('#'+id).childElementCount,0);
+ await assert.rejects(app.auth.login({email:'crm-dom@fixture.invalid',password:'CRM-DOM-Fixture-Password-1234'}),/invalid_credentials/);
+ assert.ok((await app.auth.login({email:'crm-dom@fixture.invalid',password:'DOM-Changed-Password-5678'})).access_token);
+});

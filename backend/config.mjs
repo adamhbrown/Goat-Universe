@@ -19,12 +19,13 @@ export function configuration(env = process.env) {
   // browser POSTs from http://127.0.0.1:8787 fail the same-origin guard.
   const appOrigin = env.APP_ORIGIN || `http://${host}:${port}`;
   if (appEnv === 'production' && (!appOrigin.startsWith('https://') || env.PRODUCTION_LAUNCH_APPROVED !== 'true')) throw new Error('production_launch_approval_required');
+  const authEmailEnabled = env.AUTH_EMAIL_ENABLED === 'true';
   const paymentsEnabled = env.PAYMENTS_ENABLED === 'true';
   const paymentLaunchApproved = env.PAYMENT_LAUNCH_APPROVED === 'true';
   if (paymentsEnabled && (!paymentLaunchApproved || !env.STRIPE_SECRET_KEY || !env.STRIPE_WEBHOOK_SECRET)) throw new Error('payment_launch_configuration_required');
   if (paymentsEnabled && appEnv !== 'production' && !env.STRIPE_SECRET_KEY.startsWith('sk_test_')) throw new Error('live_payments_forbidden_in_development');
   const tiers = JSON.parse(env.STRIPE_APPROVED_PRICES || '{}');
-  return { mode, appEnv, url, appOrigin, publishableKey: env.SUPABASE_PUBLISHABLE_KEY,
+  return { mode, appEnv, url, appOrigin, authEmailEnabled, publishableKey: env.SUPABASE_PUBLISHABLE_KEY,
     systemKey: env.SUPABASE_BILLING_SECRET_KEY, stripeSecret: env.STRIPE_SECRET_KEY,
     webhookSecret: env.STRIPE_WEBHOOK_SECRET, tiers, paymentsEnabled, paymentLaunchApproved,
     localPath: env.LOCAL_DATABASE_PATH || '.local/postgres', host, port };

@@ -264,3 +264,11 @@ calls are denied; championship predictions are redacted from pre-lock snapshots.
 
 Live payments, outbound research workers and message transport are not activated
 by any of these operations. See CHECKPOINT.md for current test evidence/blockers.
+
+Account activation now includes `/auth/recover`, `/auth/confirm`, `/auth/reset`
+and authenticated `/auth/password`; `/auth/callback` is display-only until an
+explicit form submission. Email operations default disabled. See
+`ACCOUNT_ACTIVATION.md` before configuring custom templates, redirect URLs and
+approved development email delivery. `npm run check:deployment` performs only
+read-only hosted checks and reports incomplete/blocked rather than implying
+email/browser launch readiness.

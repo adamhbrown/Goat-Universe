@@ -75,15 +75,22 @@ $('#account').addEventListener('submit',event => {
     if(!values.display_name) delete values.display_name;
     if(event.submitter.value==='signup') {
       const result=await api.signup(values);
-      message(result.confirmation_required === false ? 'Development account created. Sign in to continue.' : 'Registration submitted. Check your email for confirmation before signing in.');
+      message(result.confirmation_required === false ? (result.environment==='local-development'?'Development account created. Sign in to continue.':'Account created. Sign in to continue.') : 'Registration submitted. Check your email for confirmation before signing in.');
     } else { await api.login(values);await dashboard();message('Signed in.'); }
     $('#account').elements.password.value='';
   },event.submitter);
 });
+function clearAccountView() {
+  account=undefined;activeLeague=undefined;$('#auth').hidden=false;$('#logout').hidden=true;
+  for(const id of ['dashboard','league','commercial']) {$('#'+id).replaceChildren();$('#'+id).hidden=true;}
+}
+$('#recovery').addEventListener('submit',event=>{
+  event.preventDefault();const f=event.currentTarget;
+  run(async()=>{await api.request('/auth/recover',{email:f.elements.email.value},false);message('If an eligible account exists, a recovery email will arrive. Check your inbox.');},event.submitter);
+});
 $('#logout').addEventListener('click',() => run(async() => {
   try { await api.logout(); } finally {
-    account=undefined;activeLeague=undefined;$('#auth').hidden=false;$('#logout').hidden=true;
-    for(const id of ['dashboard','league','commercial']) { $('#'+id).replaceChildren();$('#'+id).hidden=true; }
+    clearAccountView();
     message('Signed out.');
   }
 }));
@@ -93,6 +100,11 @@ async function dashboard() {
   $('#auth').hidden=true;$('#logout').hidden=false;
   const panel=$('#dashboard');panel.hidden=false;panel.replaceChildren(node('h1',`Welcome, ${account.profile.display_name}`));
   form(details(panel,'Your profile'),'',[field('display_name','Display name','text',account.profile.display_name,{required:'',maxlength:80})],'Update profile',p=>command({op:'profile_update',...p}));
+  form(details(panel,'Change your password'),'',[field('current_password','Current password','password','',{required:'',minlength:12,maxlength:200,autocomplete:'current-password'}),field('new_password','New password','password','',{required:'',minlength:12,maxlength:200,autocomplete:'new-password'}),field('repeat_password','Repeat new password','password','',{required:'',minlength:12,maxlength:200,autocomplete:'new-password'})],'Change password and sign out',async p=>{
+    if(p.new_password!==p.repeat_password)throw new Error('The new passwords do not match.');
+    await api.request('/auth/password',{current_password:p.current_password,new_password:p.new_password});
+    try{await api.logout();}catch{}clearAccountView();message('Password changed. All previous sessions were revoked. Sign in again.');
+  });
   form(details(panel,'Newsletter preferences'),'',[field('opted_in','I want GOAT Universe email updates. I can withdraw this permission.','checkbox',data.newsletter?.opted_in || false)],'Save preference',p=>command({op:'newsletter_consent',...p,consent_version:'portal-newsletter-v1'}));
   panel.append(node('p',account.membership ? `Membership: ${account.membership.tier} · ${account.membership.status}. Billing is not enabled in this development portal.` : 'No paid membership. Billing is not enabled in this development portal.'));
   panel.append(node('h2','Your competitions'));

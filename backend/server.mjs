@@ -22,10 +22,10 @@ export async function application(config = configuration()) {
       const url = new URL(req.url, 'http://localhost');
       if (req.method === 'GET' && url.pathname === '/goat-games') return respond(200, publicCatalog());
       if (req.method === 'GET' && url.pathname === '/health') {
-        try { return respond(200, { status: 'ok', environment: config.appEnv, database: config.mode, ...(await db.health()), payments_enabled: config.paymentsEnabled }); }
+        try { return respond(200, { status: 'ok', environment: config.appEnv, database: config.mode, ...(await db.health()), payments_enabled: config.paymentsEnabled, auth_email_enabled: config.authEmailEnabled }); }
         catch { return respond(503, { status: 'unavailable', environment: config.appEnv }); }
       }
-      const portalFiles = { '/manage':'manage.html', '/manage/ui.mjs':'manage.mjs', '/manage/style.css':'manage.css', '/manage/forms.mjs':'forms.mjs', '/manage/bracket.mjs':'bracket.mjs' };
+      const portalFiles = { '/manage':'manage.html', '/manage/ui.mjs':'manage.mjs', '/manage/style.css':'manage.css', '/manage/forms.mjs':'forms.mjs', '/manage/bracket.mjs':'bracket.mjs', '/auth/callback':'callback.html', '/auth/callback.mjs':'callback.mjs' };
       if (req.method === 'GET' && url.pathname === '/nfl61.json') {
         const content = await readFile(new URL('./rules/nfl-playoffs-61.json', import.meta.url));
         res.writeHead(200, headers); return res.end(content);
@@ -62,14 +62,15 @@ export async function application(config = configuration()) {
       if (!req.headers['content-type']?.startsWith('application/json')) return respond(415, { error: 'json_required' });
       const p = JSON.parse(raw.toString('utf8'));
       if (p === null || Array.isArray(p) || typeof p !== 'object') throw new Error('invalid_request');
-      if (['/auth/signup','/auth/login','/auth/refresh'].includes(url.pathname)) {
+      if (['/auth/signup','/auth/login','/auth/refresh','/auth/recover','/auth/confirm','/auth/reset','/auth/password'].includes(url.pathname)) {
         const authKey = `auth:${key}`;
         const authRate = limits.get(authKey) || { count: 0, until: now + 60000 }; limits.set(authKey, authRate);
         if (++authRate.count > 10) return respond(429, { error: 'rate_limit' });
-        return respond(url.pathname.endsWith('signup') ? 201 : 200, await auth[url.pathname.split('/').at(-1)](p));
+        if(url.pathname!=='/auth/password')return respond(url.pathname.endsWith('signup') ? 201 : 200, await auth[url.pathname.split('/').at(-1)](p));
       }
       const token = req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.slice(7) : null;
       const user = await auth.user(token);
+      if (url.pathname === '/auth/password') return respond(200,await auth.password(p,token));
       if (url.pathname === '/auth/logout') { await auth.logout(token); return respond(200, { logged_out: true }); }
       if (url.pathname === '/commands') return respond(200, await db.rpc('goat_command', p, user.databaseIdentity));
       if (url.pathname === '/query') return respond(200, await db.rpc('goat_query', p, user.databaseIdentity));
@@ -87,7 +88,7 @@ export async function application(config = configuration()) {
       return respond(404, { error: 'route_not_found' });
     } catch (err) {
       const code = /^[a-z][a-z0-9_]+$/.test(err.message) ? err.message : 'request_failed';
-      const status = /authentication_required|invalid_credentials|verified_email_required/.test(code) ? 401 :
+      const status = /auth_email_not_enabled|email_recovery_unavailable|password_updated_session_revocation_failed/.test(code) ? 503 : /authentication_required|invalid_credentials|verified_email_required/.test(code) ? 401 :
         /required$|denied$|forbidden/.test(code) || err.code === '42501' ? 403 :
         err.code === '23505' ? 409 : code === 'request_too_large' ? 413 : 400;
       respond(status, { error: code });

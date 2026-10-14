@@ -15,7 +15,7 @@ major_version = 17
 [auth]
 enabled = true
 site_url = "http://localhost:8787"
-additional_redirect_urls = ["http://localhost:8787"]
+additional_redirect_urls = ["http://localhost:8787/auth/callback", "http://127.0.0.1:8787/auth/callback"]
 jwt_expiry = 3600
 enable_signup = true
 minimum_password_length = 12
