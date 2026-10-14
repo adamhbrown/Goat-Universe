@@ -3,11 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": {"node": ">=22"},
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "node backend/server.mjs",
     "test": "node --test backend/test/*.test.mjs",
-    "check": "node --check backend/server.mjs && node --check backend/database.mjs && node --check backend/auth.mjs"
+    "check": "node --check backend/server.mjs && node --check backend/database.mjs && node --check backend/auth.mjs && node --check backend/console/play.mjs"
   },
-  "dependencies": {"@electric-sql/pglite": "0.5.9"}
+  "dependencies": {
+    "@electric-sql/pglite": "0.5.9"
+  }
 }
