@@ -119,17 +119,24 @@ async function openLeague(id) {
     for (const entry of pending) {
       const card = node('article', null, 'card');
       card.append(node('p', 'Member ID: ' + entry.user_id));
+      const decisionControls = [];
       for (const approved of [true, false]) {
         const control = node('button', approved ? 'Approve entry' : 'Decline entry', approved ? '' : 'secondary');
         control.type = 'button';
         control.addEventListener('click', async () => {
-          control.disabled = true;
+          // Prevent simultaneous approve and decline commands for one entry.
+          if (decisionControls.some(item => item.disabled)) return;
+          decisionControls.forEach(item => { item.disabled = true; });
           try {
             await command('entry_decide', { league_id: id, user_id: entry.user_id, approved });
             await openLeague(id);
             notice(approved ? 'Entry approved.' : 'Entry declined.', 'success');
-          } catch (error) { control.disabled = false; notice(error.message, 'error'); }
+          } catch (error) {
+            decisionControls.forEach(item => { item.disabled = false; });
+            notice(error.message, 'error');
+          }
         });
+        decisionControls.push(control);
         card.append(control);
       }
       requests.append(card);
@@ -243,6 +250,7 @@ function createPickForm(round, games, ownPicks) {
   button.type = 'submit'; form.append(button);
   form.addEventListener('submit', async event => {
     event.preventDefault();
+    if (button.disabled) return; // Synthetic or keyboard double-submit protection.
     const picks = fields.map(field => ({ game_id: field.game_id, side: field.side.value, weight: Number(field.weight.value) }));
     if (new Set(picks.map(p => p.weight)).size !== picks.length) {
       notice('Use each confidence weight once per round.', 'error'); return;
@@ -298,15 +306,19 @@ el('recovery-form').addEventListener('submit',async event=>{
 });
 el('join-form').addEventListener('submit', async event => {
   event.preventDefault();
+  const button = el('join-submit');
+  if (button.disabled) return;
   const league_id = el('invite-id').value.trim().toLowerCase();
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(league_id)) {
     notice('Please enter the complete invitation ID.', 'error'); return;
   }
+  button.disabled = true;
   try {
     await command('enroll', { league_id });
     el('invite-id').value = '';
     notice('Join request received. Your commissioner must approve your entry before the league appears here.', 'success');
   } catch (error) { notice(error.message, 'error'); }
+  finally { button.disabled = false; }
 });
 el('reload').addEventListener('click', async () => {
   try { await loadLeagues(); notice('Your leagues are up to date.', 'success'); }

@@ -64,3 +64,67 @@ test('Safari pagehide removes private views and local credentials before back/fo
   p.$('reload').click();await wait();assert.equal(p.calls.at(-1).p.headers.Authorization,undefined);
  }finally{p.dom.window.close();}
 });
+
+
+test('rapid taps cannot submit duplicate enrollment requests; controls recover after rejection',async()=>{
+ let finish;const pending=new Promise(r=>{finish=r;});
+ const p=await player((path,payload)=>{
+  if(path==='/commands'&&JSON.parse(payload.body).op==='enroll')return pending;
+ });
+ try{
+  p.$('email').value='join@fixture.invalid';p.$('password').value='Fixture-Password-1234';
+  p.submit('account-form');await until(()=>!p.$('member-panel').hidden);
+  const leagueId='4a5fe0c7-e3ad-4834-9e5a-cd48a25c6b11';
+  p.$('invite-id').value=leagueId;
+  p.submit('join-form');p.submit('join-form');
+  assert.equal(p.calls.filter(c=>c.path==='/commands'&&JSON.parse(c.p.body).op==='enroll').length,1);
+  assert.equal(p.$('join-form').querySelector('button').disabled,true);
+  finish(reply(503,{error:'temporary_unavailable'}));
+  await until(()=>p.$('join-form').querySelector('button').disabled===false);
+  assert.match(p.$('notice').textContent,/temporary_unavailable/);
+  assert.equal(p.$('invite-id').value,leagueId,'Failed join keeps the entered ID for retry');
+ }finally{p.dom.window.close();}
+});
+
+test('commissioner approve/decline and ranked-pick submissions are single-flight',async()=>{
+ const leagueId='4a5fe0c7-e3ad-4834-9e5a-cd48a25c6b11';
+ const league={id:leagueId,name:'Fixture League',sport:'NFL',season:'2027',status:'open',owner_id:'MEMBER_FIXTURE'};
+ const round={id:'fixture-round',name:'Playoff Round',status:'open',lock_at:'2099-01-01T00:00:00Z',weights:[7],weight_options:[[7]],mvp_bonus:0};
+ const game={id:'fixture-game',round_id:round.id,home:'Home Fixture',away:'Away Fixture',home_spread:-3.5};
+ const details={league,rounds:[round],games:[game],entries:[{user_id:'PENDING_MEMBER_FIXTURE',status:'pending'}],picks:[]};
+ let finishDecision,finishPicks;
+ const pendingDecision=new Promise(r=>{finishDecision=r;});
+ const pendingPicks=new Promise(r=>{finishPicks=r;});
+ const p=await player((path,options)=>{
+  if(path==='/query'){
+   const op=JSON.parse(options.body).op;
+   if(op==='leagues')return reply(200,[league]);
+   if(op==='league')return reply(200,details);
+   if(op==='standings')return reply(200,[]);
+  }
+  if(path==='/commands'){
+   const op=JSON.parse(options.body).op;
+   if(op==='entry_decide')return pendingDecision;
+   if(op==='picks_submit')return pendingPicks;
+  }
+ });
+ const count=op=>p.calls.filter(c=>c.path==='/commands'&&JSON.parse(c.p.body).op===op).length;
+ try{
+  p.$('email').value='commissioner@fixture.invalid';p.$('password').value='Fixture-Password-1234';
+  p.submit('account-form');await until(()=>p.$('leagues').querySelector('button'));
+  [...p.$('leagues').querySelectorAll('button')].find(b=>b.textContent==='View competition').click();await until(()=>!p.$('league-panel').hidden);
+  const buttons=p.$('entry-requests').querySelectorAll('button');
+  assert.equal(buttons.length,2);
+  buttons[0].click();buttons[1].click();
+  assert.equal(count('entry_decide'),1,'Approve and decline cannot both be sent');
+  assert.equal(buttons[0].disabled,true);assert.equal(buttons[1].disabled,true);
+  finishDecision(reply(200,{ok:true}));await until(()=>p.$('notice').textContent==='Entry approved.');
+  const form=p.$('rounds').querySelector('form');
+  assert.ok(form,'An open ranked-pick form is available');
+  const submit=()=>form.dispatchEvent(new p.dom.window.SubmitEvent('submit',{bubbles:true,cancelable:true}));
+  submit();submit();
+  assert.equal(count('picks_submit'),1,'Only one ranked-pick command can be in flight');
+  assert.equal(form.querySelector('button[type=submit]').disabled,true);
+  finishPicks(reply(200,{ok:true}));await until(()=>count('picks_submit')===1&&p.$('notice').textContent.includes('saved'));
+ }finally{p.dom.window.close();}
+});
