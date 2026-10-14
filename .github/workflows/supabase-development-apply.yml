@@ -24,6 +24,7 @@ jobs:
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DEV_PROJECT_REF: ${{ vars.SUPABASE_DEV_PROJECT_REF }}
+      SUPABASE_DEV_ORGANIZATION_ID: ${{ vars.SUPABASE_DEV_ORGANIZATION_ID }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DEV_DB_PASSWORD }}
       SUPABASE_DEV_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_DEV_PUBLISHABLE_KEY }}
       APP_ORIGIN: ${{ vars.GOAT_DEV_APP_ORIGIN }}
@@ -49,6 +50,8 @@ jobs:
         run: supabase link --project-ref "$SUPABASE_DEV_PROJECT_REF"
       - name: Print migration dry run without altering Vault settings
         run: supabase db push --dry-run --skip-vault
+      - name: Require healthy isolated development provisioning before schema changes
+        run: node backend/scripts/check-staging-infrastructure.mjs
       - name: Apply reviewed migrations to development only
         run: supabase db push --skip-vault --yes
       - name: Verify schema and anonymous access without creating accounts or sending email
