@@ -9,36 +9,90 @@ export function pickCommand(round, games, rows, mvp) {
 }
 
 // Tokens live in this closure, not browser storage, URLs, or the DOM.
-export function client(fetchImpl = fetch) {
-  let access = '', refresh = '', rotation;
+export function client(fetchImpl = fetch, {onSessionEnd = () => {}} = {}) {
+  let access = '', refresh = '', rotation, generation = 0;
+  function clear(reason) {
+    generation++; access = ''; refresh = ''; rotation = undefined;
+    if (reason) onSessionEnd(reason);
+  }
+  const send = (path, body, bearer) => fetchImpl(path, {method:'POST',headers:{'Content-Type':'application/json',...(bearer?{Authorization:`Bearer ${bearer}`}:{})},body:JSON.stringify(body),credentials:'omit',signal:AbortSignal.timeout(15000)});
   async function request(path, body, authenticated = true, retried = false) {
-    const sentAccess = access;
-    const response = await fetchImpl(path, { method:'POST', headers:{'Content-Type':'application/json', ...(authenticated && access ? {Authorization:`Bearer ${access}`} : {})}, body:JSON.stringify(body), credentials:'omit' });
+    const sentAccess = access, started = generation;
+    const response = await send(path, body, authenticated ? access : undefined);
     const result = await response.json();
+    // A late login, rotation or dashboard response must never restore a session
+    // or private view after sign-out, or overwrite a newly signed-in account.
+    if (started !== generation) throw new Error('session_changed_please_sign_in');
     if (response.status === 401 && authenticated && refresh && !retried) {
       // A delayed response may refer to the old token after another request
       // finished refreshing. Retry with the new token instead of rotating again.
       if (sentAccess !== access && access) return request(path, body, authenticated, true);
       // Multiple dashboard queries share one rotation, so the single-use
       // refresh token is never submitted twice concurrently.
-      rotation ||= request('/auth/refresh', {refresh_token:refresh}, false).then(setSession).finally(() => { rotation = undefined; });
-      await rotation;
+      if (!rotation) {
+        // Keep the provider result available for logout to revoke even after
+        // local invalidation. Only this generation may install it as a session.
+        const pending = (async () => {
+          const rotated = await send('/auth/refresh', {refresh_token:refresh});
+          const session = await rotated.json();
+          if (!rotated.ok) throw new Error('authentication_required');
+          if (started === generation) setSession(session);
+          return session;
+        })();
+        rotation = pending;
+        // Keep an old promise's cleanup from clearing a newer rotation.
+        pending.finally(() => { if (rotation === pending) rotation = undefined; }).catch(() => {});
+      }
+      try { await rotation; }
+      catch {
+        if (started !== generation) throw new Error('session_changed_please_sign_in');
+        clear('session_expired_please_sign_in');
+        throw new Error('session_expired_please_sign_in');
+      }
+      if (started !== generation) throw new Error('session_changed_please_sign_in');
       return request(path, body, authenticated, true);
     }
+    if (response.status === 401 && authenticated) clear('session_expired_please_sign_in');
     if (!response.ok) throw new Error(result.error || 'request_failed');
     return result;
   }
   function setSession(result) {
-    access = result.access_token || ''; refresh = result.refresh_token || '';
-    if (!access) throw new Error('authentication_required');
+    if (typeof result.access_token !== 'string' || !result.access_token || typeof result.refresh_token !== 'string' || !result.refresh_token) throw new Error('authentication_required');
+    access = result.access_token; refresh = result.refresh_token;
     return result;
   }
   return {
     request,
-    async login(body) { return setSession(await request('/auth/login',body,false)); },
+    checkpoint() { const started=generation; return () => { if(started!==generation)throw new Error('session_changed_please_sign_in'); }; },
+    async login(body) { clear(access ? 'account_changed' : undefined); return setSession(await request('/auth/login',body,false)); },
     signup(body) { return request('/auth/signup',body,false); },
     query(body) { return request('/query',body); },
     command(body) { return request('/commands',body); },
-    async logout() { try { if(access) await request('/auth/logout',{}); } finally { access='';refresh=''; } }
+    forget() { clear('page_left'); },
+    async logout() {
+      let token = access, oldRefresh = refresh;
+      const pendingRotation = rotation;
+      clear('signed_out');
+      if (!token) return;
+      try {
+        if (pendingRotation) {
+          // Do not race a single-use token already sent by a private request.
+          const rotated = await pendingRotation;
+          if (!rotated.access_token) throw new Error('server_signout_unconfirmed');
+          token = rotated.access_token; oldRefresh = rotated.refresh_token;
+        }
+        let response = await send('/auth/logout',{},token);
+        // An expired access token can still have a valid refresh token. Revoke
+        // that session too, without ever restoring it in this client.
+        if (response.status === 401 && oldRefresh) {
+          const refreshed = await send('/auth/refresh',{refresh_token:oldRefresh});
+          if (!refreshed.ok) throw new Error('server_signout_unconfirmed');
+          const session = await refreshed.json();
+          if (!session.access_token) throw new Error('server_signout_unconfirmed');
+          response = await send('/auth/logout',{},session.access_token);
+        }
+        if (!response.ok) throw new Error('server_signout_unconfirmed');
+      } catch { throw new Error('server_signout_unconfirmed'); }
+    }
   };
 }
