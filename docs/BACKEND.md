@@ -6,9 +6,26 @@ Run `npm ci --ignore-scripts`, then `npm run dev`. No hosted credentials are
 needed for local development. The database is saved under `.local/postgres`,
 which Git ignores. The server binds to loopback by default.
 
-`GET /play` serves the new responsive participant portal on the backend origin. It supports signup, sign-in, in-memory session refresh, viewing approved leagues, private join requests, commissioner entry approvals, standings and ranked ATS submissions. It is a development implementation; it is not published on GitHub Pages. The browser does not persist tokens to localStorage.\n\n`GET /health` checks the database RPC; failure returns 503. `GET /admin` is an
+`GET /play` serves the existing responsive participant portal on the backend
+origin. It supports signup, sign-in, in-memory session refresh, viewing approved
+leagues, private join requests, commissioner entry approvals, standings and
+ranked ATS submissions. It is not published on GitHub Pages. Browser tokens are
+not persisted in localStorage.
+
+`GET /health` checks the database RPC; failure returns 503. `GET /admin` is an
 initial administrative API console, not a replacement for the public website.
 Create an account, sign in, and use the JSON actions/reports below.
+
+`GET /manage` serves the extended management workspace with registration/login, profile
+editing, league requests, picks, commissioner controls and the staff-only
+commercial workspace. It does not modify or serve the public `index.html`.
+The other session's completed `/play` portal is preserved unchanged. Both
+screens use the same authenticated API, accounts and access policies.
+Browser access/refresh tokens remain in memory only; reloading requires login.
+Concurrent expired requests share a single refresh rotation. Signup in hosted
+mode prompts email confirmation; local-only accounts skip actual email delivery.
+Password recovery and hosted confirmation redirects still require implementation
+and integration testing before public launch.
 
 All action/query endpoints are POST with `Content-Type: application/json`.
 Authenticated endpoints require `Authorization: Bearer <access_token>`.
@@ -29,12 +46,21 @@ the local session. Credentials and tokens are never committed to Git.
 | `/billing/webhook` | Raw Stripe JSON with verified Stripe signature |
 
 Available queries: `me`, `leagues`, `league`, `standings`, `history`,
-`crm_records`, `crm_report`, `executive_report`.
+`dashboard`, `crm_records`, `crm_report`, `executive_report`. `dashboard` includes
+the user's own pending/rejected entry status, never private games or picks from
+a league they are not authorized to view. `profile_update` only changes the
+session actor's display name; it cannot grant a role or change another user.
 
 ## 2. Commissioner workflow
 
 Any verified account can create a private league and becomes its commissioner.
 Commercial privileges are separate; league ownership grants no CRM role.
+
+The portal's `competition_setup` command creates a draft league plus 1–32 rounds
+in one database transaction. An invalid round rolls back every write and audit
+record. It always sets rules `approved:false`. The NFL screen uses the existing
+`backend/rules/nfl-playoffs-61.json` source: four rounds, 59 ranking points and 2
+MVP points. Dates must be entered; no teams, sports results or dates are invented.
 
 1. `league_create`: `name`, `sport`, `season`, `rules`.
 2. `round_create`: `league_id`, `name`, `lock_at`, `weights`, optional
@@ -67,6 +93,12 @@ Private picks become visible to league members after the selection deadline.
 Commissioners cannot inspect competitors' choices before lock through the API.
 Direct database table writes are denied to ordinary users. RPCs lock the league
 row and validate ownership, membership, deadlines, allocations and transitions.
+Hosted RPCs and restrictive RLS policies additionally check the signed JWT's
+`session_id` against `auth.sessions`, its actor and expiry, and require a
+confirmed, non-anonymous, non-banned account. This closes the normal JWT
+post-logout validity window once Supabase removes the session. Local compatibility
+fixtures exercise these database checks; actual hosted sign-out semantics remain
+an integration acceptance requirement. No hosted Auth tables were changed.
 
 ## 3. Commercial workflow
 
@@ -80,6 +112,13 @@ Allowed roles: `researcher`, `approver`, `executive`.
 
 - `research_job`: `query`; creates a research queue record. A scheduled source
   research worker is not connected yet.
+- `research_claim`: researcher/executive claims one pending or expired job with
+  `FOR UPDATE SKIP LOCKED`, an actor-bound UUID lease and a 15-minute expiry.
+  `research_finish`: `job_id`, `lease_token`, `status` (`completed`/`failed`),
+  `result:{summary,sources:[HTTPS URLs]}`. Completion requires sources; expired,
+  forged, wrong-actor and reused leases are rejected. Leases are not exposed in
+  reports or direct authenticated table reads. Failed jobs retain their evidence;
+  expired running jobs can be reclaimed and their attempt count increments.
 - `crm_prospect`: `organization`, canonical HTTPS root `website`, `category`
   (`advertiser`, `partner`, `investor`), `source_url`, `evidence`, and five named
   `signals`. Each signal has `name`, `value` (0–5), and evidence for nonzero values.
@@ -127,6 +166,15 @@ against the Supabase management API. On October 13, 2026 the API returned HTTP
 401. Replace the rejected credential with a valid Supabase personal access token
 through the appropriate GitHub secrets UI. No project status is inferred from
 that authentication error, and no provider state was changed.
+
+**October 14 connected-service update:** Supabase MCP account access now works.
+`Goat-Universe` (`opvoemihfyxidzbdyory`) reported `COMING_UP` during the read-only
+audit. A database catalog query succeeded; the public schema had no application
+tables, migration history was empty and there were no development branches.
+The existing database was not altered. This connection does not update the
+rejected GitHub Actions token, and it is not a dedicated development database.
+No project/branch was created because costs and environment selection require
+approval. Hosted application registration is still unverified.
 
 Run the development dry run after these are configured. Review its output before
 applying migrations in development. No production migration or reset is included.
@@ -180,3 +228,39 @@ is sent and no public-site tracking snippet has been added. Executive reports
 show actual database account/entry/consent counts, CRM follow-ups and pipeline.
 Traffic analytics, delivery automation, GPI, Baas payouts and monetization
 activation require further approved implementation.
+
+## All five draft setup and March Madness
+
+Use `/manage` after signing in. Its all-five catalog creates persistent drafts
+through `game_draft_create` with `game_key`, `name`, and `season`. Drafts do not
+need invented schedules. NFL keeps its four-round LXI setup option. Crossover,
+League of Greatness, and Classic can store source specifications; their opening
+and entry commands fail closed until their full engines are integrated.
+
+For Horns & Hoops, configure the official first Round of 64 tip and schedule
+source through `bracket_configure`, then import the real tree with
+`bracket_schedule_import`. Supply a JSON `nodes` array with unique `code`,
+`stage` 0–6, `starts_at`, `source_url`, and either literal `home_team` / `away_team`
+or `home_from_code` / `away_from_code`. Stages 0 and 1 require known future tips;
+subsequent stages may omit starts until available. Feeder stages must be adjacent.
+No actual qualifying count is hardcoded. Schedule import requires an empty draft
+and rolls back every node/audit row on failure.
+
+Rules review preserves the founder points `[1,2,3,5,7,9,11]` and
+`championship_total_closest`. After explicit approval and schedule validation,
+`league_open` enables invitation requests and commissioner entry decisions.
+`bracket_qualifying_pick` takes `node_id`/`team` and locks at that game's tip.
+`bracket_submit` atomically replaces exactly 63 main `picks` (`node_id`, `team`)
+and `championship_total`, until the one main lock. Downstream selections must
+advance the entrant's own predicted earlier winners.
+
+`bracket_result` requires sourced decisive scores after the relevant lock/tip.
+`bracket_results_import` applies a `results` array atomically in feeder order.
+`bracket_correct` requires a reason and clears the game and dependent outcomes,
+retaining old snapshots and audit evidence. Finalize only after all sourced
+results are present. Private `league`, `standings` and `history` queries use the
+same authenticated member gate as NFL. Direct table writes and internal helper
+calls are denied; championship predictions are redacted from pre-lock snapshots.
+
+Live payments, outbound research workers and message transport are not activated
+by any of these operations. See CHECKPOINT.md for current test evidence/blockers.

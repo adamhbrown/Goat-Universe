@@ -15,8 +15,8 @@ export const GOAT_GAMES = Object.freeze([
     subtitle: "Downtown's BAAsketball Showcase XXXV",
     calendar_month: 3, sport: 'NCAA_MBB', strategy: 'ncaa_bracket_v1',
     mechanics: 'NCAA basketball bracket selections and round advancement',
-    local_scoring_status: 'rules_pending', baas_status: 'awaiting_approved_conversion',
-    notes: 'Round values, First Four handling, deadlines, score source and ties are not yet founder-approved.'
+    local_scoring_status: 'implemented_development', baas_status: 'awaiting_approved_conversion',
+    notes: 'Founder rules: qualifying 1; main rounds 2/3/5/7/9/11. Qualifying locks per game; one complete main bracket and championship-total tiebreaker lock at first Round of 64 tip. Official field and hosted launch review required.'
   }),
   Object.freeze({
     id: 'goat-crossover', name: 'GOAT Crossover', subtitle: 'Two Sports, 1 Competition',

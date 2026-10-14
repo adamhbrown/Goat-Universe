@@ -25,6 +25,17 @@ export async function application(config = configuration()) {
         try { return respond(200, { status: 'ok', environment: config.appEnv, database: config.mode, ...(await db.health()), payments_enabled: config.paymentsEnabled }); }
         catch { return respond(503, { status: 'unavailable', environment: config.appEnv }); }
       }
+      const portalFiles = { '/manage':'manage.html', '/manage/ui.mjs':'manage.mjs', '/manage/style.css':'manage.css', '/manage/forms.mjs':'forms.mjs', '/manage/bracket.mjs':'bracket.mjs' };
+      if (req.method === 'GET' && url.pathname === '/nfl61.json') {
+        const content = await readFile(new URL('./rules/nfl-playoffs-61.json', import.meta.url));
+        res.writeHead(200, headers); return res.end(content);
+      }
+      if (req.method === 'GET' && Object.hasOwn(portalFiles, url.pathname)) {
+        const file = portalFiles[url.pathname];
+        headers['Content-Type'] = file.endsWith('.mjs') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : 'text/html';
+        const content = await readFile(new URL('./portal/' + file, import.meta.url));
+        res.writeHead(200, headers); return res.end(content);
+      }
       if (req.method === 'GET' && ['/admin','/admin.mjs','/admin.css','/play','/play.mjs','/play.css','/crm','/crm.mjs','/crm.css'].includes(url.pathname)) {
         const file = url.pathname === '/admin' ? 'admin.html' : url.pathname === '/play' ? 'play.html' : url.pathname === '/crm' ? 'crm.html' : url.pathname.slice(1);
         headers['Content-Type'] = file.endsWith('.mjs') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : 'text/html';

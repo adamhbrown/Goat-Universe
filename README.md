@@ -9,8 +9,17 @@ npm test
 npm run dev
 ```
 
-Node 24 is used in CI. The local API and administrative console run at
-`http://localhost:8787/health` and `http://localhost:8787/admin`.
+Node 24 is used in CI. The existing participant portal is
+`http://localhost:8787/play`; the extended commissioner/commercial workspace is
+`http://localhost:8787/manage`. Database health is `http://localhost:8787/health`;
+the advanced JSON API console remains at `http://localhost:8787/admin`.
+
+The portal has real local registration, login, profile editing, invitation
+requests, private competition dashboards, pick forms, standings/history,
+commissioner controls, researched leads, draft review and approval. NFL LXI
+draft setup creates four rounds atomically and keeps rules unapproved until
+review. Tests exercise HTTP, PostgreSQL access policies and real DOM form
+handlers; DOM tests do not replace desktop/mobile visual browser acceptance.
 
 The development server now serves two responsive interfaces:
 

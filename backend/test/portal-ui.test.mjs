@@ -46,7 +46,8 @@ function find(node, tag) {
 
 test('member portal handles login, view, ranked picks, join requests, and entry approvals with no external transport', async () => {
   const script = await readFile(new URL('../console/play.mjs', import.meta.url), 'utf8');
-  assert.doesNotMatch(script, /\.\s*(?:localStorage|sessionStorage|innerHTML)\b|eval\s*\(/);
+  // Match unsafe operations, not explanatory comments mentioning storage.
+  assert.doesNotMatch(script, /\b(?:localStorage|sessionStorage)\s*(?:\.|\[)|\.innerHTML\s*=|\beval\s*\(/);
   const ids = {};
   const document = {
     getElementById(id) { return ids[id] ||= new FakeElement(); },

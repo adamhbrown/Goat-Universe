@@ -59,3 +59,25 @@ their own approved rules and implementation.
 
 Uploaded apparel images remain source assets. Their mockup prices, manufacturing
 claims and third-party logos are not used as approved sale inventory.
+
+## Horns & Hoops — founder instructions, October 14, 2026
+
+The current conversation is authoritative: qualifying 1; Round of 64 2; Round
+of 32 3; Sweet 16 5; Elite Eight 7; Final Four 9; championship 11. One main
+bracket per GOAT profile. Qualifying selections lock individually at tip.
+The **entire** main bracket and combined-championship-points prediction lock
+at the first Round of 64 tip, permanently. Closest predicted combined total
+breaks a total-points tie; equally close entries remain tied until any further
+rule is approved. No champion bonus. Qualifying participation is optional;
+missed qualifying picks cannot be retroactively entered.
+
+Do not infer a qualifying-game count from the tentative audio schedule. Import
+an official sourced field/schedule. The main tree has 63 games; its points total
+209. Add one available point per actual qualifying game. The 65-game / 211-point
+regression fixture uses two explicitly synthetic qualifying games.
+
+Database strategy: `ncaa_bracket_v1`, with config, tournament feeder nodes,
+actor-bound picks, one main submission, graph-consistency validation, standings
+and shared audit/history. Other competitions now have persistent gated drafts
+and sourced scoring helpers, not approved live leagues. Their caller-provided
+fixture scoring policies must never be treated as founder-approved rules.

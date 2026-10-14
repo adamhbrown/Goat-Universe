@@ -1,0 +1,647 @@
+{
+  "checked_at": "2026-10-14T10:16:25.370603+00:00",
+  "editions": 39,
+  "pages": 802,
+  "requests": 89,
+  "passed": 89,
+  "failures": [],
+  "results": [
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/greatness-files/page-64.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/greatness-files/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/greatness-files/GOATVILLE_TIMES_THE_GREATNESS_FILES_FINAL.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/week5/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/week5/page-25.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/week5/Week5_Greatness_Magazine.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/goat-universe-blueprint/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/goat-universe-blueprint/page-15.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/goat-universe-blueprint/GOAT_Universe_Blueprint_of_Greatness.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/goat-universe-ecosystem/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/goat-universe-ecosystem/page-11.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/goat-universe-ecosystem/Inside_the_GOAT_Universe_Ecosystem.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/miracle/page-1.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/miracle/page-9.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/q3/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/q3/page-17.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/week4/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/week4/page-33.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-4bdf4efe41/page-08.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-4bdf4efe41/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-829e7d0071/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-829e7d0071/page-37.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-1a8ef1f337/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-1a8ef1f337/page-12.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-1965516374/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-1965516374/page-03.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-c122262bbf/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-c122262bbf/page-04.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-d41a6b9883/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-d41a6b9883/page-02.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-5b7c62036c/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-5b7c62036c/page-13.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-c5099c887c/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-c276ac07f4/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-c276ac07f4/page-46.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-ed8689c3e8/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-ed8689c3e8/page-38.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-debf5ad108/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-debf5ad108/page-09.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-a5c53155ec/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/edition-a5c53155ec/page-05.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/greatness-2026-dossier/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/greatness-2026-dossier/page-46.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/llws-baa-book/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/llws-baa-book/page-66.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/llws-baa-report-upload/page-49.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/annual-goat-championships/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/annual-goat-championships/page-17.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/brooklyn-portfolio/cover-v13.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/brooklyn-portfolio/page-54.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/brooklyn-portfolio/Adam_Brown_Brooklyn_Athletics_Portfolio.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-ec7d92d665/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-ec7d92d665/page-07.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-ac211ecaad/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-ac211ecaad/page-15.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-c95d569600/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-c95d569600/page-20.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-e1c2cf1eee/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-e1c2cf1eee/page-03.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-5397392af8/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-5397392af8/page-30.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-9dd664c524/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-9dd664c524/page-37.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-042a38ec69/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-042a38ec69/page-23.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-82921002b7/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-82921002b7/page-02.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-6602d0bb44/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-6602d0bb44/page-11.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-5c0363eb0b/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/added-5c0363eb0b/page-14.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/college-footbaaa-week7/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/college-footbaaa-oct4/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/tiff-i-have-an-idea/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/tiff-i-have-an-idea/page-23.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/tiff-i-have-an-idea/Tiff_I_Have_An_Idea.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/jules-college-goat/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/jules-college-goat/page-11.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/jules-college-goat/CollegeGoat.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/world-cup-poster-gallery/page-01.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/publications/world-cup-poster-gallery/page-20.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/",
+      "status": 200,
+      "content_type": "text/html",
+      "ok": true,
+      "error": null
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/reader.html",
+      "status": 200,
+      "content_type": "text/html",
+      "ok": true,
+      "error": null,
+      "redirect_followed": true
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/adam.html",
+      "status": 200,
+      "content_type": "text/html",
+      "ok": true,
+      "error": null,
+      "redirect_followed": true
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/brooklyn.html",
+      "status": 200,
+      "content_type": "text/html",
+      "ok": true,
+      "error": null,
+      "redirect_followed": true
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/juliana.html",
+      "status": 200,
+      "content_type": "text/html",
+      "ok": true,
+      "error": null,
+      "redirect_followed": true
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/juliana-media.html",
+      "status": 200,
+      "content_type": "text/html",
+      "ok": true,
+      "error": null,
+      "redirect_followed": true
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/films.html",
+      "status": 200,
+      "content_type": "text/html",
+      "ok": true,
+      "error": null,
+      "redirect_followed": true
+    },
+    {
+      "url": "https://goatverse-publications.downtownadamb.chatgpt.site/app.js?v=35",
+      "status": 200,
+      "content_type": "text/javascript",
+      "ok": true,
+      "error": null
+    }
+  ],
+  "redirects_followed": [
+    "https://goatverse-publications.downtownadamb.chatgpt.site/reader.html",
+    "https://goatverse-publications.downtownadamb.chatgpt.site/adam.html",
+    "https://goatverse-publications.downtownadamb.chatgpt.site/brooklyn.html",
+    "https://goatverse-publications.downtownadamb.chatgpt.site/juliana.html",
+    "https://goatverse-publications.downtownadamb.chatgpt.site/juliana-media.html",
+    "https://goatverse-publications.downtownadamb.chatgpt.site/films.html"
+  ]
+}

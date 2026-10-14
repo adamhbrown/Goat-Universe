@@ -155,7 +155,7 @@ async function openLeague(id) {
     cell.colSpan = 4; row.append(cell); board.append(row);
   } else standings.forEach((person, index) => {
     const row = node('tr');
-    addCell(row, index + 1);
+    addCell(row, person.rank ?? index + 1);
     addCell(row, person.display_name || 'Competitor');
     addCell(row, person.points ?? 0);
     addCell(row, person.wins ?? 0);
@@ -179,7 +179,10 @@ async function openLeague(id) {
     } else card.append(node('p', 'Games have not been announced.', 'small'));
     rounds.append(card);
   }
-  if (!ordered.length) rounds.append(node('p', 'The commissioner has not published any rounds yet.', 'small'));
+  if (!ordered.length) rounds.append(node('p', details.league.strategy==='ncaa_bracket_v1'?'March Madness bracket selections and commissioner controls are available in the management workspace.':'The commissioner has not published any rounds yet.', 'small'));
+  if(details.league.strategy==='ncaa_bracket_v1'){
+    const link=node('a','Open March Madness workspace');link.href='/manage';rounds.append(link);
+  }
   el('member-panel').hidden = true;
   el('league-panel').hidden = false;
   notice('Viewing ' + details.league.name, 'success');
