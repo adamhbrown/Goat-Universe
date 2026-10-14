@@ -66,6 +66,19 @@ async function loadLeagues() {
   for (const league of leagues) {
     const card = node('article', null, 'card');
     card.append(node('h4', league.name), node('p', league.sport + ' · ' + league.season), node('p', 'Status: ' + league.status));
+    if (league.owner_id === myUserId) {
+      card.append(node('p', 'Invitation ID: ' + league.id, 'small'));
+      const copy = node('button', 'Copy invitation ID', 'secondary');
+      copy.type = 'button';
+      copy.addEventListener('click', async () => {
+        try {
+          if (typeof navigator === 'undefined' || !navigator.clipboard) throw new Error('clipboard_unavailable');
+          await navigator.clipboard.writeText(league.id);
+          notice('Invitation ID copied. Share it privately with participants.', 'success');
+        } catch { notice('Copy this invitation ID from the league card: ' + league.id); }
+      });
+      card.append(copy);
+    }
     const open = node('button', 'View competition');
     open.type = 'button';
     open.addEventListener('click', async () => {
@@ -244,7 +257,7 @@ el('account-form').addEventListener('submit', async event => {
     accessToken = result.access_token || result.session?.access_token || '';
     refreshToken = result.refresh_token || result.session?.refresh_token || '';
     if (!accessToken) {
-      notice('Account created. Check your email for a confirmation link, then sign in.', 'success');
+      notice(result.confirmation_required === false ? 'Account created. Sign in using your new password.' : 'Account created. Check your email for a confirmation link, then sign in.', 'success');
       return;
     }
     await showSignedIn();
