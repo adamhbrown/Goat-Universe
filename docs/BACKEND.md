@@ -70,6 +70,8 @@ row and validate ownership, membership, deadlines, allocations and transitions.
 
 ## 3. Commercial workflow
 
+The development-only staff interface is available at GET /crm on the backend origin. It includes staff login, in-memory session refresh, evidence-backed prospect entry, qualified pipeline reporting by currency, internal outreach draft preparation, approvals/rejections, and opportunity records. Only a researcher, approver, or executive can sign in to the commercial desk; the database still enforces the precise permission for each operation. No emails are sent, even when a draft is approved. Browser compatibility and hosted authorization remain to be verified before deployment.
+
 Staff roles are granted by a trusted database administrator. There is no role
 granting API and no reliance on client-supplied metadata for privileges.
 For local development only, stop the backend, run
