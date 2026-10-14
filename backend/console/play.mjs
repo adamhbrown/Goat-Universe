@@ -206,6 +206,18 @@ el('account-form').addEventListener('submit', async event => {
     notice('Welcome to GOAT Games!', 'success');
   } catch (error) { el('password').value = ''; notice(error.message, 'error'); }
 });
+el('join-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const league_id = el('invite-id').value.trim().toLowerCase();
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(league_id)) {
+    notice('Please enter the complete invitation ID.', 'error'); return;
+  }
+  try {
+    await command('enroll', { league_id });
+    el('invite-id').value = '';
+    notice('Join request received. Your commissioner must approve your entry before the league appears here.', 'success');
+  } catch (error) { notice(error.message, 'error'); }
+});
 el('reload').addEventListener('click', async () => {
   try { await loadLeagues(); notice('Your leagues are up to date.', 'success'); }
   catch (error) { notice(error.message, 'error'); }
