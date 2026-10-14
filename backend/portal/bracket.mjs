@@ -64,6 +64,39 @@ export async function renderBracket(data,context) {
   }
   fields.push(field('championship_total','Predicted combined points in the National Championship','number',data.bracket_submissions.find(s=>s.user_id===me)?.championship_total??'',{required:'',min:0,max:10000,step:1}));
   const f=form(panel,'Your complete main bracket',fields,'Save complete bracket',p=>command(bracketCommand(id,nodes,p)));
+  // The entire 63-game submission is still atomic. Group its controls by
+  // round so a phone user does not face an unbroken wall of 63 selectors.
+  // Moving labels (rather than cloning inputs) preserves their form ownership.
+  const progress=node('p','',{role:'status','aria-live':'polite'});
+  f.querySelector('h3').after(progress);
+  const labels=[...f.querySelectorAll('label')], groups=new Map();
+  for(let stage=1;stage<=6;stage++){
+    const group=node('details',undefined,{'class':'bracket-round'});
+    group.open=stage===1;
+    const summary=node('summary');
+    group.append(summary);
+    f.insertBefore(group,labels.at(-1));
+    groups.set(stage,{group,summary});
+  }
+  main.forEach((game,index)=>groups.get(game.stage).group.append(labels[index]));
+  function updateProgress(){
+    let complete=0;
+    for(let stage=1;stage<=6;stage++){
+      const stageGames=main.filter(game=>game.stage===stage);
+      const done=stageGames.filter(game=>Boolean(f.elements['pick_'+game.id].value)).length;
+      complete+=done;
+      groups.get(stage).summary.textContent=STAGES[stage]+' — '+done+' of '+stageGames.length+' selected';
+    }
+    progress.textContent=complete+' of 63 winners selected. '+(complete===63
+      ? 'Enter your championship-total prediction and save before the first tip.'
+      : 'Complete each round; advancing teams update as you make selections.');
+  }
+  // Browsers cannot focus a required select inside a closed details panel.
+  // Expand its round on invalidity, without weakening native form validation.
+  f.addEventListener('invalid',event=>{
+    const group=event.target.closest('details');
+    if(group)group.open=true;
+  },true);
   // Changing an upstream winner removes impossible downstream selections. The
   // server independently validates the full graph and atomic replacement.
   f.addEventListener('change',()=>{
@@ -71,7 +104,9 @@ export async function renderBracket(data,context) {
     const input=f.elements['pick_'+n.id],prior=input.value,allowed=[f.elements['pick_'+n.home_from]?.value,f.elements['pick_'+n.away_from]?.value].filter(Boolean);
     input.replaceChildren(node('option','Choose a winner',{value:''}),...allowed.map(team=>node('option',team,{value:team})));input.value=allowed.includes(prior)?prior:'';
    }
+   updateProgress();
   });
+  updateProgress();
  }
  const submission=data.bracket_submissions.find(s=>s.user_id===me);
  if(submission)panel.append(node('p','Your main bracket was saved at '+new Date(submission.submitted_at).toLocaleString()+'. Championship total: '+submission.championship_total+'.'));
