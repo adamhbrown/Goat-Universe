@@ -44,3 +44,12 @@ test('responsive and keyboard accessible baseline styles exist', () => {
   assert.match(html, /a:focus-visible,button:focus-visible/);
   assert.match(html, /prefers-reduced-motion:reduce/);
 });
+
+test('homepage does not invent rankings or claim a fake profile registration', () => {
+  assert.doesNotMatch(html, /Jordan Vale|Casey Rivers|Morgan Lee|Avery Stone|Taylor Cruz/);
+  assert.doesNotMatch(html, /GOAT PROFILE REQUEST CAPTURED|Create your GOAT profile/);
+  assert.match(html, /No verified GOAT Universe standings published yet/);
+  assert.match(html, /Member registration is not available/);
+  assert.equal((html.match(/<span class="tag">PREVIEW<\/span>/g) ?? []).length, 0, 'competition cards render from JS at runtime');
+  assert.match(html, /const competitions=\[/);
+});
