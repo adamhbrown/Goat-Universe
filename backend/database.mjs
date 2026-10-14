@@ -45,7 +45,7 @@ export class LocalDatabase {
     return this;
   }
   async rpc(fn, p, userId, role = 'authenticated') {
-    if (!['goat_command', 'goat_query', 'goat_payment_event'].includes(fn)) throw new Error('invalid_rpc');
+    if (!['goat_command', 'goat_query', 'goat_payment_event', 'bullpen_command', 'bullpen_query'].includes(fn)) throw new Error('invalid_rpc');
     if (!['authenticated', 'service_role', 'anon'].includes(role)) throw new Error('invalid_role');
     return this.exclusive(() => this.db.transaction(async tx => {
       await tx.exec(`set local role ${role}`);
@@ -62,7 +62,7 @@ export class LocalDatabase {
 export class SupabaseDatabase {
   constructor(config, fetchImpl = fetch) { this.config = config; this.fetch = fetchImpl; }
   async rpc(fn, p, userToken, system = false) {
-    if (!['goat_command', 'goat_query', 'goat_payment_event'].includes(fn)) throw new Error('invalid_rpc');
+    if (!['goat_command', 'goat_query', 'goat_payment_event', 'bullpen_command', 'bullpen_query'].includes(fn)) throw new Error('invalid_rpc');
     const key = system ? this.config.systemKey : this.config.publishableKey;
     if (!key) throw new Error('billing_system_key_missing');
     const headers = { apikey: key, 'Content-Type': 'application/json' };

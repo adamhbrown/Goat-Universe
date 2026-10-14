@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "node backend/server.mjs",
     "test": "node --test backend/test/*.test.mjs",
+    "test:bullpen": "node --test backend/test/bullpen*.test.mjs",
+    "check:bullpen": "node --check backend/bullpen/ui.mjs && node --check backend/bullpen/routes.mjs && node --check backend/bullpen/client.mjs && node --check backend/scripts/bullpen-client.mjs && node --check backend/scripts/bullpen-bind-local.mjs",
     "check": "node --check backend/server.mjs && node --check backend/database.mjs && node --check backend/auth.mjs && node --check backend/console/play.mjs && node --check backend/portal/manage.mjs && node --check backend/portal/forms.mjs && node --check backend/console/crm.mjs && node --check backend/portal/bracket.mjs && node --check backend/portal/callback.mjs && node --check backend/deployment-readiness.mjs && node --check backend/deployment-target.mjs",
     "check:deployment": "node backend/scripts/check-deployment.mjs"
   },

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#111714">
+  <title>GOAT Universe Bullpen</title>
+  <link rel="stylesheet" href="/bullpen/style.css">
+  <script type="module" src="/bullpen/ui.mjs"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="brand"><span class="mark" aria-hidden="true">G</span><div>GOAT UNIVERSE<small>PRIVATE EXECUTIVE WORKSPACE</small></div></div>
+    <button id="logout" hidden>Sign out</button>
+  </header>
+  <main>
+    <div class="intro"><p class="eyebrow">ONE TEAM. ONE ROOM. ONE MISSION.</p><h1>The Bullpen<span>.</span></h1><p>One Founder. Three specialized AI workstreams. One shared mission.</p></div>
+    <p id="notice" role="status" aria-live="polite"></p>
+    <section id="auth" class="panel auth-panel" aria-labelledby="sign-in-title">
+      <p class="eyebrow">MEMBERS ONLY</p><h2 id="sign-in-title">Enter the boardroom</h2>
+      <p>Sign in with the account assigned to your seat. Access is granted by Adam.</p>
+      <form id="login">
+        <label>Email<input name="email" type="email" autocomplete="username" required maxlength="254"></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" required maxlength="200"></label>
+        <button class="primary" type="submit">Enter Bullpen →</button>
+      </form>
+      <p class="muted">Never paste access tokens or project credentials into the conversation.</p>
+    </section>
+    <div id="workspace" hidden>
+      <div class="room-heading"><h2>GOAT Universe Bullpen</h2><p id="sync" class="muted" role="status"></p></div>
+      <div id="seats" class="seat-grid" aria-label="The four seats"></div>
+      <nav class="tabs" aria-label="Bullpen views">
+        <button data-view="conversation" aria-pressed="true">Conversation</button>
+        <button data-view="dashboard" aria-pressed="false">CEO overview</button>
+        <button data-view="tasks" aria-pressed="false">Assignments</button>
+        <button data-view="intelligence" aria-pressed="false">Project intelligence</button>
+        <button data-view="connections" aria-pressed="false">Connections</button>
+      </nav>
+      <section id="conversation" class="view panel" aria-labelledby="thread-title">
+        <div class="section-heading"><div><p class="eyebrow">SHARED THREAD</p><h2 id="thread-title">The room</h2></div><button id="older">Earlier messages</button></div>
+        <p class="muted">Everyone with access can read this thread. Mentions flag a workstream; they do not connect a separate ChatGPT session.</p>
+        <div id="messages" aria-label="Conversation messages"></div>
+        <form id="compose">
+          <p id="replying" hidden></p><button id="cancel-reply" type="button" hidden>Cancel reply</button>
+          <label>Message the team<textarea name="content" rows="3" maxlength="8000" required placeholder="Team, here’s what we need to move forward…"></textarea></label>
+          <div class="composer-actions"><div class="mentions"><button type="button" data-mention="Tiffany">@Tiffany</button><button type="button" data-mention="Pope">@Pope</button><button type="button" data-mention="Codex">@Codex</button></div><button type="submit" class="primary">Post message</button></div>
+          <button id="acceptance-prompt" type="button" class="text-button">Use CEO acceptance prompt</button>
+        </form>
+        <div id="acceptance" hidden></div>
+      </section>
+      <section id="dashboard" class="view" hidden aria-label="CEO overview"></section>
+      <section id="tasks" class="view" hidden aria-labelledby="tasks-title">
+        <div class="section-heading"><h2 id="tasks-title">Coordinated assignments</h2><button id="new-task">New assignment +</button></div>
+        <div id="task-editor" class="panel" hidden></div>
+        <label class="filter">View<select id="task-filter"><option value="active">Active work</option><option value="all">All work</option><option value="done">Completed</option><option value="approval">Awaiting CEO approval</option><option value="blocked">Blocked</option></select></label>
+        <div id="task-list" class="card-grid"></div>
+      </section>
+      <section id="intelligence" class="view" hidden aria-labelledby="intel-title">
+        <div class="section-heading"><h2 id="intel-title">Shared project intelligence</h2></div>
+        <p class="muted">Source the finding. Propose a decision. Adam approves the authoritative record; prior approvals remain in history.</p>
+        <details class="panel"><summary>Add a project record</summary>
+          <form id="intel-form">
+            <label>Topic key<input name="topic" required pattern="[a-z0-9][a-z0-9_/-]{2,119}" maxlength="120" placeholder="engineering/october-21"></label>
+            <label>Record type<select name="kind"><option value="finding">Technical finding</option><option value="launch_blocker">Launch blocker</option><option value="decision">Proposed decision</option><option value="rule">Proposed rule</option></select></label>
+            <label>Record<textarea name="content" rows="3" required maxlength="8000"></textarea></label>
+            <label>Evidence / source<textarea name="evidence" rows="2" required maxlength="4000"></textarea></label>
+            <button type="submit" class="primary">Save project record</button>
+          </form>
+        </details>
+        <div id="intel-list" class="card-grid"></div>
+      </section>
+      <section id="connections" class="view panel" hidden aria-labelledby="connections-title">
+        <h2 id="connections-title">Connection registry</h2>
+        <p>An API connection means an authenticated client has polled this room within 90 seconds. It does not prove a model is running or that a response is coming. Read receipts and linked replies provide per-message evidence.</p>
+        <p>Separate ChatGPT conversations need a supported connector or an authorized worker. There is no automatic bridge to Tiffany, Pope, or Codex.</p>
+        <div id="connection-list"></div>
+        <div id="binding" hidden></div>
+      </section>
+    </div>
+  </main>
+  <footer>GOAT UNIVERSE · PRIVATE OPERATIONS <span>CAN’T STOP THE BAA.</span></footer>
+</body>
+</html>
