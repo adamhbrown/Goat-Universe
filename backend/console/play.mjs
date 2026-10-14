@@ -38,6 +38,29 @@ async function send(path, payload, authenticated = true, allowRefresh = true) {
   if (!response.ok) throw new Error(result.error || 'request_failed');
   return result;
 }
+async function loadGoatGamesCatalog() {
+  const list = el('goat-games-catalog');
+  try {
+    const response = await fetch('/goat-games', { method: 'GET' });
+    if (!response.ok) throw new Error('catalog_unavailable');
+    const catalog = await response.json();
+    if (!Array.isArray(catalog.games) || catalog.games.length !== 5) throw new Error('catalog_incomplete');
+    list.replaceChildren();
+    const months = ['','JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+    for (const game of catalog.games) {
+      const card = node('article', null, 'card');
+      card.append(node('p', months[game.calendar_month] || 'SEASON', 'eyebrow'),
+        node('h4', game.name), node('p', game.subtitle, 'small'),
+        node('p', game.mechanics),
+        node('p', game.local_scoring_status === 'implemented_development'
+          ? 'Development engine available · Not live'
+          : 'Rulebook and scoring under development', 'small'));
+      list.append(card);
+    }
+  } catch {
+    list.replaceChildren(node('p', 'The GOAT Games catalog is temporarily unavailable. Please try again later.', 'small'));
+  }
+}
 async function query(op, extras = {}) { return send('query', { op, ...extras }); }
 async function command(op, extras = {}) { return send('commands', { op, ...extras }); }
 function showSignedOut() {
@@ -291,3 +314,4 @@ el('signout').addEventListener('click', async () => {
   finally { showSignedOut(); notice('Signed out. See you at the next game.'); }
 });
 showSignedOut();
+loadGoatGamesCatalog();
