@@ -39,7 +39,12 @@
     <div class="actions"><button id="reload" type="button">Refresh my leagues</button></div>
     <h3>My competitions</h3>
     <div id="leagues" class="cards"></div>
-    <p class="small">Only leagues you commission or have been approved to enter are shown. Request an invitation from your commissioner to join a private competition.</p>
+    <h3>Have an invitation?</h3>
+    <form id="join-form">
+      <label>League invitation ID <input id="invite-id" required pattern="[a-fA-F0-9-]{36}" maxlength="36" placeholder="Your commissioner shares this ID"></label>
+      <button type="submit">Request to join</button>
+    </form>
+    <p class="small">Only leagues you commission or have been approved to enter are shown. Joining a private league requires commissioner approval. Pending requests will not appear in My Competitions until approved.</p>
   </section>
   <section id="league-panel" class="panel" hidden>
     <div class="section-head"><h2 id="league-name">League</h2><button id="back" type="button" class="secondary">All leagues</button></div>
