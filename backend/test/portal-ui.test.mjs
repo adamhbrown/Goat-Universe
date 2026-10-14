@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
+import { GOAT_GAMES } from '../rules/goat-games.mjs';
 
 class FakeElement {
   constructor(tag = 'div') {
@@ -64,6 +65,10 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
     picks: []
   };
   const fetch = async (url, options) => {
+    if (url === '/goat-games') {
+      assert.equal(options.method, 'GET');
+      return { ok: true, status: 200, json: async () => ({ games: GOAT_GAMES }) };
+    }
     assert.match(url, /^\/(auth\/|query$|commands$)/);
     const payload = JSON.parse(options.body);
     api.push({ url, payload });
@@ -86,6 +91,8 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
   document.getElementById('email').value = 'fixture@example.invalid';
   document.getElementById('password').value = 'Fixture-Password-1234';
   await ids['account-form'].fire('submit', { submitter: { value: 'login' } });
+  assert.equal(ids['goat-games-catalog'].children.length, 5);
+  assert.equal(ids['goat-games-catalog'].children[2].children[1].textContent, 'GOAT Crossover');
   assert.equal(ids['account-panel'].hidden, true);
   assert.equal(ids['member-panel'].hidden, false);
   assert.equal(ids['member-name'].textContent, 'Welcome, Fixture Member');
