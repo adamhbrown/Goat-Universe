@@ -147,6 +147,12 @@ function createPickForm(round, games, ownPicks) {
     label.value = String(index);
     weightSet.append(label);
   });
+  const savedWeights = games.map(game => ownPicks.find(p => p.game_id === game.id)?.weight);
+  if (savedWeights.every(value => Number.isInteger(value))) {
+    const sortedSaved = [...savedWeights].sort((a, b) => a - b).join(',');
+    const savedOption = choices.findIndex(option => [...option].sort((a, b) => a - b).join(',') === sortedSaved);
+    if (savedOption >= 0) weightSet.value = String(savedOption);
+  }
   allocation.append(weightSet);
   form.append(allocation);
   const fields = [];
