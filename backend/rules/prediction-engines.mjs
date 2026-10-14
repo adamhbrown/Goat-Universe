@@ -103,6 +103,54 @@ export function scoreVerifiedPredictions({game_id,season,policy,participants,eve
     });
 }
 
+
+/**
+ * Prepare one participant's submitted picks for a future GOAT Game.
+ * Unlike scoreVerifiedPredictions, outcomes are NOT needed at entry time.
+ *
+ * The caller MUST supply received_at from its own trusted server clock, not
+ * from the participant/browser. Production database commands must still check
+ * lock times transactionally to prevent races. No pick is written here.
+ * A partial batch is allowed because individual games/series lock separately.
+ */
+export function validatePredictionBatch({game_id,season,policy,member_id,events,picks,received_at}) {
+  const requiredSports=verifyPolicy(game_id,season,policy);
+  if (!identity(member_id) || !Array.isArray(events) || !events.length ||
+      !Array.isArray(picks) || !picks.length) fail('goat_entry_input_invalid');
+  const acceptedAt=timestamp(received_at);
+  const eventLookup=new Map(), coveredSports=new Set();
+  for (const event of events) {
+    if (!event || !identity(event.id) || eventLookup.has(event.id) ||
+        !requiredSports.includes(event.sport) || !identity(event.round) ||
+        !Object.hasOwn(policy.points_by_sport[event.sport],event.round) ||
+        !Array.isArray(event.options) || event.options.length!==2 ||
+        event.options.some(x=>!identity(x)) ||
+        new Set(event.options).size!==2 ||
+        typeof event.source_url!=='string' ||
+        !/^https:\/\/[^\s/]+(?:\/[^\s]*)?$/.test(event.source_url))
+      fail('goat_entry_schedule_invalid');
+    timestamp(event.locked_at);
+    eventLookup.set(event.id,event);
+    coveredSports.add(event.sport);
+  }
+  // GOAT Crossover must always be configured with NBA and NHL events.
+  if (requiredSports.some(sport=>!coveredSports.has(sport)))
+    fail('goat_required_sport_missing');
+  const seen=new Set(), sanitized=[];
+  for (const pick of picks) {
+    if (!pick || !identity(pick.event_id) || !eventLookup.has(pick.event_id) ||
+        seen.has(pick.event_id)) fail('goat_entry_pick_invalid');
+    seen.add(pick.event_id);
+    const event=eventLookup.get(pick.event_id);
+    if (!event.options.includes(pick.selection)) fail('goat_entry_pick_invalid');
+    if (acceptedAt>=timestamp(event.locked_at)) fail('goat_prediction_after_deadline');
+    sanitized.push({member_id,event_id:pick.event_id,selection:pick.selection});
+  }
+  // All-or-nothing validation: return a new sanitized batch only after every
+  // pick is checked. Do not mutate caller objects or accept browser timestamps.
+  return {game_id,season,received_at,picks:sanitized};
+}
+
 export function fantasyHeadToHeadWinner({season,home_team_id,away_team_id,home_official_score,away_official_score}) {
   if (!Number.isInteger(season) || season<2019 ||
       !identity(home_team_id) || !identity(away_team_id) || home_team_id===away_team_id ||
