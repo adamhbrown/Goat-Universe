@@ -32,3 +32,5 @@ footer{border-top:1px solid var(--line);text-align:center;padding:1.5rem;font-si
 @media(prefers-reduced-motion:no-preference){button{transition:background .15s ease,transform .15s ease}button:hover{transform:translateY(-1px)}}
 
 .hero-freedom{display:inline-block;color:var(--white);margin-left:.4em;text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:.25em}
+
+.hero-origin{color:#e6bd62;font-weight:900;letter-spacing:.18em;font-size:.95rem;margin:.4rem 0 1rem}
