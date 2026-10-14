@@ -104,7 +104,7 @@ export function scoreVerifiedPredictions({game_id,season,policy,participants,eve
 }
 
 export function fantasyHeadToHeadWinner({season,home_team_id,away_team_id,home_official_score,away_official_score}) {
-  if (!Number.isInteger(season) || season<2026 ||
+  if (!Number.isInteger(season) || season<2019 ||
       !identity(home_team_id) || !identity(away_team_id) || home_team_id===away_team_id ||
       !Number.isFinite(home_official_score) || !Number.isFinite(away_official_score) ||
       home_official_score<0 || away_official_score<0) fail('goat_fantasy_matchup_invalid');
@@ -113,5 +113,5 @@ export function fantasyHeadToHeadWinner({season,home_team_id,away_team_id,home_o
     winner:home_official_score>away_official_score?home_team_id:
       away_official_score>home_official_score?away_team_id:null,
     tied:home_official_score===away_official_score,
-    note:'Official 2026+ home scores already contain the two-point home advantage.'};
+    note:season >= 2026 ? 'Official 2026+ home scores already contain the two-point home advantage.' : 'Historical official scores are not retroactively adjusted.'};
 }
