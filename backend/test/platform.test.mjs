@@ -42,6 +42,13 @@ test('HTTP authentication, origin protection, health and production guards',asyn
  assert.equal(portalScript.status,200);
  assert.match(await portalScript.text(),/picks_submit/);
  assert.equal((await fetch(base+'/play.css')).status,200);
+ const crmPage = await fetch(base+'/crm');
+ assert.equal(crmPage.status,200);
+ assert.match(await crmPage.text(),/COMMERCIAL HQ/);
+ const crmScript = await fetch(base+'/crm.mjs');
+ assert.equal(crmScript.status,200);
+ assert.match(await crmScript.text(),/crm_decide/);
+ assert.equal((await fetch(base+'/crm.css')).status,200);
  assert.equal((await call('query',{op:'me'})).status,401);
  assert.equal((await call('query',{op:'me'},'participant',{Origin:'https://untrusted.invalid'})).status,403);
  const me=await query({op:'me'},'participant');assert.deepEqual(me.roles,[]);
