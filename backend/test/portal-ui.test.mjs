@@ -77,8 +77,8 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
     return { ok: true, status: 200, json: async () => result };
   };
   runInNewContext(script, { document, fetch, console });
-  ids.email.value = 'fixture@example.invalid';
-  ids.password.value = 'Fixture-Password-1234';
+  document.getElementById('email').value = 'fixture@example.invalid';
+  document.getElementById('password').value = 'Fixture-Password-1234';
   await ids['account-form'].fire('submit', { submitter: { value: 'login' } });
   assert.equal(ids['account-panel'].hidden, true);
   assert.equal(ids['member-panel'].hidden, false);
@@ -95,7 +95,7 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
   assert.equal(ids.notice.className, 'notice success');
 
   await ids.back.fire('click');
-  ids['invite-id'].value = leagueId;
+  document.getElementById('invite-id').value = leagueId;
   await ids['join-form'].fire('submit');
   assert.ok(api.some(x => x.payload.op === 'enroll' && x.payload.league_id === leagueId));
 
