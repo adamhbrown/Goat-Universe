@@ -42,6 +42,7 @@ test('HTTP authentication, origin protection, health and production guards',asyn
  assert.match(portalHtml,/BAA HARD OR GO HOME/);
  assert.match(portalHtml,/FREE TO BAA/);
  assert.match(portalHtml,/B-TRIPLE-A! BAAA!/);
+ assert.match(portalHtml,/BORN TO BAA/);
  const portalScript = await fetch(base+'/play.mjs');
  assert.equal(portalScript.status,200);
  assert.match(await portalScript.text(),/picks_submit/);
