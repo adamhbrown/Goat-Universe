@@ -20,4 +20,5 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run check
+      - run: npm run check:bullpen
       - run: npm test

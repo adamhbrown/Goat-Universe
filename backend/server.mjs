@@ -6,6 +6,7 @@ import { LocalAuth, SupabaseAuth } from './auth.mjs';
 import { configuration } from './config.mjs';
 import { checkout, paymentRecord, verifiedStripeEvent } from './billing.mjs';
 import { publicCatalog } from './rules/goat-games.mjs';
+import { bullpenAsset } from './bullpen/routes.mjs';
 
 export async function application(config = configuration()) {
   const db = config.mode === 'local' ? await new LocalDatabase(config.localPath).init() : new SupabaseDatabase(config);
@@ -20,6 +21,7 @@ export async function application(config = configuration()) {
     try {
       if (req.headers.origin && req.headers.origin !== config.appOrigin) return respond(403, { error: 'origin_denied' });
       const url = new URL(req.url, 'http://localhost');
+      if (await bullpenAsset(req, res, url.pathname, headers)) return;
       if (req.method === 'GET' && url.pathname === '/goat-games') return respond(200, publicCatalog());
       if (req.method === 'GET' && url.pathname === '/health') {
         try { return respond(200, { status: 'ok', environment: config.appEnv, database: config.mode, ...(await db.health()), payments_enabled: config.paymentsEnabled, auth_email_enabled: config.authEmailEnabled }); }
@@ -72,6 +74,8 @@ export async function application(config = configuration()) {
       const user = await auth.user(token);
       if (url.pathname === '/auth/password') return respond(200,await auth.password(p,token));
       if (url.pathname === '/auth/logout') { await auth.logout(token); return respond(200, { logged_out: true }); }
+      if (url.pathname === '/bullpen/query') return respond(200, { ...(await db.rpc('bullpen_query', p, user.databaseIdentity)), environment: config.appEnv, database: config.mode });
+      if (url.pathname === '/bullpen/commands') return respond(200, await db.rpc('bullpen_command', p, user.databaseIdentity));
       if (url.pathname === '/commands') return respond(200, await db.rpc('goat_command', p, user.databaseIdentity));
       if (url.pathname === '/query') return respond(200, await db.rpc('goat_query', p, user.databaseIdentity));
       if (url.pathname === '/billing/checkout') return respond(200, await checkout(user.id, p.tier, config));
@@ -90,7 +94,7 @@ export async function application(config = configuration()) {
       const code = /^[a-z][a-z0-9_]+$/.test(err.message) ? err.message : 'request_failed';
       const status = /auth_email_not_enabled|email_recovery_unavailable|password_updated_session_revocation_failed/.test(code) ? 503 : /authentication_required|invalid_credentials|verified_email_required/.test(code) ? 401 :
         /required$|denied$|forbidden/.test(code) || err.code === '42501' ? 403 :
-        err.code === '23505' ? 409 : code === 'request_too_large' ? 413 : 400;
+        err.code === '23505' || /conflict$/.test(code) ? 409 : code === 'request_too_large' ? 413 : 400;
       respond(status, { error: code });
     }
   });
