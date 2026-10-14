@@ -139,3 +139,72 @@ test('commissioner approve/decline and ranked-pick submissions are single-flight
   finishPicks(reply(200,{ok:true}));await until(()=>count('picks_submit')===1&&p.$('notice').textContent.includes('saved'));
  }finally{p.dom.window.close();}
 });
+
+test('switching between leagues ignores a slow earlier competition response',async()=>{
+ const first='4a5fe0c7-e3ad-4834-9e5a-cd48a25c6b11';
+ const second='a6f67ea3-9bd8-43c8-b086-e19894c1ab21';
+ const leagues=[
+  {id:first,name:'Older League',sport:'NFL',season:'2027',status:'open',owner_id:'OTHER'},
+  {id:second,name:'Current League',sport:'NFL',season:'2027',status:'open',owner_id:'OTHER'}
+ ];
+ let resolveOld,startedOld;
+ const oldStarted=new Promise(r=>{startedOld=r;});
+ const oldRequest=new Promise(r=>{resolveOld=r;});
+ const p=await player((path,options)=>{
+  if(path!=='/query')return;
+  const data=JSON.parse(options.body);
+  if(data.op==='leagues')return reply(200,leagues);
+  if(data.op==='league'){
+   if(data.league_id===first){startedOld();return oldRequest;}
+   return reply(200,{league:leagues[1],rounds:[],games:[],entries:[],picks:[]});
+  }
+  if(data.op==='standings')return reply(200,[]);
+ });
+ try{
+  p.$('email').value='league@fixture.invalid';p.$('password').value='Fixture-Password-1234';
+  p.submit('account-form');await until(()=>p.$('leagues').querySelectorAll('button').length>=2);
+  const buttons=[...p.$('leagues').querySelectorAll('button')].filter(b=>b.textContent==='View competition');
+  assert.equal(buttons.length,2);
+  buttons[0].click();await oldStarted;
+  buttons[1].click();
+  await until(()=>p.$('league-name').textContent==='Current League');
+  resolveOld(reply(200,{league:leagues[0],rounds:[],games:[],entries:[],picks:[]}));
+  await wait();
+  assert.equal(p.$('league-name').textContent,'Current League');
+  assert.equal(p.$('league-panel').hidden,false);
+  assert.equal(p.$('notice').textContent,'Viewing Current League');
+ }finally{resolveOld?.(reply(200,{league:leagues[0],rounds:[],games:[],entries:[],picks:[]}));p.dom.window.close();}
+});
+
+test('back navigation prevents delayed commissioner response from reopening an old competition',async()=>{
+ const leagueId='4a5fe0c7-e3ad-4834-9e5a-cd48a25c6b11';
+ const league={id:leagueId,name:'Commissioner League',sport:'NFL',season:'2027',status:'open',owner_id:'MEMBER_FIXTURE'};
+ const details={league,rounds:[],games:[],entries:[{user_id:'APPLICANT',status:'pending'}],picks:[]};
+ let resolveDecision,decisionStarted;
+ const start=new Promise(r=>{decisionStarted=r;});
+ const pending=new Promise(r=>{resolveDecision=r;});
+ const p=await player((path,options)=>{
+  if(path==='/query'){
+   const req=JSON.parse(options.body);
+   if(req.op==='leagues')return reply(200,[league]);
+   if(req.op==='league')return reply(200,details);
+   if(req.op==='standings')return reply(200,[]);
+  }
+  if(path==='/commands'&&JSON.parse(options.body).op==='entry_decide'){
+   decisionStarted();return pending;
+  }
+ });
+ try{
+  p.$('email').value='commissioner@fixture.invalid';p.$('password').value='Fixture-Password-1234';
+  p.submit('account-form');await until(()=>p.$('leagues').querySelector('button'));
+  [...p.$('leagues').querySelectorAll('button')].find(b=>b.textContent==='View competition').click();
+  await until(()=>!p.$('league-panel').hidden);
+  p.$('entry-requests').querySelector('button').click();
+  await start;p.$('back').click();
+  assert.equal(p.$('league-panel').hidden,true);
+  resolveDecision(reply(200,{ok:true}));
+  await wait();
+  assert.equal(p.$('league-panel').hidden,true);
+  assert.equal(p.$('member-panel').hidden,false);
+ }finally{resolveDecision?.(reply(200,{ok:true}));p.dom.window.close();}
+});
