@@ -52,6 +52,7 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
     createElement(tag) { return new FakeElement(tag); }
   };
   const api = [];
+  let expireOnce = true;
   const leagueId = '4a5fe0c7-e3ad-4834-9e5a-cd48a25c6b11';
   const roundId = '30338f61-b947-4a84-b9e8-e0a7c0523eb5';
   const gameId = 'cd2b563d-d6b7-41e0-8a63-e33cb2c56e7d';
@@ -68,6 +69,11 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
     api.push({ url, payload });
     let result;
     if (url === '/auth/login') result = { access_token: 'TEST_TOKEN', refresh_token: 'TEST_REFRESH' };
+    else if (url === '/auth/refresh') result = { access_token: 'ROTATED_TOKEN', refresh_token: 'ROTATED_REFRESH' };
+    else if (url === '/query' && payload.op === 'me' && expireOnce) {
+      expireOnce = false;
+      return { ok: false, status: 401, json: async () => ({ error: 'authentication_required' }) };
+    }
     else if (url === '/query' && payload.op === 'me') result = { profile: { user_id: 'user-fixture', display_name: 'Fixture Member' } };
     else if (url === '/query' && payload.op === 'leagues') result = [details.league];
     else if (url === '/query' && payload.op === 'league') result = details;
@@ -83,6 +89,8 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
   assert.equal(ids['account-panel'].hidden, true);
   assert.equal(ids['member-panel'].hidden, false);
   assert.equal(ids['member-name'].textContent, 'Welcome, Fixture Member');
+  assert.equal(api.filter(x => x.url === '/auth/refresh').length, 1, 'Expired sessions refresh only once');
+  assert.ok(api.some(x => x.url === '/query' && x.payload.op === 'me'), 'Profile retried after refresh');
   const open = find(ids.leagues.children[0], 'BUTTON');
   await open.fire('click');
   assert.equal(ids['league-panel'].hidden, false);
