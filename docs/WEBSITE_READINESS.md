@@ -61,19 +61,21 @@ Open GitHub drafts inspected on October 14:
 
 | PR | Scope / target | Readiness and interaction |
 |---|---|---|
-| #12 | Tiffany homepage, targets `main` | Draft; changes only `index.html` and adds its homepage test. No overlapping files with the backend-foundation PR #1. Because the live page matches `main`, a merge could publish the homepage change. Keep draft until founder content/design review and visual/mobile acceptance. |
+| #12 | Tiffany homepage, targets `main` | Draft; changes `index.html`, its homepage test and a sprint handoff. No overlapping files with backend-foundation PR #1. Because the live page matches `main`, a merge could publish the homepage change. Keep draft until founder content/design review and visual/mobile acceptance. |
 | #1 | Backend foundation, targets `main` | Large backend/competition baseline; does not change the root homepage relative to `main`. Keep app/backend launch review separate from the static page. |
-| #11 | Bullpen, targets `codex/backend-foundations` | Draft; overlaps PR #6 in `package.json` and the CI workflow. A local merge-tree dry run of #11 with #6 reports a content conflict in `package.json`; combine scripts deliberately and rerun all checks before integration. |
-| #6 | Account/session/hosting readiness, targets `codex/backend-foundations` | Draft; GitHub reports `mergeable=false`, while a local merge-tree check against the fetched foundation head found no text conflict. Refresh GitHub's mergeability and review checks before integrating. |
+| #13 | Competition workspace, targets `codex/backend-foundations` | Draft; adds five game screens, API routes, scoring/input changes and three migrations. It does not overlap the homepage or this smoke-check PR. A local merge-tree check with Bullpen PR #11 finds a content conflict in `backend/server.mjs`; integrate those server routes deliberately and retest together. |
+| #11 | Bullpen, targets `codex/backend-foundations` | Draft; overlaps PR #6 in `package.json` and the backend CI workflow. A local merge-tree dry run of #11 with #6 reports a content conflict in `package.json`; combining #11 with #13 also conflicts in `backend/server.mjs`. Reconcile these shared files before integrating. |
+| #6 | Account/session/hosting readiness, targets `codex/backend-foundations` | Draft; GitHub currently reports `mergeable=true`, matching the local merge-tree check. |
 | #7 / #8 | Navigation integration / staging gate, each stacked on #6 | Both depend on #6. Their direct deltas touch separate files and combine without a local merge-tree conflict. PR #8 still has its own staging/capacity gates. |
-| #2 / #4 / #5 | Earlier hosting, double-submit and navigation drafts | Stacked chain. PR #6 describes incorporating #2/#4; PR #7 describes replacing the navigation-only effect of #5. Do not layer the superseded changes a second time. |
+| #2 / #4 / #5 | Earlier hosting, double-submit and navigation drafts | Stacked chain. PR #2 currently reports `mergeable=false`; PR #6 describes incorporating #2/#4, and PR #7 replaces the navigation-only effect of #5. Do not layer the superseded changes a second time. |
 
 Git merge-tree dry runs found no content conflicts between homepage PR #12 and
-backend foundation PR #1, nor between PR #11 and the current foundation head.
-These are source-tree checks, not approval to merge. The new smoke workflow is
-separate from the shared backend workflow to avoid colliding with PRs #6/#11.
-Since the new workflow is not yet on `main`, it will not run on PR #12 until an
-approved integration makes it available on that PR's base branch.
+backend foundation PR #1, nor between public-site check PR #14 and the updated
+homepage PR #12. PR #11 also combines with the current foundation head without
+conflicts when considered alone. These are source-tree checks, not approval to
+merge. The new smoke workflow is separate from the shared backend workflow and
+ran successfully on PR #14. Its live-link job is intentionally skipped on pull
+requests and runs only on manual/weekly events.
 
 ## Launch blockers and improvements
 
