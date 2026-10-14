@@ -1,0 +1,44 @@
+name: Public site smoke checks
+
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'tests/**'
+      - 'scripts/check-publication-links.mjs'
+      - 'docs/publication-link-audit.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/public-site-smoke.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '17 14 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  static-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node --test tests/public-site-smoke.test.mjs
+
+  publication-links:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node scripts/check-publication-links.mjs
