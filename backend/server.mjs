@@ -5,6 +5,7 @@ import { LocalDatabase, SupabaseDatabase } from './database.mjs';
 import { LocalAuth, SupabaseAuth } from './auth.mjs';
 import { configuration } from './config.mjs';
 import { checkout, paymentRecord, verifiedStripeEvent } from './billing.mjs';
+import { publicCatalog } from './rules/goat-games.mjs';
 
 export async function application(config = configuration()) {
   const db = config.mode === 'local' ? await new LocalDatabase(config.localPath).init() : new SupabaseDatabase(config);
@@ -19,6 +20,7 @@ export async function application(config = configuration()) {
     try {
       if (req.headers.origin && req.headers.origin !== config.appOrigin) return respond(403, { error: 'origin_denied' });
       const url = new URL(req.url, 'http://localhost');
+      if (req.method === 'GET' && url.pathname === '/goat-games') return respond(200, publicCatalog());
       if (req.method === 'GET' && url.pathname === '/health') {
         try { return respond(200, { status: 'ok', environment: config.appEnv, database: config.mode, ...(await db.health()), payments_enabled: config.paymentsEnabled }); }
         catch { return respond(503, { status: 'unavailable', environment: config.appEnv }); }
