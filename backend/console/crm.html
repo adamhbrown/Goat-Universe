@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101015"><title>GOAT Universe | Commercial HQ</title>
+<link rel="stylesheet" href="/play.css"><link rel="stylesheet" href="/crm.css"></head>
+<body>
+<header class="masthead"><a class="brand" href="/crm"><span class="horn">G</span><span>GOAT <strong>UNIVERSE</strong><small>COMMERCIAL HQ</small></span></a><span class="tag">BUILD THE UNIVERSE</span></header>
+<main>
+<section class="hero"><p class="eyebrow">GOAT UNIVERSE · INTERNAL OPERATIONS</p><h1>PARTNERSHIPS.<br><em>POWERED BY PROOF.</em></h1><p>Evidence-backed prospects, commercial pipeline, draft review, and executive approvals. All communication remains internal; this system does not send messages.</p><div class="environment">Internal development console · No outreach or charges</div></section>
+<div id="crm-notice" class="notice" role="status" aria-live="polite">Authorized staff sign-in required.</div>
+<section class="panel" id="crm-account"><h2>Staff Sign In</h2><form id="crm-login">
+<label>Email<input id="crm-email" type="email" autocomplete="email" required></label>
+<label>Password<input id="crm-password" type="password" minlength="12" autocomplete="current-password" required></label>
+<button type="submit">Sign in</button></form><p class="small">Commercial access requires a researcher, approver, or executive role. A normal league commissioner cannot access CRM records.</p></section>
+<section id="crm-desk" class="panel" hidden>
+<div class="section-head"><div><p class="eyebrow">COMMERCIAL CONTROL CENTER</p><h2 id="crm-user">Staff workspace</h2></div><button id="crm-signout" type="button" class="secondary">Sign out</button></div>
+<button id="crm-refresh" type="button">Refresh pipeline</button>
+<h3>Pipeline intelligence</h3><div id="crm-report" class="stats"></div>
+<h3>Qualified prospects</h3><div id="crm-prospects" class="cards"></div>
+<h3>Outreach drafts awaiting review</h3><div id="crm-drafts" class="cards"></div>
+<h3>Opportunities</h3><div id="crm-opportunities" class="cards"></div>
+<h3>Create an evidence-backed prospect</h3>
+<form id="new-prospect">
+<div class="form-grid">
+<label>Organization<input id="cp-organization" required maxlength="150"></label>
+<label>Official website (HTTPS root)<input id="cp-website" type="url" required placeholder="https://example.org"></label>
+<label>Category<select id="cp-category"><option value="partner">Partner</option><option value="advertiser">Advertiser</option><option value="investor">Investor</option></select></label>
+<label>Evidence source URL<input id="cp-source" type="url" required placeholder="https://example.org/about"></label>
+</div>
+<label>Research evidence<textarea id="cp-evidence" rows="3" required placeholder="Verified evidence from the source, not speculation"></textarea></label>
+<p class="small">Rate each commercial signal from 0–5. Every positive score requires written supporting evidence.</p>
+<div id="crm-signals" class="form-grid"></div>
+<button type="submit">Save researched prospect</button>
+</form>
+<h3>Record a pipeline opportunity</h3>
+<form id="new-opportunity"><div class="form-grid">
+<label>Prospect<select id="co-prospect" required></select></label>
+<label>Amount<input id="co-amount" type="number" min="0" step="0.01" required></label>
+<label>Currency<input id="co-currency" value="USD" pattern="[A-Z]{3}" maxlength="3" required></label>
+<label>Probability (0–100%)<input id="co-probability" type="number" min="0" max="100" step="1" value="25" required></label>
+<label>Stage<select id="co-stage"><option value="qualified">Qualified</option><option value="conversation">Conversation</option><option value="proposal">Proposal</option><option value="won">Won (authorized staff)</option><option value="lost">Lost</option></select></label>
+<label>Evidence URL<input id="co-source" type="url" placeholder="https://example.org/record" required></label>
+</div><button type="submit">Record opportunity</button></form>
+<p class="small">Approving an outreach draft does not send it. There is no outbound sender in this service.</p>
+</section>
+</main><footer>GOAT UNIVERSE · INTERNAL ONLY · CAN'T STOP THE BAA</footer>
+<script type="module" src="/crm.mjs"></script>
+</body></html>
