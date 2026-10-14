@@ -6,6 +6,7 @@ import { LocalAuth, SupabaseAuth } from './auth.mjs';
 import { configuration } from './config.mjs';
 import { checkout, paymentRecord, verifiedStripeEvent } from './billing.mjs';
 import { publicCatalog } from './rules/goat-games.mjs';
+import { competitionAsset } from './games/routes.mjs';
 
 export async function application(config = configuration()) {
   const db = config.mode === 'local' ? await new LocalDatabase(config.localPath).init() : new SupabaseDatabase(config);
@@ -21,6 +22,10 @@ export async function application(config = configuration()) {
       if (req.headers.origin && req.headers.origin !== config.appOrigin) return respond(403, { error: 'origin_denied' });
       const url = new URL(req.url, 'http://localhost');
       if (req.method === 'GET' && url.pathname === '/goat-games') return respond(200, publicCatalog());
+      if (req.method === 'GET' && (url.pathname.startsWith('/games') || ['/portal/bracket.mjs','/portal/forms.mjs','/rules/goat-games.mjs'].includes(url.pathname))) {
+        const asset = await competitionAsset(url.pathname);
+        if (asset) { headers['Content-Type'] = asset.type; res.writeHead(200, headers); return res.end(asset.content); }
+      }
       if (req.method === 'GET' && url.pathname === '/health') {
         try { return respond(200, { status: 'ok', environment: config.appEnv, database: config.mode, ...(await db.health()), payments_enabled: config.paymentsEnabled, auth_email_enabled: config.authEmailEnabled }); }
         catch { return respond(503, { status: 'unavailable', environment: config.appEnv }); }

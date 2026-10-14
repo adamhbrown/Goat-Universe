@@ -13,10 +13,25 @@ function identity(value) {
   return typeof value === 'string' && value.trim() && value.length <= 150;
 }
 function timestamp(value) {
-  if (typeof value !== 'string' || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|[+-]\d\d:\d\d)$/.test(value)) fail('goat_invalid_timestamp');
+  const parts = typeof value === 'string' && /^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)(?:\.\d+)?(?:Z|[+-]\d\d:\d\d)$/.exec(value);
+  if (!parts) fail('goat_invalid_timestamp');
+  const [, year, month, day, hour, minute, second] = parts.map(Number);
+  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const days = [31,leap ? 29 : 28,31,30,31,30,31,31,30,31,30,31];
+  // Date.parse silently normalizes February 30 and 24:00 into another date.
+  // A normalized, nonexistent deadline must never authorize a submission.
+  if (month < 1 || month > 12 || day < 1 || day > days[month-1] || hour > 23 || minute > 59 || second > 59)
+    fail('goat_invalid_timestamp');
   const time = Date.parse(value);
   if (!Number.isFinite(time)) fail('goat_invalid_timestamp');
   return time;
+}
+function httpsEvidence(value) {
+  if (typeof value !== 'string' || /\s/.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && Boolean(url.hostname) && !url.username && !url.password;
+  } catch { return false; }
 }
 function verifyPolicy(gameId, season, policy) {
   const required = SPORT_REQUIREMENTS[gameId];
@@ -62,7 +77,7 @@ export function scoreVerifiedPredictions({game_id,season,policy,participants,eve
         !Array.isArray(event.options) || event.options.length !== 2 ||
         event.options.some(x=>!identity(x)) || new Set(event.options).size!==2 ||
         !event.options.includes(event.winner) || event.verified !== true ||
-        typeof event.evidence_url !== 'string' || !/^https:\/\//.test(event.evidence_url))
+        !httpsEvidence(event.evidence_url))
       fail('goat_event_unverified');
     if (timestamp(event.finalized_at) < timestamp(event.locked_at)) fail('goat_result_before_lock');
     seenSports.add(event.sport);
@@ -126,8 +141,7 @@ export function validatePredictionBatch({game_id,season,policy,member_id,events,
         !Array.isArray(event.options) || event.options.length!==2 ||
         event.options.some(x=>!identity(x)) ||
         new Set(event.options).size!==2 ||
-        typeof event.source_url!=='string' ||
-        !/^https:\/\/[^\s/]+(?:\/[^\s]*)?$/.test(event.source_url))
+        !httpsEvidence(event.source_url))
       fail('goat_entry_schedule_invalid');
     timestamp(event.locked_at);
     eventLookup.set(event.id,event);
