@@ -13,7 +13,11 @@ export function configuration(env = process.env) {
     }
     if (appEnv !== 'production' && url.includes('opvoemihfyxidzbdyory')) throw new Error('production_project_forbidden_in_development');
   }
-  const appOrigin = env.APP_ORIGIN || 'http://localhost:8787';
+  const host = env.HOST || '127.0.0.1';
+  const port = Number(env.PORT || 8787);
+  // Match the URL the local development server actually listens on. Otherwise
+  // browser POSTs from http://127.0.0.1:8787 fail the same-origin guard.
+  const appOrigin = env.APP_ORIGIN || `http://${host}:${port}`;
   if (appEnv === 'production' && (!appOrigin.startsWith('https://') || env.PRODUCTION_LAUNCH_APPROVED !== 'true')) throw new Error('production_launch_approval_required');
   const paymentsEnabled = env.PAYMENTS_ENABLED === 'true';
   const paymentLaunchApproved = env.PAYMENT_LAUNCH_APPROVED === 'true';
@@ -23,5 +27,5 @@ export function configuration(env = process.env) {
   return { mode, appEnv, url, appOrigin, publishableKey: env.SUPABASE_PUBLISHABLE_KEY,
     systemKey: env.SUPABASE_BILLING_SECRET_KEY, stripeSecret: env.STRIPE_SECRET_KEY,
     webhookSecret: env.STRIPE_WEBHOOK_SECRET, tiers, paymentsEnabled, paymentLaunchApproved,
-    localPath: env.LOCAL_DATABASE_PATH || '.local/postgres', host: env.HOST || '127.0.0.1', port: Number(env.PORT || 8787) };
+    localPath: env.LOCAL_DATABASE_PATH || '.local/postgres', host, port };
 }
