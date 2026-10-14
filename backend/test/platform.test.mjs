@@ -37,7 +37,9 @@ test('HTTP authentication, origin protection, health and production guards',asyn
  assert.equal(portal.status,200);
  assert.match(portal.headers.get('content-type'),/text\/html/);
  assert.match(portal.headers.get('content-security-policy'),/script-src 'self'/);
- assert.match(await portal.text(),/GOAT Games/);
+ const portalHtml=await portal.text();
+ assert.match(portalHtml,/GOAT Games/);
+ assert.match(portalHtml,/BAA HARD OR GO HOME/);
  const portalScript = await fetch(base+'/play.mjs');
  assert.equal(portalScript.status,200);
  assert.match(await portalScript.text(),/picks_submit/);
