@@ -95,8 +95,8 @@ contain check names/status, never keys, tokens or member identifiers.
 
 Exit codes: 0 passed, 1 failed, 2 blocked/incomplete. A clean read-only preflight
 still leaves email flows, revoked-session tests and browser acceptance pending.
-The current environment reports **blocked: missing SUPABASE_URL and
-SUPABASE_PUBLISHABLE_KEY**; hosted checks have not run.
+The current environment reports **blocked: missing SUPABASE_URL,
+SUPABASE_PUBLISHABLE_KEY and hosted APP_ORIGIN**; hosted checks have not run.
 
 Primary documentation reviewed:
 
@@ -117,8 +117,8 @@ applying development migrations, skips Vault settings, then performs read-only
 schema/anonymous-access checks. It does not launch the app, configure email,
 activate billing or deploy production. Remaining acceptance checks are printed.
 
-Required GitHub `development` environment values: variable
-`SUPABASE_DEV_PROJECT_REF`; secrets `SUPABASE_ACCESS_TOKEN`,
+Required GitHub `development` environment values: variables
+`SUPABASE_DEV_PROJECT_REF` and `GOAT_DEV_APP_ORIGIN` (exact HTTPS origin); secrets `SUPABASE_ACCESS_TOKEN`,
 `SUPABASE_DEV_DB_PASSWORD`, and `SUPABASE_DEV_PUBLISHABLE_KEY`.
 Environment reviewer protection must be configured/verified by the owner; this
 code does not assume an existing approval rule. The previous Actions token 401
@@ -129,3 +129,13 @@ branch before it can be dispatched for another ref. This new workflow is still
 on the development branch: a reviewed merge of the workflow file (without
 changing the public site) is also required before it appears as a runnable
 Actions operation. That merge has not been performed.
+
+## Launch-readiness follow-up
+
+Both `/play` and `/manage` now expose recovery requests and use the same
+in-memory session client. Safari pagehide clears typed login passwords, tokens
+and private panels before back/forward caching. This deliberately requires a
+new login after page navigation; no persistent browser session was introduced.
+The hosted preflight now requires an exact HTTPS `APP_ORIGIN` as well as the
+dedicated URL and publishable key. See `LAUNCH_READINESS.md` for current evidence
+and `HOSTED_DEVELOPMENT.md` for the prepared hosting process.

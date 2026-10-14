@@ -11,22 +11,13 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Read the existing project status without modifying it
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: Diagnose management authentication separately from project provisioning
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: |
-          python3 - <<'PY'
-          import json, os, urllib.request, urllib.error
-          token = os.environ.get('SUPABASE_ACCESS_TOKEN')
-          if not token:
-              raise SystemExit('SUPABASE_ACCESS_TOKEN is unavailable to this workflow.')
-          request = urllib.request.Request(
-              'https://api.supabase.com/v1/projects/opvoemihfyxidzbdyory',
-              headers={'Authorization': 'Bearer ' + token, 'Accept': 'application/json'})
-          try:
-              with urllib.request.urlopen(request, timeout=20) as response:
-                  project = json.load(response)
-              print(json.dumps({'project_ref': 'opvoemihfyxidzbdyory', 'status': project.get('status', 'not-returned')}))
-          except urllib.error.HTTPError as error:
-              raise SystemExit('Project status access failed (HTTP ' + str(error.code) + ').')
-          PY
+        run: node backend/scripts/check-management-status.mjs
