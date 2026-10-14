@@ -74,7 +74,10 @@ Eight regression tests cover preservation, partial startup, missing/duplicate
 service evidence, deprecated flags, response redaction, both endpoint failures,
 identity checks and bounded non-mutating transport. Full suite: 100 tests passed,
 zero failures or skips; syntax and whitespace checks passed. Current-head CI is
-recorded separately in the draft PR. The paused account-resilience checkpoint
+confirmed by [GitHub CI run 38601861630](https://github.com/adamhbrown/Goat-Universe/actions/runs/38601861630)
+for code commit `ae4d40080feac9a8331772ae4109a5e8db3933a7`, including Docker
+build, non-root inspection and refusal of unconfigured hosted startup. The
+workflow now runs this health gate before CLI linking or migration dry-run. The paused account-resilience checkpoint
 remains separate.
 
 ## Remaining execution sequence within authorization
@@ -109,8 +112,9 @@ On October 14 at approximately 12:43 p.m. Eastern, one CEO-authorized support
 ticket was submitted for the original project, category Other, severity Normal
 (system impaired; no production outage asserted), affected services Storage and
 Realtime. Supabase visibly confirmed "Support request sent" and said it would
-reply to the owner's account email. No ticket number was shown and no findings
-have arrived. The request included verified error timestamps, missing managed
+reply to the owner's account email. The confirmation page showed no number; the owner subsequently supplied the
+email acknowledgment identifying **SU-507996**. That email is an acknowledgment,
+not a technical diagnosis; no findings have arrived. The request included verified error timestamps, missing managed
 relations and the separate workflow 401; it requested diagnosis and an in-place
 recovery recommendation only. Temporary human/AI support access was disabled.
 No credentials, secrets, HAR files or raw payloads were shared. Any repair,
