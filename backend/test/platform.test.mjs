@@ -33,6 +33,15 @@ after(async()=>{await app.close();});
 
 test('HTTP authentication, origin protection, health and production guards',async()=>{
  assert.equal((await fetch(base+'/health')).status,200);
+ const portal = await fetch(base+'/play');
+ assert.equal(portal.status,200);
+ assert.match(portal.headers.get('content-type'),/text\/html/);
+ assert.match(portal.headers.get('content-security-policy'),/script-src 'self'/);
+ assert.match(await portal.text(),/GOAT GAMES/);
+ const portalScript = await fetch(base+'/play.mjs');
+ assert.equal(portalScript.status,200);
+ assert.match(await portalScript.text(),/picks_submit/);
+ assert.equal((await fetch(base+'/play.css')).status,200);
  assert.equal((await call('query',{op:'me'})).status,401);
  assert.equal((await call('query',{op:'me'},'participant',{Origin:'https://untrusted.invalid'})).status,403);
  const me=await query({op:'me'},'participant');assert.deepEqual(me.roles,[]);
