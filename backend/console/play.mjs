@@ -7,6 +7,9 @@ const api = client(fetch, {onSessionEnd(reason) {
 if(typeof window !== 'undefined')window.addEventListener('pagehide',()=>api.forget());
 let myUserId = '';
 let activeLeagueId = '';
+// Invalidate asynchronous league views when navigation, sign-out, or another
+// league selection supersedes them. Prevent late results reopening old screens.
+let leagueViewGeneration = 0;
 const el = id => document.getElementById(id);
 const node = (tag, text, className) => {
   const item = document.createElement(tag);
@@ -47,6 +50,7 @@ async function loadGoatGamesCatalog() {
 async function query(op, extras = {}) { return send('query', { op, ...extras }); }
 async function command(op, extras = {}) { return send('commands', { op, ...extras }); }
 function showSignedOut() {
+  leagueViewGeneration++;
   myUserId = ''; activeLeagueId = '';
   el('password').value='';el('password').type='password';
   el('show-password').textContent='Show password';el('show-password').setAttribute('aria-pressed','false');
@@ -105,7 +109,9 @@ function formatDeadline(value) {
   return Number.isNaN(date.getTime()) ? 'TBD' : date.toLocaleString();
 }
 async function openLeague(id) {
+  const requestedView = ++leagueViewGeneration;
   const [details, standings] = await Promise.all([query('league', { league_id: id }), query('standings', { league_id: id })]);
+  if (requestedView !== leagueViewGeneration) return; // Superseded or signed out.
   activeLeagueId = id;
   el('league-name').textContent = details.league.name;
   el('league-details').textContent = details.league.sport + ' · ' + details.league.season + ' · ' + details.league.status;
@@ -128,9 +134,13 @@ async function openLeague(id) {
           if (decisionControls.some(item => item.disabled)) return;
           decisionControls.forEach(item => { item.disabled = true; });
           try {
+            const currentView = leagueViewGeneration;
             await command('entry_decide', { league_id: id, user_id: entry.user_id, approved });
+            // An approved/declined request should not reopen a league the
+            // commissioner deliberately left while the network was pending.
+            if (currentView !== leagueViewGeneration || activeLeagueId !== id) return;
             await openLeague(id);
-            notice(approved ? 'Entry approved.' : 'Entry declined.', 'success');
+            if (activeLeagueId === id) notice(approved ? 'Entry approved.' : 'Entry declined.', 'success');
           } catch (error) {
             decisionControls.forEach(item => { item.disabled = false; });
             notice(error.message, 'error');
@@ -256,11 +266,12 @@ function createPickForm(round, games, ownPicks) {
       notice('Use each confidence weight once per round.', 'error'); return;
     }
     button.disabled = true;
+    const submissionView = leagueViewGeneration, submissionLeague = activeLeagueId;
     try {
       await command('picks_submit', { round_id: round.id, picks, ...(mvp ? { mvp_pick: mvp.value.trim() } : {}) });
-      notice('Your picks were saved. You can change them until the deadline.', 'success');
-      await openLeague(activeLeagueId);
-      notice('Your picks were saved. You can change them until the deadline.', 'success');
+      if (submissionView !== leagueViewGeneration || activeLeagueId !== submissionLeague) return;
+      await openLeague(submissionLeague);
+      if (activeLeagueId === submissionLeague) notice('Your picks were saved. You can change them until the deadline.', 'success');
     } catch (error) { notice(error.message, 'error'); }
     finally { button.disabled = false; }
   });
@@ -325,6 +336,7 @@ el('reload').addEventListener('click', async () => {
   catch (error) { notice(error.message, 'error'); }
 });
 el('back').addEventListener('click', () => {
+  ++leagueViewGeneration;
   activeLeagueId = '';
   el('league-panel').hidden = true;
   el('member-panel').hidden = false;
