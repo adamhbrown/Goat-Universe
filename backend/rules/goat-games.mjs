@@ -122,3 +122,21 @@ export function leagueOfGreatnessPlayoffSeeds(seeds) {
     championship_week: 17
   };
 }
+
+/**
+ * Week 16 reseeding after the 2026 Wildcat opening round.
+ * Seed order is supplied by the commissioner, not invented from scores.
+ * No new home bonus or unverified tiebreaker is applied.
+ */
+export function leagueOfGreatnessSemifinalMatchups(seeds, wildcatWinners) {
+  leagueOfGreatnessPlayoffSeeds(seeds);
+  if (!Array.isArray(wildcatWinners) || wildcatWinners.length !== 3 ||
+      new Set(wildcatWinners).size !== 3) throw new Error('fantasy_three_unique_winners_required');
+  const games = [[seeds[1], seeds[6]], [seeds[2], seeds[5]], [seeds[3], seeds[4]]];
+  if (games.some((match,i) => !match.includes(wildcatWinners[i])))
+    throw new Error('fantasy_wildcat_winner_invalid');
+  const ranked = [seeds[0], ...wildcatWinners].sort((a,b) => seeds.indexOf(a) - seeds.indexOf(b));
+  return { week:16, protected_seed:ranked[0],
+    matchups:[[ranked[0], ranked[3]], [ranked[1], ranked[2]]],
+    championship_week:17 };
+}
