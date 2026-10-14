@@ -7,7 +7,7 @@ const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 test('GOAT Games feature is visible in hero, page and both navigations', () => {
   assert.match(html, /<h1>THE <span>GOAT<\/span> GAMES\.<\/h1>/);
   assert.match(html, /<section class="section games-section" id="goat-games"/);
-  assert.match(html, /<nav class="navlinks">\s*<a href="#goat-games">GOAT Games<\/a>/);
+  assert.match(html, /<nav class="navlinks" aria-label="Main navigation">\s*<a href="#goat-games">GOAT Games<\/a>/);
   assert.match(html, /<nav class="mobile-nav"[^>]*><a href="#goat-games">Games<\/a>/);
 });
 
