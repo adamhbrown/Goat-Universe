@@ -22,7 +22,7 @@ health. Managed-service failures and absent relations remain documented in
 `SUPABASE_RECOVERY.md`. Reconnecting or replacing the Actions PAT does not repair
 managed Storage/Realtime startup.
 
-## Proposed development target — needs owner approval before creation
+## Authorized development target — creation remains conditional
 
 | Item | Exact proposal |
 |---|---|
@@ -30,7 +30,7 @@ managed Storage/Realtime startup.
 | Organization | downtown-sports |
 | Region | us-east-1 |
 | Type | New independent development project, not a branch of the unhealthy project |
-| Maximum authorized additional cost proposed | $0; stop if an upgrade, paid compute or payment is required |
+| Maximum authorized additional cost | $0; stop if an upgrade, paid compute or payment is required |
 | Existing projects | Do not reset, restore, pause, delete, migrate or repurpose any |
 | Email / payments | Disabled throughout initial preparation |
 | Account data | No copying of production users, credentials or content |
@@ -45,29 +45,39 @@ cost before any resource is created. Stop rather than upgrade or remove an old
 project to obtain capacity.
 
 Pricing checked: https://supabase.com/pricing
-No purchase, resource creation, plan change or provider contact was performed.
+The CEO authorized the exact project above only after explicit zero-cost and capacity confirmation. The signed-in dashboard confirms Free, an enabled spend cap, no payment method and $0 prior invoices. The creation form is prepared with the approved name and us-east-1, but does not explicitly certify an available free slot. No project was created, purchased or changed.
 
 ## Prepared infrastructure gate
 
 `npm run check:staging-infrastructure` reads ONLY the proposed development
-project's Management API metadata. It blocks missing/malformed refs, the
-protected existing GOAT reference, missing/rejected credentials, scope denial,
-wrong project/organization, throttling and incomplete provisioning.
+project's Management API metadata and service health. It blocks missing/malformed refs,
+all four existing project references, missing organization identity, missing/rejected
+credentials, scope denial, wrong project/organization, throttling and incomplete provisioning.
 
-Only `ACTIVE_HEALTHY` returns `ready_for_migration_review`. That wording does
-not certify all service endpoints, hosted accounts or the application. The
-manual development migration workflow now checks this gate after dry-run and
-before applying schema changes. Existing branch, exact-ref, HTTPS-origin and
-credential guards remain in place. The workflow has not been dispatched.
+Only overall `ACTIVE_HEALTHY` followed by exactly one healthy status for each of
+Database (`db`), PostgREST (`rest`), Auth (`auth`), Storage and Realtime returns
+`ready_for_migration_review`. Missing/duplicate service records, invalid JSON,
+unrecognized statuses and partial startup fail closed. The deprecated `healthy`
+boolean cannot override `status`. Two GETs share one 15-second deadline; redirects
+are rejected. Raw errors, metadata and credentials are never included in reports.
 
-Three regression cases cover protected targets, non-mutating health requests,
-credential/scope errors, response redaction and project/organization mismatch.
-The infrastructure branch's full local suite passes 95 tests, zero failures or
-skips; syntax and whitespace checks pass. Current-head CI is recorded in its
-draft PR. The paused resilience checkpoint is separate and is not being
-integrated into this infrastructure candidate.
+This does not certify the application, managed-schema contents, email delivery,
+or deployed Edge Functions. The documented health endpoint does not expose an
+Edge Functions service enum; verify that separately before any hosted acceptance.
+No migration or hosting action is authorized by a successful check. The manual
+migration workflow has not been dispatched.
 
-## Execution sequence after explicit approval
+Official API contract checked October 14, 2026:
+https://supabase.com/docs/reference/api/v1-get-services-health
+
+Eight regression tests cover preservation, partial startup, missing/duplicate
+service evidence, deprecated flags, response redaction, both endpoint failures,
+identity checks and bounded non-mutating transport. Full suite: 100 tests passed,
+zero failures or skips; syntax and whitespace checks passed. Current-head CI is
+recorded separately in the draft PR. The paused account-resilience checkpoint
+remains separate.
+
+## Remaining execution sequence within authorization
 
 1. Confirm the proposed organization/region and zero-cost quota in the creation
    flow. Create only the approved fresh development project; retain all existing
@@ -95,7 +105,16 @@ integrated into this infrastructure candidate.
 
 The provider provisioning failure is not safely repairable by fabricating
 Storage/Realtime tables, resetting databases or changing app security code.
-The prepared support request in `SUPABASE_RECOVERY.md` is ready for owner review;
-it has not been sent. Provider contact/repair needs authorization. A fresh
+On October 14 at approximately 12:43 p.m. Eastern, one CEO-authorized support
+ticket was submitted for the original project, category Other, severity Normal
+(system impaired; no production outage asserted), affected services Storage and
+Realtime. Supabase visibly confirmed "Support request sent" and said it would
+reply to the owner's account email. No ticket number was shown and no findings
+have arrived. The request included verified error timestamps, missing managed
+relations and the separate workflow 401; it requested diagnosis and an in-place
+recovery recommendation only. Temporary human/AI support access was disabled.
+No credentials, secrets, HAR files or raw payloads were shared. Any repair,
+restart, migration, credential change or resource modification still requires
+separate CEO approval. A fresh
 development target can unblock isolated testing while the protected original
 project's provisioning remains under investigation.
