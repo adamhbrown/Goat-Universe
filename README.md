@@ -36,6 +36,12 @@ business migrations. Local authentication is blocked in production.
 See [backend operations](docs/BACKEND.md), [checkpoint](docs/CHECKPOINT.md), and
 [source and rules register](docs/SOURCES_AND_RULES.md).
 
+Launch-readiness work adds shared player/workspace session handling, player
+recovery controls, Safari cache cleanup and a non-root hosting image. See the
+[launch gates](docs/LAUNCH_READINESS.md) and
+[hosted development runbook](docs/HOSTED_DEVELOPMENT.md). These changes are
+proposed on a separate branch; they do not deploy or modify the public homepage.
+
 This is a tested development foundation. Hosted Supabase authentication, email
 delivery, and production deployment still require environment configuration and
 verification. Commercial drafts are stored for review; no outbound sender exists.

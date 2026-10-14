@@ -1,7 +1,7 @@
 name: Backend tests
 on:
   pull_request:
-    paths: ['backend/**', 'supabase/**', 'package*.json', '.github/workflows/backend-ci.yml']
+    paths: ['backend/**', 'supabase/**', 'package*.json', 'Dockerfile', '.dockerignore', '.github/workflows/backend-ci.yml']
   push:
     branches: ['codex/backend-foundations']
 permissions:
@@ -21,3 +21,12 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run check
       - run: npm test
+      - name: Build the isolated hosting image (no deployment or credentials)
+        run: docker build --tag goat-backend-check .
+      - name: Verify container is non-root and refuses unconfigured hosted startup
+        run: |
+          test "$(docker image inspect --format '{{.Config.User}}' goat-backend-check)" = node
+          if docker run --rm goat-backend-check; then
+            echo 'Unconfigured hosted startup must fail closed'
+            exit 1
+          fi

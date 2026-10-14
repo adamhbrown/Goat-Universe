@@ -3,7 +3,9 @@ import { promisify } from 'node:util';
 const scrypt = promisify(scryptCallback);
 const digest = token => createHash('sha256').update(token).digest('hex');
 function emailInput(email) {
-  if(typeof email!=='string'||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||email.length>254)throw new Error('invalid_email');
+  if(typeof email!=='string')throw new Error('invalid_email');
+  email=email.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||email.length>254)throw new Error('invalid_email');
   return email.trim().toLowerCase();
 }
 function passwordInput(password) {

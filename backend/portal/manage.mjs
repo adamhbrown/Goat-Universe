@@ -2,10 +2,16 @@ import { client, pickCommand } from './forms.mjs';
 import {renderBracket} from './bracket.mjs';
 // The original /play participant portal is preserved. This workspace extends
 // account, competition administration, research and commercial operations.
-const api = client();
+const api = client(fetch, {onSessionEnd(reason) {
+  clearAccountView();
+  if(reason !== 'signed_out') message('Your session ended. Sign in again to continue.');
+}});
 const $ = selector => document.querySelector(selector);
 let account, activeLeague;
 const signalNames = ['audience_fit','commercial_fit','decision_access','timing','engagement'];
+// Safari may restore a page from its back/forward cache with the old DOM and
+// module memory intact. Clear local secrets and private panels before caching.
+if(typeof window !== 'undefined')window.addEventListener('pagehide',()=>api.forget());
 
 // All remote strings become text nodes, never HTML, including names, evidence,
 // outreach drafts, MVP selections, and commissioner-supplied team names.
@@ -40,6 +46,7 @@ function form(parent, title, fields, label, submit) {
   const b = node('button',label,{type:'submit'}); f.append(b);
   f.addEventListener('submit',event => {
     event.preventDefault();
+    if (b.disabled) return;
     run(async() => {
       const values = Object.fromEntries(new FormData(f));
       for (const spec of fields) {
@@ -54,13 +61,13 @@ function form(parent, title, fields, label, submit) {
 }
 function details(parent,title) { const d = node('details');d.append(node('summary',title));parent.append(d);return d; }
 function table(parent,headers,rows) {
-  const wrap=node('div',undefined,{class:'table-wrap'}),t=node('table'),head=node('tr');
+  const wrap=node('div',undefined,{class:'table-wrap',role:'region',tabindex:0,'aria-label':headers.join(', ')+'. Scroll horizontally for more columns.'}),t=node('table'),head=node('tr');
   headers.forEach(x=>head.append(node('th',x,{scope:'col'})));t.append(append(node('thead'),head));
   const body=node('tbody'); for(const row of rows) body.append(append(node('tr'),...row.map(x=>node('td',x ?? '—'))));
   t.append(body);wrap.append(t);parent.append(wrap);
 }
 const required = {required:'',maxlength:120};
-const datetime = (name,label) => field(name,label,'datetime-local','',{required:''});
+const datetime = (name,label) => field(name,label+' ('+Intl.DateTimeFormat().resolvedOptions().timeZone+')','datetime-local','',{required:''});
 const select = (name,label,options,value='') => ({...field(name,label,'select',value,{required:''}),options});
 const command = async (p, refresh = true) => {
   const result = await api.command(p); message('Saved.');
@@ -70,18 +77,36 @@ const command = async (p, refresh = true) => {
 
 $('#account').addEventListener('submit',event => {
   event.preventDefault();
+  const f=event.currentTarget, control=event.submitter || f.querySelector('button[value=login]');
+  if (f.getAttribute('aria-busy')==='true') return;
+  f.setAttribute('aria-busy','true');
+  for(const button of f.querySelectorAll('button[type=submit]'))button.disabled=true;
   run(async() => {
-    const values=Object.fromEntries(new FormData(event.currentTarget));
+   try {
+    const values=Object.fromEntries(new FormData(f));
     if(!values.display_name) delete values.display_name;
-    if(event.submitter.value==='signup') {
+    if(control.value==='signup') {
       const result=await api.signup(values);
       message(result.confirmation_required === false ? (result.environment==='local-development'?'Development account created. Sign in to continue.':'Account created. Sign in to continue.') : 'Registration submitted. Check your email for confirmation before signing in.');
     } else { await api.login(values);await dashboard();message('Signed in.'); }
-    $('#account').elements.password.value='';
-  },event.submitter);
+   } finally {
+    f.elements.password.value='';
+    f.elements.password.type='password';
+    $('#show-password').textContent='Show password';$('#show-password').setAttribute('aria-pressed','false');
+    f.setAttribute('aria-busy','false');
+    for(const button of f.querySelectorAll('button[type=submit]'))button.disabled=false;
+   }
+  });
+});
+$('#show-password').addEventListener('click',event=>{
+  const input=$('#account').elements.password,show=input.type==='password';
+  input.type=show?'text':'password';event.currentTarget.textContent=show?'Hide password':'Show password';
+  event.currentTarget.setAttribute('aria-pressed',String(show));
 });
 function clearAccountView() {
   account=undefined;activeLeague=undefined;$('#auth').hidden=false;$('#logout').hidden=true;
+  $('#account').elements.password.value='';$('#account').elements.password.type='password';
+  $('#show-password').textContent='Show password';$('#show-password').setAttribute('aria-pressed','false');
   for(const id of ['dashboard','league','commercial']) {$('#'+id).replaceChildren();$('#'+id).hidden=true;}
 }
 $('#recovery').addEventListener('submit',event=>{
@@ -89,9 +114,10 @@ $('#recovery').addEventListener('submit',event=>{
   run(async()=>{await api.request('/auth/recover',{email:f.elements.email.value},false);message('If an eligible account exists, a recovery email will arrive. Check your inbox.');},event.submitter);
 });
 $('#logout').addEventListener('click',() => run(async() => {
-  try { await api.logout(); } finally {
+  try { await api.logout(); message('Signed out.'); }
+  catch { message('Signed out on this page. Server sign-out could not be confirmed. Close this page and retry when connected.'); }
+  finally {
     clearAccountView();
-    message('Signed out.');
   }
 }));
 
