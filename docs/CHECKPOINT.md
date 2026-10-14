@@ -20,6 +20,10 @@
 ## Test result
 
 `npm test`: **9 tests passed, 0 failed** at this checkpoint.
+GitHub's automated `Backend tests` workflow also completed successfully on the
+development branch and pull request. A standalone server smoke check returned
+HTTP 200 for `/health`, `/admin`, and both console assets; the database health
+response reported schema version 2 and payments disabled.
 The competition and CRM tests exercise the HTTP API against actual local
 PostgreSQL migrations. Supabase remote transport is separately tested with a
 mock; hosted account and RLS behavior is not claimed verified.
@@ -31,6 +35,11 @@ restart is now covered by a regression test.
 
 ## Incomplete / requires access
 
+- The read-only Supabase project-status workflow returned **HTTP 401** on
+  October 13, 2026. The configured token is present, but the management API does
+  not accept it. A valid Supabase personal access token must be securely supplied;
+  project pause status remains unknown. This is a current authentication blocker
+  in addition to the earlier September IPv6 connection failure.
 - Hosted Supabase project status and connectivity verification; dedicated
   development project ref, API key and database password are unavailable here.
 - Applying migrations in development, real Auth email delivery, production

@@ -120,6 +120,12 @@ The workflow refuses the existing project ref `opvoemihfyxidzbdyory` as a
 development target. The existing access token is not readable by this agent.
 No password or secret should be pasted into chat or committed to Git.
 
+A separate read-only status workflow safely used the existing repository token
+against the Supabase management API. On October 13, 2026 the API returned HTTP
+401. Replace the rejected credential with a valid Supabase personal access token
+through the appropriate GitHub secrets UI. No project status is inferred from
+that authentication error, and no provider state was changed.
+
 Run the development dry run after these are configured. Review its output before
 applying migrations in development. No production migration or reset is included.
 If the linked pooler connection fails, inspect the actual project status, account
