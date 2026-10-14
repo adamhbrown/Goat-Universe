@@ -53,7 +53,8 @@ fragments so email callbacks and POST origin checks cannot drift apart.
 
 Configure protected GitHub development values:
 
-- Variables: `SUPABASE_DEV_PROJECT_REF`, `GOAT_DEV_APP_ORIGIN`.
+- Variables: `SUPABASE_DEV_PROJECT_REF`, `SUPABASE_DEV_ORGANIZATION_ID`,
+  `GOAT_DEV_APP_ORIGIN`.
 - Secrets: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DEV_DB_PASSWORD`,
   `SUPABASE_DEV_PUBLISHABLE_KEY`.
 
@@ -63,7 +64,9 @@ a valid appropriately scoped management credential securely.
 
 After approval, the prepared manual workflow checks the exact development ref,
 explicit apply confirmation, branch and HTTPS origin before running tests,
-linking, dry-running, applying migrations and checking anonymous denial. Do not
+verifying overall and per-service development health, linking, dry-running,
+applying migrations and checking anonymous denial. The health gate runs before
+the CLI connects; all four existing project references are blocked. Do not
 run it from `main` or redirect it to the protected existing project. No workflow
 was dispatched by this track. It neither hosts the server nor configures Auth.
 
