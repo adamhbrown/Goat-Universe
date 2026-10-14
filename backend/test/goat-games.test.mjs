@@ -29,6 +29,7 @@ test('Baas accumulation is blocked without reviewed policy, complete five-game t
   assert.throws(()=>validateBaasPolicy({...p,conversions:{...p.conversions,'goat-crossover':undefined}}),/baas_conversion_empty/);
   assert.throws(()=>validateBaasPolicy({...p,conversions:{...p.conversions,'goat-classic':[10,20]}}),/baas_order_invalid/);
   validateBaasPolicy(p);
+  assert.throws(()=>validateBaasPolicy({...p,tie_policy:'commissioner_verified_rank'}),/baas_tie_policy_not_implemented/);
   const finish=(member_id,game_id,place)=>({member_id,game_id,place,season:2027,verified:true,evidence:'https://fixture.invalid/results'});
   const finished=[finish('A','first-and-baa',1),finish('B','first-and-baa',2),finish('B','goat-crossover',1)];
   const board=buildAnnualBaasStandings(p,finished);
@@ -36,7 +37,16 @@ test('Baas accumulation is blocked without reviewed policy, complete five-game t
   assert.equal(board[0].member_id,'B');
   assert.equal(board[0].baas,190);
   assert.equal(board[0].competitions,2);
+  assert.equal(board[0].rank,1);
   assert.equal(board[1].baas,100);
+  const tiePolicy=examplePolicy();
+  tiePolicy.conversions['goat-crossover']=[10,9,8,7,0];
+  const tied = buildAnnualBaasStandings(tiePolicy,[finish('A','first-and-baa',1),finish('B','first-and-baa',2),finish('B','goat-crossover',1)]);
+  assert.equal(tied[0].baas,100);
+  assert.equal(tied[1].baas,100);
+  assert.equal(tied[0].rank,1);
+  assert.equal(tied[1].rank,1);
+  assert.notEqual(tied[0].competitions,tied[1].competitions);
   assert.throws(()=>buildAnnualBaasStandings(p,[finished[0],finished[0]]),/baas_duplicate_finish/);
   assert.throws(()=>buildAnnualBaasStandings(p,[{...finished[0],verified:false}]),/baas_unverified_finish/);
   assert.throws(()=>buildAnnualBaasStandings(p,[finish('A','first-and-baa',10)]),/baas_place_not_configured/);
