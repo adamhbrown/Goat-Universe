@@ -104,3 +104,28 @@ Primary documentation reviewed:
 - https://supabase.com/docs/reference/javascript/auth-verifyotp
 - https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail
 - https://supabase.com/docs/guides/auth/server-side/advanced-guide
+
+## Manual development schema workflow
+
+`.github/workflows/supabase-development-apply.yml` prepares the development-only
+migration operation. It has **no push trigger** and has not been dispatched.
+After the dedicated project and protected development environment credentials
+exist, a reviewed manual run must set the apply checkbox and type the exact
+project reference. Guards reject main/other branches, the existing production
+project, mismatches and absent credentials. It runs tests and a dry run before
+applying development migrations, skips Vault settings, then performs read-only
+schema/anonymous-access checks. It does not launch the app, configure email,
+activate billing or deploy production. Remaining acceptance checks are printed.
+
+Required GitHub `development` environment values: variable
+`SUPABASE_DEV_PROJECT_REF`; secrets `SUPABASE_ACCESS_TOKEN`,
+`SUPABASE_DEV_DB_PASSWORD`, and `SUPABASE_DEV_PUBLISHABLE_KEY`.
+Environment reviewer protection must be configured/verified by the owner; this
+code does not assume an existing approval rule. The previous Actions token 401
+must be resolved separately. No secrets were created or rotated by this batch.
+
+GitHub requires a `workflow_dispatch` workflow to be registered on the default
+branch before it can be dispatched for another ref. This new workflow is still
+on the development branch: a reviewed merge of the workflow file (without
+changing the public site) is also required before it appears as a runnable
+Actions operation. That merge has not been performed.

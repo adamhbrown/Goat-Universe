@@ -1,0 +1,69 @@
+name: Supabase development migrations (manual only)
+on:
+  workflow_dispatch:
+    inputs:
+      apply_development_migrations:
+        description: 'Apply reviewed migrations to the dedicated DEVELOPMENT project only'
+        required: true
+        default: false
+        type: boolean
+      confirm_development_project_ref:
+        description: 'Type the dedicated development project ref to confirm the target'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: goat-supabase-development-migrations
+  cancel-in-progress: false
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    environment: development
+    timeout-minutes: 10
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DEV_PROJECT_REF: ${{ vars.SUPABASE_DEV_PROJECT_REF }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DEV_DB_PASSWORD }}
+      SUPABASE_DEV_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_DEV_PUBLISHABLE_KEY }}
+      APPLY_DEV_MIGRATIONS: ${{ inputs.apply_development_migrations }}
+      CONFIRM_DEV_PROJECT_REF: ${{ inputs.confirm_development_project_ref }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Validate branch, exact project confirmation and isolated credentials
+        run: node backend/scripts/validate-dev-deployment.mjs
+      - run: npm ci --ignore-scripts
+      - run: npm run check
+      - run: npm test
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.120.0
+      - name: Link dedicated development target via the pooler
+        run: supabase link --project-ref "$SUPABASE_DEV_PROJECT_REF"
+      - name: Print migration dry run without altering Vault settings
+        run: supabase db push --dry-run --skip-vault
+      - name: Apply reviewed migrations to development only
+        run: supabase db push --skip-vault --yes
+      - name: Verify schema and anonymous access without creating accounts or sending email
+        env:
+          BACKEND_MODE: supabase
+          APP_ENV: staging
+          AUTH_EMAIL_ENABLED: 'false'
+          PAYMENTS_ENABLED: 'false'
+        run: |
+          export SUPABASE_URL="https://${SUPABASE_DEV_PROJECT_REF}.supabase.co"
+          export SUPABASE_PUBLISHABLE_KEY="$SUPABASE_DEV_PUBLISHABLE_KEY"
+          node --input-type=module <<'JS'
+          import {deploymentReadiness} from './backend/deployment-readiness.mjs';
+          const report=await deploymentReadiness();
+          console.log(JSON.stringify(report,null,2));
+          // Remaining hosted email/browser checks are explicitly reported.
+          // No launch-ready claim follows from schema/anonymous checks passing.
+          if(['failed','blocked'].includes(report.status))process.exitCode=1;
+          JS

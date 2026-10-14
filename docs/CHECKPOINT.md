@@ -143,5 +143,9 @@ hosted pass. Supabase confirmation/recovery transport tests use mocks; actual
 provider delivery, token expiry/reuse and hosted revocation still need acceptance.
 See `ACCOUNT_ACTIVATION.md` for exact callback templates and setup requirements.
 
-Account additions expanded the local suite to **59 passing tests**. Updated
+Account additions expanded the local suite to **60 passing tests**. Updated
 current-commit CI must still be checked after saving this batch.
+
+A manual-only development migration workflow is prepared and target guards are
+tested. It has not been dispatched; no hosted schema was changed. It rejects
+main/production targets and requires exact development-reference confirmation.
