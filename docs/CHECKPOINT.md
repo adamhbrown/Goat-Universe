@@ -55,3 +55,28 @@ restart is now covered by a regression test.
 
 The existing public website and main branch were not changed. No hosted service
 is reported restored by this development checkpoint.
+
+
+## October 14, 2026 — additional completed development
+
+### Product interfaces committed (development branch only)
+- GOAT Games participant portal served at GET /play: account creation/sign-in, rotating in-memory session tokens, private league invitation requests, owned/approved league cards, standings, ranked ATS pick form, existing confidence-weight restoration, and commissioner entry approvals.
+- Commercial HQ served at GET /crm: authorized staff sign-in, reports, researched prospect evidence intake, opportunity recording, internal outreach draft preparation, and approver/executive decision controls. No external message sending or charging.
+- Both are separate from the existing static public website. No production route or hosted Node API was deployed.
+
+### Verification
+- GitHub Actions Backend tests succeeded with 11 passing and 0 failing, including the existing league/CRM integration tests and new headless UI tests.
+- The headless UI tests simulate account sessions, ranking submissions, league enrollments and approvals, commercial prospect records, internal drafts, approval decisions, and expired-token refresh. They do not prove full real-browser support.
+- Updated source syntax checks include both browser scripts.
+
+### Live Supabase read-only investigation
+- Connected account confirmed Goat-Universe project ref opvoemihfyxidzbdyory, region us-east-1; status remains COMING_UP at repeated checks.
+- PostgreSQL responds to read-only queries, but Realtime logged managed migration/connection timeouts, and managed internal tables were missing during read-only inspection.
+- No migration was applied, no project was reset, and no hosted registration was tested. See docs/SUPABASE_RECOVERY.md for diagnostic details and support escalation.
+- The original GitHub workflow management-token 401 remains a separate credential-rotation task; working connector access does not repair the GitHub secret.
+
+### Remaining release gates
+- Healthy Supabase services, separate approved-cost development project, valid protected development credentials, development-only migrations and hosted RLS/authentication verification.
+- Email confirmation/sending setup, real-browser and mobile functional/accessibility tests, API hosting, monitored staging deployment and release approval.
+- Founder approval of NFL push, missed-pick, tie, spread/source and deadline policies; no unsourced games or fabricated results.
+- Explicit approvals for any production deployment, outreach, payment activation or paid services.
