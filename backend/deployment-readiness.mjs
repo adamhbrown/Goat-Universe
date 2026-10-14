@@ -7,7 +7,7 @@ import {SupabaseAuth} from './auth.mjs';
 export async function deploymentReadiness(env=process.env,fetchImpl=fetch) {
  const report={status:'blocked',checks:[],pending:[]};
  const check=(name,status,detail)=>report.checks.push({name,status,...(detail?{detail}:{})});
- const missing=['SUPABASE_URL','SUPABASE_PUBLISHABLE_KEY'].filter(k=>!env[k]);
+ const missing=['SUPABASE_URL','SUPABASE_PUBLISHABLE_KEY','APP_ORIGIN'].filter(k=>!env[k]);
  if(missing.length){check('configuration','blocked','Missing '+missing.join(', '));return report;}
  let cfg;
  try{

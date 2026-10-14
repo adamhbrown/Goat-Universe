@@ -26,6 +26,7 @@ jobs:
       SUPABASE_DEV_PROJECT_REF: ${{ vars.SUPABASE_DEV_PROJECT_REF }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DEV_DB_PASSWORD }}
       SUPABASE_DEV_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_DEV_PUBLISHABLE_KEY }}
+      APP_ORIGIN: ${{ vars.GOAT_DEV_APP_ORIGIN }}
       APPLY_DEV_MIGRATIONS: ${{ inputs.apply_development_migrations }}
       CONFIRM_DEV_PROJECT_REF: ${{ inputs.confirm_development_project_ref }}
     steps:

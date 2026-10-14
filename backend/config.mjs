@@ -15,9 +15,15 @@ export function configuration(env = process.env) {
   }
   const host = env.HOST || '127.0.0.1';
   const port = Number(env.PORT || 8787);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('invalid_port');
   // Match the URL the local development server actually listens on. Otherwise
   // browser POSTs from http://127.0.0.1:8787 fail the same-origin guard.
   const appOrigin = env.APP_ORIGIN || `http://${host}:${port}`;
+  let parsedOrigin;
+  try { parsedOrigin = new URL(appOrigin); } catch { throw new Error('invalid_app_origin'); }
+  if (!['http:','https:'].includes(parsedOrigin.protocol) || parsedOrigin.origin !== appOrigin || parsedOrigin.username || parsedOrigin.password) throw new Error('invalid_app_origin');
+  if (mode === 'supabase' && appEnv !== 'development' && !env.APP_ORIGIN) throw new Error('hosted_app_origin_required');
+  if ((appEnv === 'staging' || appEnv === 'production') && parsedOrigin.protocol !== 'https:') throw new Error('hosted_https_origin_required');
   if (appEnv === 'production' && (!appOrigin.startsWith('https://') || env.PRODUCTION_LAUNCH_APPROVED !== 'true')) throw new Error('production_launch_approval_required');
   const authEmailEnabled = env.AUTH_EMAIL_ENABLED === 'true';
   const paymentsEnabled = env.PAYMENTS_ENABLED === 'true';

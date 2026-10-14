@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {deploymentReadiness} from '../deployment-readiness.mjs';
-const ENV={SUPABASE_URL:'https://developmentfixture.supabase.co',SUPABASE_PUBLISHABLE_KEY:'sb_publishable_FIXTURE'};
+const ENV={APP_ORIGIN:'https://dev.fixture.invalid',SUPABASE_URL:'https://developmentfixture.supabase.co',SUPABASE_PUBLISHABLE_KEY:'sb_publishable_FIXTURE'};
 const USER='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
 const fake=async(url,params)=>{
  assert.notEqual(params.method,'PUT');assert.notEqual(params.method,'DELETE');assert.ok(!url.includes('/signup')&&!url.includes('/recover')&&!url.includes('/goat_command'));

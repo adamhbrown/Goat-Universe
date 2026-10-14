@@ -1,6 +1,10 @@
 // GOAT Games participant portal. No tokens in localStorage or analytics by default.
-let accessToken = '';
-let refreshToken = '';
+import {client} from '/manage/forms.mjs';
+const api = client(fetch, {onSessionEnd(reason) {
+  showSignedOut();
+  if(reason !== 'signed_out') notice('Your session ended. Sign in again to continue.', 'error');
+}});
+if(typeof window !== 'undefined')window.addEventListener('pagehide',()=>api.forget());
 let myUserId = '';
 let activeLeagueId = '';
 const el = id => document.getElementById(id);
@@ -14,29 +18,8 @@ function notice(message, type = '') {
   el('notice').textContent = message;
   el('notice').className = 'notice ' + type;
 }
-async function send(path, payload, authenticated = true, allowRefresh = true) {
-  const response = await fetch('/' + path, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(authenticated && accessToken ? { Authorization: 'Bearer ' + accessToken } : {})
-    },
-    body: JSON.stringify(payload)
-  });
-  if (response.status === 401 && authenticated && allowRefresh && refreshToken) {
-    try {
-      const session = await send('auth/refresh', { refresh_token: refreshToken }, false, false);
-      accessToken = session.access_token;
-      refreshToken = session.refresh_token;
-      return await send(path, payload, true, false);
-    } catch {
-      showSignedOut();
-      throw new Error('session_expired_please_sign_in');
-    }
-  }
-  const result = await response.json();
-  if (!response.ok) throw new Error(result.error || 'request_failed');
-  return result;
+async function send(path, payload, authenticated = true) {
+  return api.request('/' + path, payload, authenticated);
 }
 async function loadGoatGamesCatalog() {
   const list = el('goat-games-catalog');
@@ -64,7 +47,12 @@ async function loadGoatGamesCatalog() {
 async function query(op, extras = {}) { return send('query', { op, ...extras }); }
 async function command(op, extras = {}) { return send('commands', { op, ...extras }); }
 function showSignedOut() {
-  accessToken = ''; refreshToken = ''; myUserId = ''; activeLeagueId = '';
+  myUserId = ''; activeLeagueId = '';
+  el('password').value='';el('password').type='password';
+  el('show-password').textContent='Show password';el('show-password').setAttribute('aria-pressed','false');
+  for(const id of ['leagues','rounds','standings','entry-requests','league-details'])el(id).replaceChildren();
+  el('member-name').textContent='GOAT Games';
+  el('league-name').textContent='League';
   el('account-panel').hidden = false;
   el('member-panel').hidden = true;
   el('league-panel').hidden = true;
@@ -272,23 +260,41 @@ function createPickForm(round, games, ownPicks) {
 }
 el('account-form').addEventListener('submit', async event => {
   event.preventDefault();
+  const form=el('account-form');
+  if (form.getAttribute('aria-busy') === 'true') return;
+  form.setAttribute('aria-busy','true');
+  const buttons=[...form.querySelectorAll('button[type=submit]')];
+  buttons.forEach(button=>button.disabled=true);
   const action = event.submitter?.value || 'login';
   try {
-    const result = await send('auth/' + action, {
-      email: el('email').value.trim(),
-      password: el('password').value,
-      ...(action === 'signup' ? { display_name: el('display-name').value.trim() || undefined } : {})
-    }, false);
-    el('password').value = '';
-    accessToken = result.access_token || result.session?.access_token || '';
-    refreshToken = result.refresh_token || result.session?.refresh_token || '';
-    if (!accessToken) {
-      notice(result.confirmation_required === false ? 'Account created. Sign in using your new password.' : 'Account created. Check your email for a confirmation link, then sign in.', 'success');
-      return;
+    const values={email:el('email').value.trim(),password:el('password').value,
+      ...(action==='signup'?{display_name:el('display-name').value.trim()||undefined}:{})};
+    if(action==='signup') {
+      const result=await api.signup(values);
+      notice(result.confirmation_required === false ? 'Account created. Sign in using your new password.' : 'Registration submitted. Check your email for a confirmation link before signing in.', 'success');
+    } else {
+      await api.login(values);
+      await showSignedIn();
+      notice('Welcome to GOAT Games!', 'success');
     }
-    await showSignedIn();
-    notice('Welcome to GOAT Games!', 'success');
-  } catch (error) { el('password').value = ''; notice(error.message, 'error'); }
+  } catch (error) { notice(error.message.replaceAll('_',' '), 'error'); }
+  finally {
+    el('password').value='';el('password').type='password';form.setAttribute('aria-busy','false');
+    el('show-password').textContent='Show password';el('show-password').setAttribute('aria-pressed','false');
+    buttons.forEach(button=>button.disabled=false);
+  }
+});
+el('show-password').addEventListener('click',event=>{
+  const input=el('password'),show=input.type==='password';input.type=show?'text':'password';
+  event.currentTarget.textContent=show?'Hide password':'Show password';
+  event.currentTarget.setAttribute('aria-pressed',String(show));
+});
+el('recovery-form').addEventListener('submit',async event=>{
+  event.preventDefault();const button=event.submitter || el('recovery-form').querySelector('button');
+  if(button.disabled)return;button.disabled=true;
+  try {await api.request('/auth/recover',{email:el('recovery-email').value.trim()},false);notice('If an eligible account exists, a recovery email will arrive. Check your inbox.','success');}
+  catch(error){notice(error.message.replaceAll('_',' '),'error');}
+  finally{button.disabled=false;}
 });
 el('join-form').addEventListener('submit', async event => {
   event.preventDefault();
@@ -312,9 +318,9 @@ el('back').addEventListener('click', () => {
   el('member-panel').hidden = false;
 });
 el('signout').addEventListener('click', async () => {
-  try { if (accessToken) await send('auth/logout', {}); }
-  catch { /* Clear the browser session even if the server is unreachable. */ }
-  finally { showSignedOut(); notice('Signed out. See you at the next game.'); }
+  try { await api.logout(); notice('Signed out. See you at the next game.'); }
+  catch { notice('Signed out on this page. Server sign-out could not be confirmed. Close this page and retry when connected.', 'error'); }
+  finally { showSignedOut(); }
 });
 showSignedOut();
 loadGoatGamesCatalog();
