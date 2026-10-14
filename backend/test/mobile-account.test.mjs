@@ -81,7 +81,7 @@ test('rapid taps cannot submit duplicate enrollment requests; controls recover a
   assert.equal(p.$('join-form').querySelector('button').disabled,true);
   finish(reply(503,{error:'temporary_unavailable'}));
   await until(()=>p.$('join-form').querySelector('button').disabled===false);
-  assert.match(p.$('notice').textContent,/temporary unavailable/);
+  assert.match(p.$('notice').textContent,/temporary_unavailable/);
   assert.equal(p.$('invite-id').value,leagueId,'Failed join keeps the entered ID for retry');
  }finally{p.dom.window.close();}
 });
@@ -112,7 +112,7 @@ test('commissioner approve/decline and ranked-pick submissions are single-flight
  try{
   p.$('email').value='commissioner@fixture.invalid';p.$('password').value='Fixture-Password-1234';
   p.submit('account-form');await until(()=>p.$('leagues').querySelector('button'));
-  p.$('leagues').querySelector('button').click();await until(()=>!p.$('league-panel').hidden);
+  [...p.$('leagues').querySelectorAll('button')].find(b=>b.textContent==='View competition').click();await until(()=>!p.$('league-panel').hidden);
   const buttons=p.$('entry-requests').querySelectorAll('button');
   assert.equal(buttons.length,2);
   buttons[0].click();buttons[1].click();
