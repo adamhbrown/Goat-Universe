@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101015">
+  <meta name="description" content="GOAT Games member portal. Join, compete, and track your standings.">
+  <title>GOAT Games | Where the Goats Play</title>
+  <link rel="stylesheet" href="/play.css">
+</head>
+<body>
+<header class="masthead">
+  <a class="brand" href="/play" aria-label="GOAT Games home"><span class="horn">G</span><span>GOAT <strong>GAMES</strong><small>WHERE THE GOATS PLAY</small></span></a>
+  <span class="tag">CAN'T STOP THE BAA</span>
+</header>
+<main>
+  <section class="hero" aria-labelledby="welcome-title">
+    <p class="eyebrow">1ST &amp; BAA · GOATS OF THE GRIDIRON</p>
+    <h1 id="welcome-title">YOUR ROAD TO <em>GREATNESS.</em></h1>
+    <p>The competition is real. The bragging rights are eternal. Create your GOAT account to view your leagues, make picks, and follow the championship race.</p>
+    <div id="environment" class="environment">Development portal · No live competition or purchases</div>
+  </section>
+  <div id="notice" class="notice" role="status" aria-live="polite">Sign in to get started.</div>
+  <section id="account-panel" class="panel" aria-labelledby="account-heading">
+    <h2 id="account-heading">Enter the Universe</h2>
+    <form id="account-form">
+      <label>Email <input id="email" type="email" autocomplete="email" maxlength="254" required></label>
+      <label>Password <input id="password" type="password" autocomplete="current-password" minlength="12" maxlength="200" required></label>
+      <label>Display name <span class="muted">(new accounts only)</span><input id="display-name" maxlength="80" autocomplete="nickname"></label>
+      <div class="actions">
+        <button type="submit" name="action" value="login">Sign in</button>
+        <button type="submit" name="action" value="signup" class="secondary">Create account</button>
+      </div>
+    </form>
+    <p class="small">Passwords are never saved in this page. Email verification may be required for new accounts in hosted environments.</p>
+  </section>
+  <section id="member-panel" class="panel" hidden>
+    <div class="section-head"><div><p class="eyebrow">MEMBER HQ</p><h2 id="member-name">GOAT Games</h2></div><button id="signout" class="secondary" type="button">Sign out</button></div>
+    <div class="actions"><button id="reload" type="button">Refresh my leagues</button></div>
+    <h3>My competitions</h3>
+    <div id="leagues" class="cards"></div>
+    <p class="small">Only leagues you commission or have been approved to enter are shown. Request an invitation from your commissioner to join a private competition.</p>
+  </section>
+  <section id="league-panel" class="panel" hidden>
+    <div class="section-head"><h2 id="league-name">League</h2><button id="back" type="button" class="secondary">All leagues</button></div>
+    <div id="league-details"></div>
+    <h3>Standings</h3><div class="table-wrap"><table><thead><tr><th>Place</th><th>Competitor</th><th>Points</th><th>ATS Wins</th></tr></thead><tbody id="standings"></tbody></table></div>
+    <h3>Rounds &amp; picks</h3><div id="rounds" class="cards"></div>
+  </section>
+</main>
+<footer>GOAT UNIVERSE · FIT OUT. DON'T FIT IN. · EVERY GOAT WAS ONCE A KID.</footer>
+<script type="module" src="/play.mjs"></script>
+</body>
+</html>
