@@ -49,7 +49,42 @@ test('homepage does not invent rankings or claim a fake profile registration', (
   assert.doesNotMatch(html, /Jordan Vale|Casey Rivers|Morgan Lee|Avery Stone|Taylor Cruz/);
   assert.doesNotMatch(html, /GOAT PROFILE REQUEST CAPTURED|Create your GOAT profile/);
   assert.match(html, /No verified GOAT Universe standings published yet/);
-  assert.match(html, /Member registration is not available/);
-  assert.equal((html.match(/<span class="tag">PREVIEW<\/span>/g) ?? []).length, 0, 'competition cards render from JS at runtime');
-  assert.match(html, /const competitions=\[/);
+  assert.match(html, /Competition enrollment and member accounts are not offered/);
+  assert.doesNotMatch(html, /const competitions=\[/);
+});
+
+test('every event has an accessible linked discovery panel', () => {
+  const section = html.match(/<section class="section game-discovery"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(section);
+  assert.equal((section.match(/<details class="game-detail"/g) ?? []).length, 5);
+  assert.equal((html.match(/class="games-card-link"/g) ?? []).length, 5);
+  const slugs = ['gridiron', 'hoops', 'crossover', 'greatness', 'classic'];
+  for (const slug of slugs) {
+    assert.match(html, new RegExp('href="#game-details-' + slug + '"'));
+    assert.ok(section.includes('id="game-details-' + slug + '"'));
+  }
+});
+
+test('season calendar presents five games without fabricated schedules', () => {
+  assert.equal((html.match(/class="season-card"/g) ?? []).length, 5);
+  assert.match(html, /THERE IS NO OFFSEASON/);
+  assert.doesNotMatch(html, /QUALIFYING WINDOW OPEN|DSN MATCH OF THE DAY/);
+});
+
+test('publications link to separate editor-approved destination safely', () => {
+  const domain = 'https://goatverse-publications.downtownadamb.chatgpt.site/';
+  const publicationLinks = [...html.matchAll(/<a\b[^>]*href="(https?:\/\/[^"]+)"[^>]*>/g)].filter(x => x[1] === domain);
+  assert.ok(publicationLinks.length >= 2);
+  for (const [tag] of publicationLinks) {
+    assert.match(tag, /target="_blank"/);
+    assert.match(tag, /rel="noopener noreferrer"/);
+  }
+});
+
+test('mobile and keyboard access preserve safe navigation', () => {
+  assert.match(html, /class="skip-link" href="#top"/);
+  assert.match(html, /<main id="top" tabindex="-1">/);
+  assert.match(html, /aria-label="Main navigation"/);
+  assert.match(html, /safe-area-inset-bottom/);
+  assert.match(html, /prefers-reduced-motion:reduce/);
 });
