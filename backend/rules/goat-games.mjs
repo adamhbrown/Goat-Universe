@@ -57,7 +57,9 @@ export function validateBaasPolicy(policy, expectedGameIds = GOAT_GAMES.map(g =>
   if (!policy || typeof policy !== 'object' || policy.approved !== true) throw new Error('baas_policy_not_approved');
   if (typeof policy.source_reference !== 'string' || policy.source_reference.trim().length < 4) throw new Error('baas_source_required');
   if (!Number.isInteger(policy.season) || policy.season < 2026 || policy.season > 2100) throw new Error('baas_invalid_season');
-  if (policy.tie_policy !== 'shared_rank' && policy.tie_policy !== 'commissioner_verified_rank') throw new Error('baas_tie_policy_required');
+  // The only implemented annual tie treatment is shared rank. A commissioner
+  // adjudication workflow may be added later, but is not silently simulated.
+  if (policy.tie_policy !== 'shared_rank') throw new Error('baas_tie_policy_not_implemented');
   if (!policy.conversions || typeof policy.conversions !== 'object' || Array.isArray(policy.conversions)) throw new Error('baas_conversions_required');
   const expected = [...new Set(expectedGameIds)].sort();
   if (expected.length !== GOAT_GAMES.length || expected.some(id => !GAMES_BY_ID.has(id))) throw new Error('baas_expected_games_invalid');
@@ -93,7 +95,14 @@ export function buildAnnualBaasStandings(policy, finishes) {
     current.breakdown.push({ game_id: item.game_id, place: item.place, baas: amount, evidence: item.evidence });
     totals.set(item.member_id, current);
   }
-  return [...totals.values()].sort((a,b) => b.baas - a.baas || b.competitions - a.competitions || a.member_id.localeCompare(b.member_id));
+  const ordered = [...totals.values()].sort((a,b) => b.baas - a.baas || a.member_id.localeCompare(b.member_id));
+  // Competition count is informative, NOT a tiebreaker. Equal Baas share rank.
+  let previousBaas = null, sharedRank = 0;
+  return ordered.map((member, index) => {
+    if (member.baas !== previousBaas) sharedRank = index + 1;
+    previousBaas = member.baas;
+    return { ...member, rank: sharedRank };
+  });
 }
 // ESPN official 2026+ team totals already include home advantage.
 export function homeAdjustedFantasyScore({ year, raw_player_points, is_home, source_includes_home_bonus = false }) {
