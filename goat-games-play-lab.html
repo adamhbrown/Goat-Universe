@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090a0c">
+<meta name="description" content="Five sports. Five interactive challenges. One universe. Explore the GOAT Games Play Lab.">
+<title>The GOAT Games Play Lab — Where The GOATs Play</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{--gold:#edc578;--gold2:#f7e0ab;--ink:#090a0c;--panel:#181b1f;--panel2:#21262a;--white:#f6f2e9;--dim:#cbc7bc;--line:#6d6250;--mint:#a2e3cc;--red:#f5b0a7}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--ink);color:var(--white);font-family:Inter,Arial,sans-serif;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.58}a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid var(--gold2);outline-offset:4px}
+.shell{width:min(1180px,calc(100% - 36px));margin:0 auto}.skip{position:absolute;left:10px;top:-90px;padding:12px;background:var(--gold);color:#111;z-index:100}.skip:focus{top:8px}
+header{position:sticky;top:0;z-index:20;background:#0b0e10f2;backdrop-filter:blur(12px);border-bottom:1px solid #bd985f55}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{font:800 1.07rem Manrope,Arial,sans-serif;letter-spacing:.035em}.brand b{color:var(--gold)}
+.return{font-size:.8rem;font-weight:800;letter-spacing:.06em;border:1px solid var(--line);border-radius:6px;padding:11px 16px}
+.return:hover{border-color:var(--gold)}
+.hero{padding:70px 0 46px;background:radial-gradient(ellipse at 76% 43%,#97713b39,transparent 49%),linear-gradient(115deg,#151917,#090b0d 72%);border-bottom:1px solid #9d783d55}
+.eyebrow{color:var(--gold);text-transform:uppercase;font-weight:800;font-size:.73rem;letter-spacing:.2em}
+h1,h2,h3{font-family:Manrope,Arial,sans-serif;line-height:1.07;letter-spacing:-.052em}
+h1{font-size:clamp(3.1rem,8.5vw,7.5rem);text-transform:uppercase;margin:18px 0}h1 em{font-style:normal;color:var(--gold)}
+h2{font-size:clamp(2.35rem,5.6vw,4.8rem);text-transform:uppercase;margin:18px 0}
+h3{font-size:1.4rem;margin:12px 0}
+.lead{max-width:755px;font-size:1.09rem;color:#e3dacf}
+.disclosure{max-width:890px;border-left:3px solid var(--gold);background:#26251e;padding:15px 18px;margin-top:26px;font-size:.89rem;color:#e7dfd2}
+.arena-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:30px 0}
+.sport{min-height:136px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:15px;border:1px solid #786c55;border-radius:10px;color:var(--white);background:#1d2225;transition:background .2s,transform .2s}
+.sport:hover{background:#34383a;transform:translateY(-2px)}
+.sport[aria-selected=true]{border:2px solid var(--gold);background:linear-gradient(145deg,#5a4729,#242521)}
+.sport small{font-size:.67rem;color:#ddd3c2;letter-spacing:.1em;font-weight:800}
+.sport b{font:800 clamp(.86rem,1.2vw,1.02rem)/1.14 Manrope,sans-serif}
+.sport span{color:var(--gold);font-size:.75rem;font-weight:800;letter-spacing:.1em}
+main{padding:0 0 90px}
+.arena{background:radial-gradient(circle at 88% 12%,#b5873925,transparent 47%),linear-gradient(130deg,#1a2020,#111415);border:1px solid #897451;border-radius:20px;padding:clamp(21px,5vw,48px);box-shadow:0 28px 65px #0007;min-height:600px}
+.arena[hidden]{display:none}
+.arena-heading{display:flex;align-items:start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.arena-kicker{font-size:.75rem;letter-spacing:.14em;color:var(--gold);font-weight:850}
+.chip{border-radius:100px;border:1px solid #ae8c4f;padding:9px 15px;color:var(--gold2);font-size:.74rem;letter-spacing:.06em;font-weight:800}
+.desc{font-size:1rem;color:#d6d0c4;max-width:790px}
+.challenge{font-size:clamp(1.25rem,2.5vw,1.8rem);font-weight:800;margin:31px 0 17px;line-height:1.32}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.choice{min-height:74px;padding:17px;text-align:left;border:1px solid #707b70;border-radius:10px;background:#28302d;color:var(--white);font-size:.98rem;font-weight:750;line-height:1.4}
+.choice:hover:not(:disabled){border-color:var(--gold)}
+.choice[aria-pressed=true]{border:2px solid var(--gold);background:#4a3d28;color:#fff3d7}
+.choice small{display:block;font-size:.77rem;color:#c8c7c1;font-weight:500;margin-top:4px}
+.field{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:22px 0}
+.field label{font-weight:800;font-size:.92rem}
+.field select{background:#242c29;color:#fff;border:1px solid #b6a177;border-radius:6px;padding:12px 16px;min-height:48px;min-width:150px}
+.btn-row{display:flex;flex-wrap:wrap;gap:11px;margin:24px 0}
+.btn{min-height:50px;padding:12px 20px;border-radius:6px;border:1px solid var(--gold);background:var(--gold);color:#101213;text-transform:uppercase;font-weight:850;letter-spacing:.065em;font-size:.79rem}
+.btn.ghost{background:transparent;color:var(--gold)}
+.btn:hover:not(:disabled){filter:brightness(1.13)}
+.result{border:1px solid #746d5d;border-radius:10px;background:#202722;padding:18px;color:#e3dacb;min-height:63px;margin:20px 0}
+.result.good{border-color:#8bbca4;background:#1e3e33}
+.result[hidden]{display:none}
+.sequence{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.sequence div{border:1px solid #766a53;padding:16px;border-radius:9px;background:#1f2526}
+.sequence strong{display:block;color:var(--gold);font-size:1.4rem}
+.sequence small{display:block;font-size:.76rem;color:#d8d0c0}
+.timeline{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:20px 0}
+.timeline span{border:1px solid #7c715c;border-radius:8px;padding:12px 16px;background:#242b27;font-weight:750;font-size:.88rem}
+.timeline b{color:var(--gold)}
+.fine{font-size:.84rem;color:#c9c1b3;border-top:1px solid #665c4b;margin-top:34px;padding-top:18px}
+.session{border:1px solid #8d7d5e;background:linear-gradient(120deg,#232519,#11191a);border-radius:15px;padding:28px;margin-top:25px}
+.session h3{font-size:1.9rem}
+.progress{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:23px 0}
+.progress div{border:1px solid #766b54;border-radius:8px;padding:18px}
+.progress strong{display:block;color:var(--gold);font:800 clamp(1.25rem,2.9vw,2.2rem) Manrope,sans-serif}
+.progress small{display:block;color:#d8d1c4;font-size:.73rem;letter-spacing:.055em}
+footer{padding:38px 0 65px;border-top:1px solid #655c4b;color:#c9c5b8;font-size:.86rem}
+@media(max-width:840px){.arena-nav{grid-template-columns:repeat(3,minmax(0,1fr))}.sport{min-height:108px}}
+@media(max-width:560px){.shell{width:calc(100% - 26px)}.nav{height:64px}.brand{font-size:.91rem}.return{font-size:.68rem;padding:10px}.hero{padding:49px 0 33px}.lead{font-size:.99rem}.arena-nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.sport{padding:13px;min-height:103px}.sport:last-child{grid-column:1/-1}.sport b{font-size:.89rem}.arena{padding:21px 16px}.options{grid-template-columns:1fr}.choice{min-height:62px}.btn{width:100%}.sequence,.progress{grid-template-columns:1fr}.field{align-items:stretch;flex-direction:column}.field select{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style></head><body>
+<a class="skip" href="#play">Skip to challenges</a>
+<header><div class="shell nav"><a class="brand" href="index.html">GOAT <b>UNIVERSE</b></a><a class="return" href="goatville.html">← RETURN TO GOATVILLE</a></div></header>
+<section class="hero"><div class="shell"><div class="eyebrow">GOAT UNIVERSE / IMMERSIVE SPORTS PLAY LAB</div><h1>FIVE SPORTS.<br><em>ONE UNIVERSE.</em></h1><p class="lead">The entrance creates adrenaline. The game earns your attention. Five distinct sports decisions, five challenges, and one reason to keep coming back.</p><p class="disclosure"><strong>FREE PLAY LAB:</strong> All teams, players, results and scenarios below are explicitly fictional demonstrations. No official GOAT Games entries, actual betting lines, live data, prizes, payments or tournament standings are involved.</p></div></section>
+<main id="play"><div class="shell">
+<div class="arena-nav" role="tablist" aria-label="Choose a GOAT Games challenge">
+<button class="sport" id="tab-football" data-sport="football" role="tab" aria-controls="arena-football" aria-selected="true" tabindex="0"><small>01 / FOOTBALL</small><b>1st &amp; BAA</b><span>THE WAR ROOM ↗</span></button>
+<button class="sport" id="tab-hoops" data-sport="hoops" role="tab" aria-controls="arena-hoops" aria-selected="false" tabindex="-1"><small>02 / BASKETBALL</small><b>HORNS &amp; HOOPS</b><span>THE COLISEUM ↗</span></button>
+<button class="sport" id="tab-cross" data-sport="cross" role="tab" aria-controls="arena-cross" aria-selected="false" tabindex="-1"><small>03 / TWO SPORTS</small><b>GOAT CROSSOVER</b><span>DUAL-SPORT ARENA ↗</span></button>
+<button class="sport" id="tab-fantasy" data-sport="fantasy" role="tab" aria-controls="arena-fantasy" aria-selected="false" tabindex="-1"><small>04 / FANTASY</small><b>LEAGUE OF GREATNESS</b><span>THE CLUBHOUSE ↗</span></button>
+<button class="sport" id="tab-baseball" data-sport="baseball" role="tab" aria-controls="arena-baseball" aria-selected="false" tabindex="-1"><small>05 / BASEBALL</small><b>THE GOAT CLASSIC</b><span>OCTOBER DIAMOND ↗</span></button>
+</div>
+<section class="arena" id="arena-football" role="tabpanel" aria-labelledby="tab-football">
+<div class="arena-heading"><div class="arena-kicker">01 / THE GRIDIRON WAR ROOM</div><div class="chip">ATS + CONFIDENCE</div></div>
+<h2>1st &amp; BAA.</h2><p class="desc">Goats of the Gridiron Playoff League. Study a fictional spread, rank your confidence and reveal a simulated final score to see whether your practice pick covers.</p>
+<div class="challenge">Harbor Hawks -3.5 vs. Canyon Wolves +3.5. Who covers?</div>
+<div class="options" id="football-options"><button class="choice" data-value="Hawks" aria-pressed="false" type="button">HARBOR HAWKS -3.5</button><button class="choice" data-value="Wolves" aria-pressed="false" type="button">CANYON WOLVES +3.5</button></div>
+<div class="field"><label for="confidence">Confidence</label><select id="confidence"><option value="1">1 — Cautious</option><option value="2">2 — Firm</option><option value="3">3 — All In</option></select></div>
+<div class="btn-row"><button class="btn" id="football-play">LOCK &amp; REVEAL →</button><button class="btn ghost" id="football-reset">NEW ROUND</button></div><div class="result" id="football-result" role="status" aria-live="polite">Pick a side and lock your practice call.</div>
+<div class="fine">Demonstration only. This uses an invented matchup and randomized simulated scores, not a real spread or the official league scoring engine.</div>
+</section>
+<section class="arena" id="arena-hoops" role="tabpanel" aria-labelledby="tab-hoops" hidden>
+<div class="arena-heading"><div class="arena-kicker">02 / THE BRACKET COLISEUM</div><div class="chip">FOUR-TEAM BRACKET</div></div>
+<h2>HORNS &amp; HOOPS.</h2><p class="desc">Downtown's BAAsketball Showcase XXXV. Build a mini-bracket through two semifinals, then crown your own champion. Every team is fictional.</p>
+<div class="timeline"><span>METRO METEORS</span><b>vs.</b><span>SUMMIT STORM</span><span>RIVER ROYALS</span><b>vs.</b><span>COAST COMETS</span></div>
+<div class="challenge" id="hoops-question">SEMIFINAL 1: Metro Meteors vs. Summit Storm</div><div class="options" id="hoops-options"></div>
+<div class="btn-row"><button class="btn" id="hoops-advance" disabled>ADVANCE WINNER →</button><button class="btn ghost" id="hoops-reset">RESET BRACKET</button></div><div class="result" id="hoops-result" role="status" aria-live="polite">Pick your first semifinal winner.</div>
+<div class="fine">This four-team fictional bracket is not a substitute for the official March Madness XXXV contest or scoring rules.</div>
+</section>
+<section class="arena" id="arena-cross" role="tabpanel" aria-labelledby="tab-cross" hidden>
+<div class="arena-heading"><div class="arena-kicker">03 / THE DUAL-SPORT ARENA</div><div class="chip">BASKETBALL + HOCKEY</div></div>
+<h2>GOAT CROSSOVER.</h2><p class="desc">Two Sports, 1 Competition. Pick winners and series lengths for one fictional basketball series and one fictional hockey series, then reveal both simulations on a single card.</p>
+<div class="challenge">Basketball series: Kings vs. Comets</div><div class="options" id="cross-basket"><button type="button" class="choice" aria-pressed="false" data-value="Kings">KINGS</button><button type="button" class="choice" aria-pressed="false" data-value="Comets">COMETS</button></div>
+<div class="field"><label for="basket-length">Basketball series length</label><select id="basket-length"><option value="4">4 games</option><option value="5">5 games</option><option value="6">6 games</option><option value="7">7 games</option></select></div>
+<div class="challenge">Hockey series: Blades vs. Frost</div><div class="options" id="cross-hockey"><button type="button" class="choice" aria-pressed="false" data-value="Blades">BLADES</button><button type="button" class="choice" aria-pressed="false" data-value="Frost">FROST</button></div>
+<div class="field"><label for="hockey-length">Hockey series length</label><select id="hockey-length"><option value="4">4 games</option><option value="5">5 games</option><option value="6">6 games</option><option value="7">7 games</option></select></div>
+<div class="btn-row"><button class="btn" id="cross-play">REVEAL BOTH SERIES →</button><button class="btn ghost" id="cross-reset">NEW CARD</button></div><div class="result" id="cross-result" role="status" aria-live="polite">Choose a winner in both sports to build your card.</div>
+<div class="fine">Series outcomes are randomly simulated fictional data. Official competition rules and results remain separate.</div>
+</section>
+<section class="arena" id="arena-fantasy" role="tabpanel" aria-labelledby="tab-fantasy" hidden>
+<div class="arena-heading"><div class="arena-kicker">04 / THE FRANCHISE CLUBHOUSE</div><div class="chip">START / SIT</div></div>
+<h2>LEAGUE OF GREATNESS.</h2><p class="desc">Fantasy Football Championships. Choose the FLEX starter for a fictional team, then reveal a randomized practice scoring outcome for two different risk profiles.</p>
+<div class="challenge">One FLEX spot. Who gets the start?</div><div class="options" id="fantasy-options"><button type="button" class="choice" aria-pressed="false" data-value="Mason Reed">MASON REED — WR<small>Illustrative projection: 12.8 points · stable floor</small></button><button type="button" class="choice" aria-pressed="false" data-value="Jordan Vale">JORDAN VALE — RB<small>Illustrative projection: 11.1 points · volatile upside</small></button></div>
+<div class="btn-row"><button class="btn" id="fantasy-play">SET LINEUP &amp; SIMULATE →</button><button class="btn ghost" id="fantasy-reset">NEW WEEK</button></div><div class="result" id="fantasy-result" role="status" aria-live="polite">Make your roster decision.</div>
+<div class="fine">Fictional player names and sample projections only. No ESPN roster updates, actual athlete data or real fantasy results are involved.</div>
+</section>
+<section class="arena" id="arena-baseball" role="tabpanel" aria-labelledby="tab-baseball" hidden>
+<div class="arena-heading"><div class="arena-kicker">05 / THE OCTOBER DIAMOND</div><div class="chip">WINNER + GAMES</div></div>
+<h2>THE GOAT CLASSIC.</h2><p class="desc">Take Your Swing at History. Pick the winner and number of games for a fictional championship series. Then reveal a simulated series to see how close you came.</p>
+<div class="challenge">Atlantic Admirals vs. Pacific Pioneers</div><div class="options" id="baseball-options"><button type="button" class="choice" aria-pressed="false" data-value="Admirals">ATLANTIC ADMIRALS</button><button type="button" class="choice" aria-pressed="false" data-value="Pioneers">PACIFIC PIONEERS</button></div><div class="field"><label for="baseball-length">Series length</label><select id="baseball-length"><option value="4">4 games</option><option value="5">5 games</option><option value="6">6 games</option><option value="7">7 games</option></select></div>
+<div class="btn-row"><button class="btn" id="baseball-play">REVEAL SERIES →</button><button class="btn ghost" id="baseball-reset">NEW SERIES</button></div><div class="result" id="baseball-result" role="status" aria-live="polite">Select your fictional champion and call the series length.</div>
+<div class="fine">These are invented teams and simulated results. Official GOAT Classic games, entries and championships are not connected.</div>
+</section>
+<div class="session"><div class="eyebrow">THE PLAY LAB / YOUR SESSION</div><h3>FIVE CHALLENGES. ONE UNIVERSE.</h3><p class="desc">Complete all five challenges in this browser session. Play again, switch sports, and try a different strategy. Nothing is uploaded to a server.</p><div class="progress"><div><strong id="completion">0 / 5</strong><small>CHALLENGES COMPLETED</small></div><div><strong id="last-play">—</strong><small>LAST ARENA PLAYED</small></div><div><strong id="perfect">0</strong><small>SUCCESSFUL PREDICTIONS</small></div></div><button class="btn ghost" id="reset-session">RESET SESSION PROGRESS</button></div>
+</div></main>
+<footer><div class="shell">GOAT UNIVERSE · WHERE THE GOATS PLAY · CAN'T STOP THE BAA. This free demonstration is independent of all official competitions. It does not accept payments, stakes or real-money wagers.</div></footer>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id), randomInt=n=>Math.floor(Math.random()*n);
+const tabs=[...document.querySelectorAll('[data-sport]')];
+function show(key,focus=false){tabs.forEach(t=>{const active=t.dataset.sport===key;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;$('arena-'+t.dataset.sport).hidden=!active;if(active&&focus)t.focus();});}
+tabs.forEach((t,i)=>{t.addEventListener('click',()=>show(t.dataset.sport));t.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const n=e.key==='Home'?0:e.key==='End'?tabs.length-1:(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;show(tabs[n].dataset.sport,true);}});});
+const picks={};function bindChoices(id){const root=$(id);root.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{picks[id]=b.dataset.value;root.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));if(id==='hoops-options')$('hoops-advance').disabled=false;}));}
+function clearChoices(id){delete picks[id];$(id).querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false'));}
+const done=new Set(),successes={};
+function updateSession(){const names={football:'1st & BAA',hoops:'Horns & Hoops',cross:'GOAT Crossover',fantasy:'League of Greatness',baseball:'GOAT Classic'};$('completion').textContent=done.size+' / 5';$('perfect').textContent=Object.values(successes).reduce((sum,x)=>sum+x,0);$('last-play').textContent=names[[...done].at(-1)]||'—';}
+function mark(key,success){done.delete(key);done.add(key);successes[key]=success;updateSession();}
+function clear(key){done.delete(key);delete successes[key];updateSession();}
+const ids=['football-options','cross-basket','cross-hockey','fantasy-options','baseball-options'];ids.forEach(bindChoices);
+function result(id,txt,good){const n=$(id);n.textContent=txt;n.classList.toggle('good',good);}
+function footballReset(){clearChoices('football-options');$('confidence').value='1';result('football-result','Pick a side and lock your practice call.',false);clear('football');}
+$('football-play').addEventListener('click',()=>{const pick=picks['football-options'];if(!pick){result('football-result','Pick the team you think covers first.',false);return;}const h=10+randomInt(29),w=10+randomInt(29),margin=h-w,cover=margin>3.5?'Hawks':'Wolves',good=pick===cover;result('football-result','FICTIONAL FINAL: Harbor '+h+' — Canyon '+w+'. '+cover+' covers 3.5. Your '+pick+' pick ('+$('confidence').value+' confidence) '+(good?'COVERS.':'does not cover.')+' '+(good?'Nice call.':'Try another simulation.'),good);mark('football',good?1:0);});
+$('football-reset').addEventListener('click',footballReset);
+const teams=['Metro Meteors','Summit Storm','River Royals','Coast Comets'];let stage=0,semi=[],hPick=null;
+function hoopsRender(){let choices=stage===0?teams.slice(0,2):stage===1?teams.slice(2,4):semi;const label=stage===0?'SEMIFINAL 1':stage===1?'SEMIFINAL 2':'CHAMPIONSHIP';$('hoops-question').textContent=label+': '+choices.join(' vs. ');const box=$('hoops-options');box.replaceChildren();hPick=null;choices.forEach(name=>{const b=document.createElement('button');b.type='button';b.className='choice';b.textContent=name;b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{hPick=name;box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));$('hoops-advance').disabled=false;});box.appendChild(b);});$('hoops-advance').disabled=true;$('hoops-advance').hidden=false;$('hoops-advance').textContent=stage===2?'CROWN CHAMPION →':'ADVANCE WINNER →';}
+function hoopsReset(){stage=0;semi=[];hoopsRender();result('hoops-result','Pick your first semifinal winner.',false);clear('hoops');}
+$('hoops-advance').addEventListener('click',()=>{if(!hPick)return;if(stage<2){semi.push(hPick);stage++;result('hoops-result',hPick+' advances. '+(stage===2?'The championship matchup is set.':'Choose your second finalist.'),false);hoopsRender();}else{result('hoops-result',hPick.toUpperCase()+' — YOUR MINI-BRACKET CHAMPION. You just completed the Bracket Coliseum. Build another path to the title?',true);$('hoops-options').replaceChildren();$('hoops-question').textContent='CHAMPIONSHIP COMPLETE';$('hoops-advance').hidden=true;mark('hoops',1);}});
+$('hoops-reset').addEventListener('click',hoopsReset);hoopsRender();
+function simulateSeries(a,b){const winner=randomInt(2)===0?a:b, length=4+randomInt(4);return{winner,length};}
+function crossReset(){clearChoices('cross-basket');clearChoices('cross-hockey');$('basket-length').value='4';$('hockey-length').value='4';result('cross-result','Choose a winner in both sports to build your card.',false);clear('cross');}
+$('cross-play').addEventListener('click',()=>{if(!picks['cross-basket']||!picks['cross-hockey']){result('cross-result','Select a basketball winner AND a hockey winner.',false);return;}const b=simulateSeries('Kings','Comets'),h=simulateSeries('Blades','Frost');const hits=Number(picks['cross-basket']===b.winner&&Number($('basket-length').value)===b.length)+Number(picks['cross-hockey']===h.winner&&Number($('hockey-length').value)===h.length);result('cross-result','FICTIONAL REVEAL — Basketball: '+b.winner+' in '+b.length+'. Hockey: '+h.winner+' in '+h.length+'. Exact winner + length calls: '+hits+' / 2.',hits===2);mark('cross',hits);});
+$('cross-reset').addEventListener('click',crossReset);
+function fantasyReset(){clearChoices('fantasy-options');result('fantasy-result','Make your roster decision.',false);clear('fantasy');}
+$('fantasy-play').addEventListener('click',()=>{const p=picks['fantasy-options'];if(!p){result('fantasy-result','Choose your FLEX starter.',false);return;}const reed=(8+randomInt(11)+Math.random()).toFixed(1),vale=(3+randomInt(21)+Math.random()).toFixed(1);const winner=Number(reed)>=Number(vale)?'Mason Reed':'Jordan Vale',good=p===winner;result('fantasy-result','FICTIONAL WEEK: Mason Reed '+reed+' pts, Jordan Vale '+vale+' pts. '+winner+' wins the FLEX battle. Your '+p+' selection '+(good?'paid off.':'missed this time.'),good);mark('fantasy',good?1:0);});
+$('fantasy-reset').addEventListener('click',fantasyReset);
+function baseballReset(){clearChoices('baseball-options');$('baseball-length').value='4';result('baseball-result','Select your fictional champion and call the series length.',false);clear('baseball');}
+$('baseball-play').addEventListener('click',()=>{if(!picks['baseball-options']){result('baseball-result','Choose the series winner first.',false);return;}const s=simulateSeries('Admirals','Pioneers');const called=picks['baseball-options'],win=called===s.winner,length=Number($('baseball-length').value)===s.length;result('baseball-result','FICTIONAL SERIES: '+s.winner+' win in '+s.length+' games. '+(win?'Winner correctly called. ':'Winner missed. ')+(length?'Length correctly called.':'Length missed.')+' '+(win&&length?'PERFECT SERIES CALL.':''),win&&length);mark('baseball',Number(win)+Number(length));});
+$('baseball-reset').addEventListener('click',baseballReset);
+$('reset-session').addEventListener('click',()=>{footballReset();hoopsReset();crossReset();fantasyReset();baseballReset();show('football',false);});
+updateSession();
+})();
+</script></body></html>
