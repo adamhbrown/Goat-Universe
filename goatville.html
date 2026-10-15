@@ -67,7 +67,7 @@ section{padding:86px 0;border-top:1px solid #ffffff19}.section-head{display:flex
 .town-choice[aria-pressed=true]{border-color:var(--gold);background:var(--gold);color:#111}
 .town-reply{padding:17px 19px;margin-top:23px;border-left:3px solid var(--gold);background:#24281f;color:#f8ecd2;min-height:74px;font-weight:600}
 @media(max-width:760px){.town-layout{grid-template-columns:1fr}.town-mayor{min-height:275px}.town-mayor .mayor-avatar{width:115px;height:115px;font-size:4.3rem}}
-</style></head><body>
+</style><link rel="stylesheet" href="experience/universe-shell.css"></head><body>
 <a class="skip" href="#main">Skip to main content</a><header><div class="shell nav"><a class="brand" href="index.html"><span class="logo" aria-hidden="true">G</span><span><small>WHERE THE GOATS PLAY</small>GOAT UNIVERSE</span></a><nav aria-label="GOATVILLE navigation"><a href="#world">THE WORLD</a><a href="#passport">PASSPORT</a><a href="index.html#goat-games">THE GOAT GAMES</a><a href="#arcade" class="nav-action">PLAY NOW ↗</a></nav></div></header>
 <main id="main">
 <section class="hero"><div class="shell hero-grid"><div><div class="eyebrow">GOAT UNIVERSE PRESENTS / YOUR NEW DESTINATION</div><h1><span class="outline">WELCOME TO</span><span>GOATVILLE.</span></h1><p class="lead"><strong>Where the GOATs Play.</strong> A world of sports, stories, rivalries, ridiculous adventures, and games you can actually play. The gates are open.</p><div class="ctas"><a class="button primary" href="#world">ENTER THE UNIVERSE ↗</a><a class="button" href="#arcade">TAKE THE FIRST CHALLENGE</a></div><p class="subnote">Free browser attractions · No account required · Made for your phone</p></div>
@@ -175,4 +175,4 @@ el('swing').addEventListener('click',()=>{if(swung)return;swung=true;const h=hol
 el('next-hole').addEventListener('click',()=>{if(!swung)return;if(gidx<2){gidx++;drawHole();}else{addStamp('golf');el('golf-count').textContent='ROUND COMPLETE';el('golf-feedback').textContent='ROUND COMPLETE: '+total+' / 300 arcade points. GOAT TEE stamp collected!';el('next-hole').hidden=true;}});
 el('golf-reset').addEventListener('click',()=>{gidx=0;total=0;el('aim').value=0;el('power').value=60;el('aim-value').textContent='0°';el('power-value').textContent='60%';drawHole();});drawHole();
 })();
-</script></body></html>
+</script><script defer src="experience/universe-shell.js"></script></body></html>
