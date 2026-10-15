@@ -68,3 +68,11 @@ test('GOATVILLE does not misrepresent arcade games as official competitions', ()
   assert.match(page, /separate from official GOAT Games scoring/);
   assert.match(page, /No official competition registration, prizes or verified competitive rankings/);
 });
+
+test('Mayor Billy GOAT town square has three interactive visitor choices', () => {
+  assert.match(page, /id="town-square"/);
+  assert.match(page, /MAYOR BILLY GOAT/);
+  assert.equal((page.match(/class="town-choice"/g) ?? []).length, 3);
+  assert.match(page, /const mayorLines=/);
+  assert.match(page, /id="mayor-response"/);
+});
