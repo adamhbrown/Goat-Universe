@@ -22,7 +22,7 @@ test('the city links to a real free-play guest destination',()=>{
  assert.match(html,/guest\/parent\.mjs/);
  assert.match(html,/guest\/parent\.css/);
  assert.match(html,/Field Vision/);
- assert.match(html,/not an official GOAT Games/);
+ assert.match(html,/isolated from member accounts and official GOAT Games results/);
 });
 test('guest shell uses strict CSP, no remote code or implicit loading',()=>{
  assert.match(html,/default-src 'none'/);
