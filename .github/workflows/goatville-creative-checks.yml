@@ -1,0 +1,33 @@
+name: GOATVILLE isolated creative checks
+
+on:
+  pull_request:
+    paths:
+      - 'guest/**'
+      - 'cinema/**'
+      - 'goatville*.html'
+      - 'tests/goatville*.test.mjs'
+      - '.github/workflows/goatville-creative-checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guest-arcade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and isolated guest security checks
+        run: |
+          node --check guest/field-vision.js
+          node --check guest/spotlight-circuit.js
+          node --check guest/parent.mjs
+          node --check cinema/studio.js
+          node --check guest/catalog.mjs
+          node --check guest/host.mjs
+          node --test tests/goatville-guest-integration.test.mjs tests/goatville-spotlight.test.mjs tests/goatville-cinema.test.mjs
