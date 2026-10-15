@@ -6,6 +6,7 @@ import {createGuestSession,createGuestJournal} from '../guest/protocol.mjs';
 const root=new URL('../',import.meta.url);
 const read=path=>readFileSync(new URL(path,root),'utf8');
 const host=read('guest/host.mjs');
+const catalog=read('guest/catalog.mjs');
 const parent=read('guest/parent.mjs');
 const html=read('goatville-field-vision.html');
 const game=read('guest/field-vision.html');
@@ -36,7 +37,8 @@ test('guest shell uses strict CSP, no remote code or implicit loading',()=>{
 test('guest frames remain opaque and do not gain navigation, form or storage permissions',()=>{
  assert.match(host,/setAttribute\('sandbox', 'allow-scripts'\)/);
  assert.doesNotMatch(host,/sandbox', 'allow-scripts allow-same-origin/);
- assert.match(host,/entry\.search \|\| entry\.hash/);
+ assert.match(catalog,/entry\.search\|\|entry\.hash/);
+ assert.match(host,/resolveReviewedGuestEntry/);
  assert.match(host,/frame\.remove\(\)/);
  assert.match(host,/removeEventListener\('message'/);
 });
