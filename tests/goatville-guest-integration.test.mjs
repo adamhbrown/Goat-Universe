@@ -118,6 +118,8 @@ test('child game performs three keyboard-compatible decisions and sends one stri
 });
 test('host returns focus, only records local unverified stamps and never touches official API',()=>{
  assert.match(parent,/game\?\.destroy\(\)|game\.destroy\(\)/);
+ assert.match(parent,/goatverse:portal-open/);
+ assert.match(parent,/stop\(\{returnFocus:false\}\)/);
  assert.match(parent,/\$\('start'\)\.focus\(\)/);
  assert.match(parent,/journal\.record\(stamp\)/);
  assert.match(parent,/createGuestJournal\(\)/);
