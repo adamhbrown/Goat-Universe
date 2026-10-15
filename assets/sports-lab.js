@@ -3,6 +3,7 @@
   'use strict';
   const E = globalThis.GoatSports;
   if (!E) return;
+  document.getElementById('arcade-fallback').hidden = true;
   const root = document.getElementById('experience');
   const announcement = document.getElementById('arcade-announcement');
   const modes = {

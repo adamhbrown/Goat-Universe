@@ -3,6 +3,8 @@
   'use strict';
   const engine = globalThis.GoatTeeEngine, game = document.getElementById('tee-game');
   if (!engine || !game) return;
+  document.getElementById('tee-fallback').hidden = true;
+  document.getElementById('tee-start').disabled = false;
   const byId = id => document.getElementById(id);
   const svg = byId('tee-course'), putt = byId('tee-putt'), next = byId('tee-next'), restart = byId('tee-restart');
   const inputs = byId('tee-inputs'), aim = byId('tee-aim'), power = byId('tee-power'), status = byId('tee-status');

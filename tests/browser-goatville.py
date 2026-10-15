@@ -89,7 +89,7 @@ with sync_playwright() as p:
   context=browser.new_context(java_script_enabled=False,reduced_motion='reduce',viewport={'width':390,'height':844});page=context.new_page();ready(page);page.locator('.games-card-link[href="#game-details-gridiron"]').click();
   if page.locator('#game-details-gridiron').get_attribute('open') is None:
    page.locator('#game-details-gridiron summary').focus();page.keyboard.press('Space')
-  expect(page.locator('#game-details-gridiron')).to_have_attribute('open','');expect(page.locator('.destination-list a')).to_have_count(6);expect(page.locator('noscript')).to_contain_text('JavaScript');check('no-JavaScript navigation and native disclosures');context.close()
+  expect(page.locator('#game-details-gridiron')).to_have_attribute('open','');expect(page.locator('.destination-list a')).to_have_count(6);expect(page.locator('#tee-fallback')).to_be_visible();expect(page.locator('#tee-fallback')).to_contain_text('JavaScript');check('no-JavaScript navigation and native disclosures');context.close()
   assert not report['page_errors'],report['page_errors'];report['result']='passed'
  except Exception as error:
   report['result']='failed';report['failure']=str(error);raise

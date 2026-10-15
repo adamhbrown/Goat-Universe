@@ -239,3 +239,4 @@ body.cinema-open{overflow:hidden}
 @media(max-width:650px){.entrance-world.gate-arrival{width:calc(100% + 40px);margin:10px -20px 0;aspect-ratio:1.3;mask-image:linear-gradient(to bottom,transparent,#000 5%,#000 85%,transparent)}.entrance-world.gate-arrival>img{object-position:50% 50%}.gate-arrival .scene-invitation{bottom:14%;right:8%;font-size:.5rem;min-height:40px;gap:10px}.gate-arrival .scene-invitation>span:first-child{font-size:.875rem}.gate-arrival figcaption{display:none}}
 @media(max-height:500px) and (orientation:landscape){.entrance-world.gate-arrival{aspect-ratio:1.1;margin:0 -20px 0 0}.gate-arrival .scene-invitation{display:none}}
 @media(prefers-reduced-motion:reduce){.entrance-world.gate-arrival>img{animation:none!important}}
+.theme-direct-link{display:inline-flex;align-items:center;min-height:44px;font-size:.625rem;color:#c7b98e;text-decoration:underline;text-underline-offset:4px;margin-top:6px}
