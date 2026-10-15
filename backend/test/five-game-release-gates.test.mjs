@@ -107,6 +107,41 @@ test('malformed timestamps, invalid season and damaged saved snapshots fail clos
   for(const key of ids.slice(1)) assert.ok(report.games.find(g=>g.game_key===key).issues.length>0,key);
 });
 
+test('founder-supplied annual season map detects unintended cross-season attachments without assuming labels',()=>{
+  const mapping=Object.fromEntries(ids.map(game=>[game,2027]));
+  const preparedReport=auditFiveGameCandidate(prepared(),{seasonByGame:mapping});
+  assert.equal(preparedReport.season_mapping_checked,true);
+  assert.equal(preparedReport.data_prepared,true);
+  assert.equal(preparedReport.can_launch,false);
+  const differentSeason=prepared();
+  differentSeason[0].league.season=2026;
+  const blocked=auditFiveGameCandidate(differentSeason,{seasonByGame:mapping});
+  assert.equal(blocked.status,'blocked');
+  assert.ok(blocked.games[0].issues.includes('annual_cycle_season_mismatch'));
+  const alternate={...mapping,'goat-classic':2026};
+  assert.equal(auditFiveGameCandidate(prepared(),{seasonByGame:alternate}).data_prepared,false);
+  assert.throws(()=>auditFiveGameCandidate(prepared(),{seasonByGame:{...mapping,'unexpected-game':2027}}),/invalid_annual_season_map/);
+  assert.throws(()=>auditFiveGameCandidate(prepared(),{seasonByGame:{...mapping,'first-and-baa':2025}}),/invalid_annual_season_map/);
+  assert.throws(()=>auditFiveGameCandidate(prepared(),{seasonByGame:{...mapping,'first-and-baa':'2027Q1'}}),/invalid_annual_season_map/);
+});
+
+test('bracket lock rejects normalized nonexistent calendar days, impossible leap days, offsets and times',()=>{
+  const bad=[
+    '2027-02-30T12:00:00Z','2027-02-29T12:00:00Z',
+    '2027-03-18T24:00:00Z','2027-03-18T12:61:00Z',
+    '2027-03-18T12:00:00+99:00','2027-03-18T12:00:00'
+  ];
+  for(const lock_at of bad) {
+    const snapshots=prepared();
+    snapshots[1].bracket_config.main_lock_at=lock_at;
+    const report=auditFiveGameCandidate(snapshots);
+    assert.equal(report.data_prepared,false,lock_at);
+    assert.ok(report.games[1].issues.includes('invalid_main_bracket_lock'),lock_at);
+  }
+  const valid=prepared();valid[1].bracket_config.main_lock_at='2028-02-29T12:00:00-05:00';
+  assert.equal(auditFiveGameCandidate(valid).data_prepared,true);
+});
+
 test('audit does not mutate caller data or promote sandbox game points to official standings',()=>{
   const candidate=prepared(),before=JSON.stringify(candidate);
   const result=auditFiveGameCandidate(candidate);
@@ -140,6 +175,14 @@ test('offline audit CLI never declares a launch or prints private snapshot conte
     const blocked=run(filename);
     assert.equal(blocked.status,1,blocked.stderr);
     assert.equal(JSON.parse(blocked.stdout).status,'blocked');
+    const mapping=Object.fromEntries(ids.map(game=>[game,2027]));
+    await writeFile(filename,JSON.stringify({snapshots:prepared(),season_by_game:mapping}));
+    const mapped=run(filename);
+    assert.equal(mapped.status,2,mapped.stderr);
+    assert.equal(JSON.parse(mapped.stdout).season_mapping_checked,true);
+    mapping['goat-classic']=2026;
+    await writeFile(filename,JSON.stringify({snapshots:prepared(),season_by_game:mapping}));
+    assert.equal(run(filename).status,1);
     await writeFile(filename,'{bad-json');
     const corrupted=run(filename);
     assert.equal(corrupted.status,1);
