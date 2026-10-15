@@ -81,5 +81,8 @@ $('clear').addEventListener('click',()=>{
   showStamps();
   announce(cleared?'Unverified souvenirs cleared.':'Memory souvenirs cleared. Browser storage access is unavailable.');
 });
+document.addEventListener('goatverse:portal-open',()=>{
+  if(game){stop({returnFocus:false});announce('Attraction closed while you explore the universe. Choose Start to play another round.');}
+});
 window.addEventListener('pagehide',()=>game?.destroy());
 showStamps();
