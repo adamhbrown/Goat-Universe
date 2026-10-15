@@ -62,7 +62,7 @@ function finish(){
  parent.postMessage({
   channel:spec.channel,session:config.session,attraction:spec.attraction,version:spec.version,
   sequence:1,type:'achievement',achievement:spec.achievement
- },location.origin);
+ },config.parentOrigin);
  $('scenario').focus();
 }
 $('next').addEventListener('click',()=>{
@@ -71,13 +71,18 @@ $('next').addEventListener('click',()=>{
  position++;render();
 });
 addEventListener('message',event=>{
- if(initialized||event.source!==parent||event.origin!==location.origin)return;
+ // The sandbox has an opaque origin, so location.origin may serialize as 'null'.
+ // The loaded resource URL still identifies the reviewed HTTP(S) site. Require
+ // that exact parent origin and send completions to the authenticated sender.
+ const resource=new URL(location.href);
+ if(initialized||event.source!==parent||!['https:','http:'].includes(resource.protocol)||
+    event.origin!==resource.origin)return;
  const m=event.data;
  if(!m||typeof m!=='object'||Array.isArray(m)||Object.keys(m).length!==6||
  m.channel!==spec.channel||m.type!=='init'||m.attraction!==spec.attraction||
  m.version!==spec.version||typeof m.reducedMotion!=='boolean'||
  typeof m.session!=='string'||!/^[a-f0-9]{32}$/.test(m.session))return;
- config=Object.freeze({session:m.session});
+ config=Object.freeze({session:m.session,parentOrigin:event.origin});
  initialized=true;render();
 });
 })();

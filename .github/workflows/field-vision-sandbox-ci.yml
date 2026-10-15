@@ -1,0 +1,38 @@
+name: Pope Field Vision sandbox verification
+
+on:
+  push:
+    branches: ['work/pope-field-vision-sandbox-review-20261015']
+  pull_request:
+    branches: ['work/tiffany-stadium-entrance-20261015']
+    paths:
+      - 'guest/**'
+      - 'tests/**'
+      - 'goatville-field-vision.html'
+      - '.github/workflows/field-vision-sandbox-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  review-sandbox:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout source without persisting token
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Pin Node runtime
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: Verify reviewed guest code syntax
+        run: |
+          node --check guest/host.mjs
+          node --check guest/catalog.mjs
+          node --check guest/protocol.mjs
+          node --check guest/field-vision.js
+          node --check tests/goatville-guest-integration.test.mjs
+      - name: Test every GOATVILLE guest and public page
+        run: node --test tests/*.test.mjs
