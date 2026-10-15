@@ -199,3 +199,29 @@ targets draft PR #17 and tightens the sandbox host:
 The allowlist does not prove gameplay integrity or turn browser-issued stamps
 into official achievements. Keep the independent, local-unverified guest boundary,
 and do not merge or deploy without the CEO's explicit approval.
+
+## Browser acceptance fixture repair — afternoon follow-up
+
+The reviewed catalog added a module dependency that the original browser-test
+server did not serve. `backend/guest-test-server.mjs` now provides the explicit
+eight-file test bundle, including `catalog.mjs`, without exposing the repository
+root. The browser acceptance script uses that server under a Pages-style path
+prefix. GET/HEAD are supported; other methods and noncatalog paths are denied.
+
+Run `node --test backend/test/guest-test-server.test.mjs` to verify the actual
+HTTP dependency graph from the host HTML through the catalog and challenge,
+at both the root and a deployment prefix. Tests also cover traversal, encoded
+aliases, query strings, private paths, JavaScript MIME types and response headers.
+These HTTP tests need no browser, provider connection or additional dependency.
+
+The optional browser script still requires an installed Playwright-compatible
+Chromium executable. This environment has the Playwright package but no matching
+browser binary; exit 2 remains **blocked**, not a successful browser test.
+Server or gameplay failures after browser launch report **failed** (exit 1).
+
+Verification: fixture HTTP tests **3/3**, syntax checks and public-export audit
+passed (8 files, 14,000 bytes). The full local suite with two test files in
+parallel reported **81/82**: the previously observed full-bracket DOM transport
+timeout occurred again. Its complete DOM file passed **8/8** in isolation.
+The timeout remains an unresolved reliability issue; this change does not claim
+a clean full-suite run or a confirmed root cause for that existing failure.
