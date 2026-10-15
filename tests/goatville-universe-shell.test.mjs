@@ -64,7 +64,8 @@ test('open and close preserve focus, accurate route state, and scroll progress',
     click(){this.listeners.click?.({target:this});}
   }
   const body=new Node('body');
-  const doc={body,
+  const raised=[];
+  const doc={body,dispatchEvent:event=>{raised.push(event.type);},
     createElement:tag=>new Node(tag),
     createTextNode:value=>({textContent:value}),
     getElementById:id=>{
@@ -79,7 +80,7 @@ test('open and close preserve focus, accurate route state, and scroll progress',
     requestAnimationFrame:fn=>fn()
   };
   const loc={pathname:'/goatville-city.html',href:''};
-  new Function('document','window','location',shell)(doc,win,loc);
+  new Function('document','window','location','CustomEvent',shell)(doc,win,loc,class CustomEvent{constructor(type){this.type=type;}});
   const get=id=>doc.getElementById(id);
   const toggle=get('gv-portal-launch'),modal=get('gv-portal-dialog'),progress=get('gv-experience-progress');
   assert.ok(toggle);
@@ -87,6 +88,7 @@ test('open and close preserve focus, accurate route state, and scroll progress',
   assert.equal(modal.open,false);
   toggle.click();
   assert.equal(modal.open,true);
+  assert.deepEqual(raised,['goatverse:portal-open']);
   assert.equal(toggle.attributes['aria-expanded'],'true');
   const find=(node,p)=>p(node)?node:node.children?.map(x=>find(x,p)).find(Boolean);
   const close=find(modal,n=>n?.className==='gv-close');
