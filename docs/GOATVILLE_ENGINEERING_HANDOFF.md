@@ -173,3 +173,29 @@ clearing and teardown. Exit 2 means browser tooling is unavailable; it is not a 
 Still required: run that script successfully, review actual CSP headers, test
 real iPhone Safari/VoiceOver and slow networks, verify focus behavior inside the
 final creative UI, and measure the integrated release rather than this harness.
+
+
+## Reviewed attraction catalog hardening — October 15 follow-up
+
+A separate, narrow review branch `work/pope-reviewed-attraction-catalog-20261015`
+targets draft PR #17 and tightens the sandbox host:
+
+- `backend/goatville/catalog.mjs` is the checked-in allowlist of approved
+  attraction IDs, exact version, title, achievement names and document-relative
+  HTML entry point. Only the isolated `integration-test` fixture is approved.
+- `mountGuestGame()` rejects unknown attraction IDs, version/title/achievement
+  changes, and every unreviewed same-origin HTML path, including lookalike
+  filenames in other folders. Query strings, fragments, cross-origin URLs and
+  non-HTTP(S) schemes remain forbidden.
+- Resolve against the current guest host page so isolated staging deployments
+  can use a path prefix; the entry path must still be an exact match.
+- More test cases exercise bogus same-origin pages, forged catalog fields,
+  postMessage teardown and path-prefixed static hosting.
+- To introduce a production mini-game, explicitly add its reviewed descriptor to
+  the source-controlled catalog in a dedicated PR, alongside the static files,
+  threat model, accessibility checks and test cases. Never populate the catalog
+  from URL parameters, localStorage or server responses to ordinary visitors.
+
+The allowlist does not prove gameplay integrity or turn browser-issued stamps
+into official achievements. Keep the independent, local-unverified guest boundary,
+and do not merge or deploy without the CEO's explicit approval.
