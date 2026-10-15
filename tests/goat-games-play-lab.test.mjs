@@ -49,7 +49,7 @@ test('crossover predicts both sport series winners and number of games', () => {
 });
 test('fantasy workout and baseball series are labeled fictional', () => {
   assert.match(lab, /Illustrative projection/);
-  assert.match(lab, /Fictional player names and sample projections/);
+  assert.match(lab, /Illustrative roster archetypes and sample projections/);
   assert.match(lab, /FICTIONAL SERIES:/);
   assert.match(lab, /id="baseball-length"/);
 });
