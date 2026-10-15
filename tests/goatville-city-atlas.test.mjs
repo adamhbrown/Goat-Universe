@@ -31,6 +31,7 @@ test('map remains usable on small screens and for reduced motion',()=>{
  assert.match(styles,/@media\(max-width:350px\)/);
  assert.match(styles,/prefers-reduced-motion:reduce/);
  assert.match(styles,/\.gv-map-pin:focus-visible/);
+ assert.match(styles,/\.gv-map-direct\[hidden\]\{display:none!important\}/);
  assert.match(city,/role="group" aria-label="GOATVILLE city atlas/);
  assert.match(city,/type="button" class="gv-map-pin"/);
  assert.match(city,/aria-pressed="true"/);
@@ -48,17 +49,18 @@ test('district selection exposes a live description and routes to correct existi
  class Node{
   constructor({id='',dataset={}}={}){
    this.id=id;this.dataset=dataset;this.attrs={};this.handlers={};
-   this.tabIndex=-1;this.textContent='';this.href='';this.focused=false;
+   this.tabIndex=-1;this.textContent='';this.href='';this.focused=false;this.hidden=false;
   }
   addEventListener(k,fn){this.handlers[k]=fn;}
   click(){this.handlers.click?.({target:this});}
   keydown(key){let prevented=false;this.handlers.keydown?.({key,preventDefault:()=>{prevented=true}});return prevented;}
   setAttribute(k,v){this.attrs[k]=v;}
+  removeAttribute(k){delete this.attrs[k];if(k==='href')this.href='';}
   getAttribute(k){return this.attrs[k];}
   focus(){this.focused=true;}
  }
  const points=districts.map(name=>new Node({dataset:{mapPoint:name}}));
- const ids=['map-detail-title','map-detail-status','map-detail-description','map-detail-route','map-detail-number'];
+ const ids=['map-detail-title','map-detail-status','map-detail-description','map-detail-route','map-detail-number','map-detail-direct'];
  const nodes=Object.fromEntries(ids.map(id=>[id,new Node({id})]));
  let resetCount=0;
  const all=new Node({dataset:{filter:'all'}});
@@ -73,15 +75,21 @@ test('district selection exposes a live description and routes to correct existi
  assert.equal(nodes['map-detail-title'].textContent,'THE ATHLETIC DISTRICT');
  assert.equal(points.filter(p=>p.tabIndex===0).length,1);
  assert.equal(nodes['map-detail-route'].href,'#district-athletic');
+ assert.equal(nodes['map-detail-direct'].href,'goat-games-play-lab.html');
+ assert.equal(nodes['map-detail-direct'].hidden,false);
  points[2].click();
  assert.equal(nodes['map-detail-title'].textContent,'THE CULTURE DISTRICT');
  assert.equal(nodes['map-detail-route'].href,'#district-culture');
  assert.equal(points[2].attrs['aria-pressed'],'true');
  assert.equal(points[0].attrs['aria-pressed'],'false');
  assert.equal(nodes['map-detail-status'].textContent,'PRIVATE CREATIVE PREVIEW');
+ assert.equal(nodes['map-detail-direct'].href,'goatville-cinema.html');
+ assert.equal(nodes['map-detail-direct'].hidden,false);
  const prevent=points[2].keydown('ArrowRight');
  assert.equal(prevent,true);
  assert.equal(nodes['map-detail-route'].href,'#district-legends');
+ assert.equal(nodes['map-detail-direct'].hidden,true);
+ assert.equal(nodes['map-detail-direct'].href,'');
  assert.equal(points[3].focused,true);
  assert.equal(points[3].keydown('Home'),true);
  assert.equal(nodes['map-detail-route'].href,'#district-athletic');
@@ -94,6 +102,7 @@ test('district selection exposes a live description and routes to correct existi
  nodes['map-detail-route'].click();
  assert.equal(resetCount,1);
  assert.match(nodes['map-detail-route'].attrs['aria-label'],/AFTER DARK/);
+ assert.equal(nodes['map-detail-direct'].hidden,true);
 });
 
 test('existing district category filters and other city experiences remain present',()=>{
