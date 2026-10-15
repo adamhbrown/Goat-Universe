@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GOAT Arcade — Five Ways to Play | GOAT Universe</title>
+<meta name="description" content="Enter the GOAT Games championship district. Five interactive practice experiences: football picks, basketball brackets, crossover series, fantasy lineups and October baseball.">
+<meta name="theme-color" content="#090c10">
+<link rel="preload" href="assets/fonts/manrope-latin.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin.woff" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="assets/sports-lab.css">
+<script src="assets/sports-engine.js" defer></script><script src="assets/sports-lab.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#experience">Skip to the experience</a>
+<header class="arcade-header"><a class="arcade-brand" href="index.html"><span>G</span><div>GOAT UNIVERSE<small>WHERE THE GOATS PLAY</small></div></a><a class="back-world" href="index.html#universe">← GOATVILLE USA</a><span class="practice-pill">PRACTICE EDITION</span></header>
+<main class="arcade-shell">
+<div class="arcade-topline"><span>THE GOAT ARCADE <i>/</i> CHAMPIONSHIP DISTRICT</span><button id="passport-toggle" aria-expanded="false" aria-controls="passport-drawer" type="button">YOUR PASSPORT <b id="passport-count">0 / 5</b> <span aria-hidden="true">↗</span></button></div>
+<aside class="passport-drawer" id="passport-drawer" hidden aria-labelledby="passport-title"><div><span class="eyebrow">YOUR LOCAL GOATVILLE PASSPORT</span><h2 id="passport-title">Collect experiences.<br>Build your story.</h2><p>Five practice destinations. Complete a challenge to stamp your passport. Stamps are local-unverified souvenirs with no official status or rewards. They start in memory for this visit; browser saving is optional.</p><label for="franchise-name">Choose your clubhouse identity</label><select id="franchise-name"><option value="Gold Standard">Gold Standard</option><option value="Night Shift">Night Shift</option><option value="Summit Club">Summit Club</option></select><label class="passport-optin"><input id="passport-remember" type="checkbox"> Save my passport in this browser</label><button id="passport-clear" type="button">Clear this visit’s passport</button><p id="passport-storage" class="small-note"></p></div><div><ol id="passport-stamps"></ol><details class="gpi-lab"><summary>Open the GOAT Power Index lab <span aria-hidden="true">+</span></summary><p>An original interface experiment using fictional inputs. This is an illustrative weighted index, not official GPI methodology or an athlete rating.</p><label for="gpi-form">Form <output id="gpi-form-value">70</output></label><input id="gpi-form" type="range" min="0" max="100" value="70"><label for="gpi-moment">Moment <output id="gpi-moment-value">60</output></label><input id="gpi-moment" type="range" min="0" max="100" value="60"><label for="gpi-resolve">Resolve <output id="gpi-resolve-value">80</output></label><input id="gpi-resolve" type="range" min="0" max="100" value="80"><div class="gpi-result">ILLUSTRATIVE INDEX <strong id="gpi-value">69</strong><small>40% form · 35% moment · 25% resolve</small></div></details></div></aside>
+<nav class="sport-tabs" role="tablist" aria-label="Five GOAT Games practice destinations"><button type="button" role="tab" id="tab-gridiron" data-sport="gridiron" aria-controls="experience" aria-selected="true">01 <span>Football</span></button><button type="button" role="tab" id="tab-hoops" data-sport="hoops" aria-controls="experience" aria-selected="false" tabindex="-1">02 <span>Basketball</span></button><button type="button" role="tab" id="tab-crossover" data-sport="crossover" aria-controls="experience" aria-selected="false" tabindex="-1">03 <span>Crossover</span></button><button type="button" role="tab" id="tab-greatness" data-sport="greatness" aria-controls="experience" aria-selected="false" tabindex="-1">04 <span>Fantasy</span></button><button type="button" role="tab" id="tab-classic" data-sport="classic" aria-controls="experience" aria-selected="false" tabindex="-1">05 <span>Baseball</span></button></nav>
+<p class="demo-banner"><span aria-hidden="true">◇</span> FICTIONAL PRACTICE DATA <span>Teams, athletes, spreads and results are invented for these prototypes. No real entries, wagers, prizes or official scoring.</span></p>
+<div id="experience" role="tabpanel" aria-labelledby="tab-gridiron" tabindex="0"></div>
+<div id="arcade-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+<noscript><div class="noscript"><h1>Five ways to play.</h1><p>These practice experiences need JavaScript. You can still read about all five official competitions.</p><a href="index.html#game-guide">Explore the GOAT Games →</a></div></noscript>
+<footer class="arcade-footer"><a href="index.html#goat-tee">Take the scenic route. Play GOAT TEE ↗</a><span>INDEPENDENT PROTOTYPES · NO LEAGUE CONNECTION</span><a href="index.html#game-guide">Official competition explanations ↗</a></footer>
+</main>
+</body></html>
