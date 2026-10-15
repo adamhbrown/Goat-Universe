@@ -3,6 +3,9 @@ let accessToken = '';
 let refreshToken = '';
 let myUserId = '';
 let activeLeagueId = '';
+let sessionVersion = 0;
+let navigationVersion = 0;
+let refreshInFlight = null;
 const el = id => document.getElementById(id);
 const node = (tag, text, className) => {
   const item = document.createElement(tag);
@@ -14,27 +17,56 @@ function notice(message, type = '') {
   el('notice').textContent = message;
   el('notice').className = 'notice ' + type;
 }
-async function send(path, payload, authenticated = true, allowRefresh = true) {
+function requireSession(version) {
+  if (version !== sessionVersion) throw new Error('session_changed');
+}
+async function refreshSession(version) {
+  requireSession(version);
+  if (!refreshInFlight) {
+    const token = refreshToken;
+    refreshInFlight = { promise: (async () => {
+      const session = await send('auth/refresh', { refresh_token: token }, false, false);
+      requireSession(version);
+      if (!session.access_token || !session.refresh_token) throw new Error('invalid_refresh_response');
+      accessToken = session.access_token;
+      refreshToken = session.refresh_token;
+    })() };
+  }
+  const flight = refreshInFlight;
+  try { await flight.promise; }
+  finally { if (refreshInFlight === flight) refreshInFlight = null; }
+}
+async function send(path, payload, authenticated = true, allowRefresh = true, version = sessionVersion) {
+  const requestToken = accessToken;
+  if (authenticated) requireSession(version);
   const response = await fetch('/' + path, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      ...(authenticated && accessToken ? { Authorization: 'Bearer ' + accessToken } : {})
+      ...(authenticated && requestToken ? { Authorization: 'Bearer ' + requestToken } : {})
     },
     body: JSON.stringify(payload)
   });
-  if (response.status === 401 && authenticated && allowRefresh && refreshToken) {
-    try {
-      const session = await send('auth/refresh', { refresh_token: refreshToken }, false, false);
-      accessToken = session.access_token;
-      refreshToken = session.refresh_token;
-      return await send(path, payload, true, false);
-    } catch {
+  if (authenticated) requireSession(version);
+  if (response.status === 401 && authenticated) {
+    if (!allowRefresh || !refreshToken) {
       showSignedOut();
       throw new Error('session_expired_please_sign_in');
     }
+    try {
+      // A late 401 may belong to the token another request already rotated.
+      if (accessToken === requestToken) await refreshSession(version);
+      requireSession(version);
+    } catch {
+      requireSession(version);
+      showSignedOut();
+      throw new Error('session_expired_please_sign_in');
+    }
+    // A server/application error on the retry does not invalidate the session.
+    return send(path, payload, true, false, version);
   }
   const result = await response.json();
+  if (authenticated) requireSession(version);
   if (!response.ok) throw new Error(result.error || 'request_failed');
   return result;
 }
@@ -64,13 +96,16 @@ async function loadGoatGamesCatalog() {
 async function query(op, extras = {}) { return send('query', { op, ...extras }); }
 async function command(op, extras = {}) { return send('commands', { op, ...extras }); }
 function showSignedOut() {
+  sessionVersion++; navigationVersion++; refreshInFlight = null;
   accessToken = ''; refreshToken = ''; myUserId = ''; activeLeagueId = '';
   el('account-panel').hidden = false;
   el('member-panel').hidden = true;
   el('league-panel').hidden = true;
 }
 async function showSignedIn() {
+  const version = sessionVersion;
   const me = await query('me');
+  requireSession(version);
   myUserId = me.profile.user_id;
   el('member-name').textContent = 'Welcome, ' + me.profile.display_name;
   el('account-panel').hidden = true;
@@ -79,7 +114,9 @@ async function showSignedIn() {
   await loadLeagues();
 }
 async function loadLeagues() {
+  const version = sessionVersion;
   const leagues = await query('leagues');
+  requireSession(version);
   const list = el('leagues');
   list.replaceChildren();
   if (!leagues.length) {
@@ -117,7 +154,10 @@ function formatDeadline(value) {
   return Number.isNaN(date.getTime()) ? 'TBD' : date.toLocaleString();
 }
 async function openLeague(id) {
+  const version = sessionVersion, navigation = ++navigationVersion;
   const [details, standings] = await Promise.all([query('league', { league_id: id }), query('standings', { league_id: id })]);
+  requireSession(version);
+  if (navigation !== navigationVersion) return;
   activeLeagueId = id;
   el('league-name').textContent = details.league.name;
   el('league-details').textContent = details.league.sport + ' · ' + details.league.season + ' · ' + details.league.status;
@@ -273,12 +313,15 @@ function createPickForm(round, games, ownPicks) {
 el('account-form').addEventListener('submit', async event => {
   event.preventDefault();
   const action = event.submitter?.value || 'login';
+  showSignedOut();
+  const version = sessionVersion;
   try {
     const result = await send('auth/' + action, {
       email: el('email').value.trim(),
       password: el('password').value,
       ...(action === 'signup' ? { display_name: el('display-name').value.trim() || undefined } : {})
     }, false);
+    requireSession(version);
     el('password').value = '';
     accessToken = result.access_token || result.session?.access_token || '';
     refreshToken = result.refresh_token || result.session?.refresh_token || '';
@@ -287,8 +330,9 @@ el('account-form').addEventListener('submit', async event => {
       return;
     }
     await showSignedIn();
+    requireSession(version);
     notice('Welcome to GOAT Games!', 'success');
-  } catch (error) { el('password').value = ''; notice(error.message, 'error'); }
+  } catch (error) { if (version === sessionVersion) { el('password').value = ''; notice(error.message, 'error'); } }
 });
 el('join-form').addEventListener('submit', async event => {
   event.preventDefault();
@@ -307,14 +351,16 @@ el('reload').addEventListener('click', async () => {
   catch (error) { notice(error.message, 'error'); }
 });
 el('back').addEventListener('click', () => {
+  navigationVersion++;
   activeLeagueId = '';
   el('league-panel').hidden = true;
   el('member-panel').hidden = false;
 });
 el('signout').addEventListener('click', async () => {
-  try { if (accessToken) await send('auth/logout', {}); }
+  const logout = accessToken ? send('auth/logout', {}, true, false) : Promise.resolve();
+  showSignedOut(); notice('Signed out. See you at the next game.');
+  try { await logout; }
   catch { /* Clear the browser session even if the server is unreachable. */ }
-  finally { showSignedOut(); notice('Signed out. See you at the next game.'); }
 });
 showSignedOut();
 loadGoatGamesCatalog();

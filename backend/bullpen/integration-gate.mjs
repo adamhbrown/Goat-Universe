@@ -3,6 +3,7 @@
 // A pass on these items is never staging approval, hosting proof or AI connectivity.
 import {readFile,readdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
+import {REVIEWED_PROTOTYPE_COMMIT, REVIEWED_MIGRATIONS} from './reviewed-migrations.mjs';
 
 const root=new URL('../../',import.meta.url);
 const files=Object.freeze({
@@ -65,8 +66,8 @@ export async function auditBullpenCandidate({readSource=read,listMigrationFiles=
   try{
     if(rawManifest.exists)manifest=JSON.parse(rawManifest.bytes.toString('utf8'));
   }catch{manifest=null;}
-  if(!manifest||manifest.source_prototype_commit!=='c8b120dfc0f81bcc480408d6eee914893bd6ad84'||
-    !Array.isArray(manifest.prototype_migrations)||manifest.prototype_migrations.length!==5){
+  if(!manifest||manifest.source_prototype_commit!==REVIEWED_PROTOTYPE_COMMIT||
+    !Array.isArray(manifest.prototype_migrations)||manifest.prototype_migrations.length!==Object.keys(REVIEWED_MIGRATIONS).length){
     add('prototype_manifest','missing_or_invalid');
   }else{
     const seen=new Set();
@@ -74,11 +75,11 @@ export async function auditBullpenCandidate({readSource=read,listMigrationFiles=
     for(const entry of manifest.prototype_migrations){
       if(!entry||typeof entry.file!=='string'||!safeMigration.test(entry.file)||
          typeof entry.sha256!=='string'||!/^[a-f0-9]{64}$/.test(entry.sha256)||
-         seen.has(entry.file)){badFormat=true;continue;}
+         seen.has(entry.file)||!Object.hasOwn(REVIEWED_MIGRATIONS,entry.file)){badFormat=true;continue;}
       seen.add(entry.file);
       const source=await get(entry.file);
       if(!source.exists)missing++;
-      else if(hash(source.bytes)!==entry.sha256)diverged++;
+      else if(entry.sha256!==REVIEWED_MIGRATIONS[entry.file]||hash(source.bytes)!==REVIEWED_MIGRATIONS[entry.file])diverged++;
     }
     add('prototype_migration_hashes',
       badFormat?'invalid':missing?'missing':diverged?'changed_review_required':'match',

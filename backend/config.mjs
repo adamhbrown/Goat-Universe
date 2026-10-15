@@ -1,3 +1,5 @@
+import {isProtectedProject} from './protected-projects.mjs';
+
 export function configuration(env = process.env) {
   const mode = env.BACKEND_MODE || 'local';
   const appEnv = env.APP_ENV || 'development';
@@ -11,7 +13,7 @@ export function configuration(env = process.env) {
       let role; try { role=JSON.parse(Buffer.from(env.SUPABASE_PUBLISHABLE_KEY.split('.')[1],'base64url').toString()).role; } catch { throw new Error('invalid_publishable_key'); }
       if (role!=='anon') throw new Error('privileged_key_forbidden_as_publishable_key');
     }
-    if (appEnv !== 'production' && url.includes('opvoemihfyxidzbdyory')) throw new Error('production_project_forbidden_in_development');
+    if (appEnv !== 'production' && isProtectedProject(new URL(url).hostname.split('.')[0])) throw new Error('production_project_forbidden_in_development');
   }
   const host = env.HOST || '127.0.0.1';
   const port = Number(env.PORT || 8787);
@@ -23,6 +25,14 @@ export function configuration(env = process.env) {
   const paymentsEnabled = env.PAYMENTS_ENABLED === 'true';
   const paymentLaunchApproved = env.PAYMENT_LAUNCH_APPROVED === 'true';
   if (paymentsEnabled && (!paymentLaunchApproved || !env.STRIPE_SECRET_KEY || !env.STRIPE_WEBHOOK_SECRET)) throw new Error('payment_launch_configuration_required');
+  if (paymentsEnabled && mode === 'supabase') {
+    const key = env.SUPABASE_BILLING_SECRET_KEY;
+    let privileged = typeof key === 'string' && /^sb_secret_[A-Za-z0-9_-]+$/.test(key);
+    if (typeof key === 'string' && key.startsWith('eyJ')) {
+      try { privileged = JSON.parse(Buffer.from(key.split('.')[1], 'base64url')).role === 'service_role'; } catch { privileged = false; }
+    }
+    if (!privileged) throw new Error('payment_billing_system_key_required');
+  }
   if (paymentsEnabled && appEnv !== 'production' && !env.STRIPE_SECRET_KEY.startsWith('sk_test_')) throw new Error('live_payments_forbidden_in_development');
   const tiers = JSON.parse(env.STRIPE_APPROVED_PRICES || '{}');
   return { mode, appEnv, url, appOrigin, authEmailEnabled, publishableKey: env.SUPABASE_PUBLISHABLE_KEY,
