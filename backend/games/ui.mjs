@@ -19,7 +19,7 @@ export async function mountGames({document,location,history,createClient,fetchPu
  let api=createClient(),account,dashboard,generation=0,view=0,activeLeague,activeAnnual;
  let selected=catalog.find(g=>location.pathname==='/games/'+g.id)?.id||'';
  const node=(tag,text,attrs={})=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=String(text);for(const [k,v]of Object.entries(attrs))e.setAttribute(k,String(v));return e;};
- const notify=text=>{$('notice').textContent=text;};
+ const notify=text=>{const notice=$('notice');if(notice)notice.textContent=text;};
  const field=(name,label,type='text',value='',attrs={})=>({name,label,type,value,attrs});
  const select=(name,label,options,value='',attrs={required:''})=>({...field(name,label,'select',value,attrs),options});
  const timezone=Intl.DateTimeFormat().resolvedOptions().timeZone;

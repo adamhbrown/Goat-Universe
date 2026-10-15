@@ -82,12 +82,16 @@ finishes cannot be rewritten through ordinary commands.
   no credentials or whitespace. URLs remain evidence supplied by a commissioner;
   the code does not independently certify a source's truth.
 
-Targeted local verification: 27 tests passed together, zero failed/skipped:
+Targeted local verification: 28 tests, zero failed/skipped:
 series (5), fantasy (4), annual integration (3), deadline regressions (4), input
-validation (2), game-screen DOM/routing (9). The earlier unmodified integration
+validation (2), game-screen DOM/routing (10). The earlier unmodified integration
 baseline passed 63 tests. The full updated suite and three new HTTP/DOM/database
 tests must be verified on the final commit; see the draft PR's CI evidence.
 JSDOM checks prove functional DOM behavior, not physical iPhone rendering.
+The initial complete CI run passed all 93 cases but caught an asynchronous
+sign-out notice after browser-test teardown. The follow-up waits for actual
+HTTP sign-out, safely ignores notices after document teardown, and adds a
+deterministic teardown regression. Final-commit CI is the authoritative result.
 
 ## Integration boundaries and next work
 

@@ -43,6 +43,7 @@ test('game workspace DOM uses the actual account client and HTTP/database to sav
   await until(()=>d.getElementById('league-panel').textContent.includes('REAL DOM DATABASE FIXTURE'));
   const stored=(await app.db.db.query("select status,rules from public.goat_leagues where name='REAL DOM DATABASE FIXTURE'")).rows;assert.equal(stored.length,1);assert.equal(stored[0].status,'draft');assert.equal(stored[0].rules.approved,false);
   assert.match(d.getElementById('league-panel').textContent,/Scoring disabled/);
-  d.getElementById('sign-out').click();assert.equal(d.getElementById('league-panel').hidden,true);assert.equal(d.window?.localStorage?.length||0,0);
+  d.getElementById('sign-out').click();assert.equal(d.getElementById('league-panel').hidden,true);assert.equal(dom.window.localStorage.length,0);
+  await until(()=>d.getElementById('notice').textContent==='Signed out.');
  }finally{dom.window.close();}
 });

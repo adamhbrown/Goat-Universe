@@ -101,3 +101,7 @@ test('Back during a pending pick command cannot reopen a competition or overwrit
   assert.equal(p.$('league-panel').hidden,true);assert.match(p.$('game-title').textContent,/GOAT Classic/);
  }finally{p.dom.window.close();}
 });
+test('a delayed sign-out completion after document teardown does not throw or revive private UI',async()=>{
+ let finish;const pending=new Promise(r=>{finish=r;});const p=await workspace('goat-classic',fixture('goat-classic'),{logout:()=>pending});
+ await p.login();p.$('sign-out').click();assert.equal(p.$('member-panel').hidden,true);p.dom.window.close();finish();await wait();await wait();
+});
