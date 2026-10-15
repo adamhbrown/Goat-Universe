@@ -30,6 +30,7 @@ jobs:
           node --check guest/parent.mjs
           node --check cinema/studio.js
           node --check experience/universe-shell.js
+          node --check experience/city-atlas.js
           node --check guest/catalog.mjs
           node --check guest/host.mjs
-          node --test tests/goatville-guest-integration.test.mjs tests/goatville-spotlight.test.mjs tests/goatville-cinema.test.mjs tests/goatville-universe-shell.test.mjs tests/goatville-luxury-experience.test.mjs
+          node --test tests/goatville-guest-integration.test.mjs tests/goatville-spotlight.test.mjs tests/goatville-cinema.test.mjs tests/goatville-universe-shell.test.mjs tests/goatville-luxury-experience.test.mjs tests/goatville-city-atlas.test.mjs tests/goatville-city.test.mjs
