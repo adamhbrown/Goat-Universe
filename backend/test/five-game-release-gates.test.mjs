@@ -115,3 +115,36 @@ test('audit does not mutate caller data or promote sandbox game points to offici
   assert.equal('baas' in result,false);
   assert.equal('gpi' in result,false);
 });
+
+test('offline audit CLI never declares a launch or prints private snapshot content',async()=>{
+  const {spawnSync}=await import('node:child_process');
+  const {mkdtemp,writeFile,rm}=await import('node:fs/promises');
+  const {tmpdir}=await import('node:os');
+  const {join}=await import('node:path');
+  const dir=await mkdtemp(join(tmpdir(),'goat-five-game-test-'));
+  const run=filename=>spawnSync(process.execPath,[new URL('../scripts/audit-five-games.mjs',import.meta.url).pathname,filename],
+    {encoding:'utf8',timeout:15000});
+  try{
+    const filename=join(dir,'private-fixture.json');
+    const snapshots=prepared();
+    snapshots[0].league.private_email='member-secret@example.invalid';
+    await writeFile(filename,JSON.stringify(snapshots));
+    const ok=run(filename);
+    assert.equal(ok.status,2,ok.stderr);
+    const result=JSON.parse(ok.stdout);
+    assert.equal(result.data_prepared,true);
+    assert.equal(result.can_launch,false);
+    assert.doesNotMatch(ok.stdout,/member-secret@example\.invalid|SYNTHETIC-TEST-SOURCE/);
+    snapshots[0].league.rules.unresolved=['pending official policy'];
+    await writeFile(filename,JSON.stringify(snapshots));
+    const blocked=run(filename);
+    assert.equal(blocked.status,1,blocked.stderr);
+    assert.equal(JSON.parse(blocked.stdout).status,'blocked');
+    await writeFile(filename,'{bad-json');
+    const corrupted=run(filename);
+    assert.equal(corrupted.status,1);
+    assert.equal(corrupted.stdout,'');
+    assert.match(corrupted.stderr,/snapshot_json_invalid/);
+    assert.doesNotMatch(corrupted.stderr,/bad-json|member-secret/);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
