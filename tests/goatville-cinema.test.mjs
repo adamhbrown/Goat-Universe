@@ -85,6 +85,11 @@ test('simulation: no play before local file selection, silent start, opt-in musi
   assert.equal($('screen-video').muted,true,'separate track replaces video audio');
   await $('play').click();
   assert.equal($('music').paused,false);
+  doc.listeners['goatverse:portal-open']();
+  assert.equal($('music').paused,true,'music stops behind the universe menu');
+  assert.equal($('screen-video').paused,true,'video stops behind the universe menu');
+  await $('play').click();
+  assert.equal($('music').paused,false);
   $('screen-video').currentTime=10;
   $('screen-video').emit('timeupdate');
   assert.equal($('progress').attrs['aria-valuenow'],'50');
