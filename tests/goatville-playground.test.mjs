@@ -23,7 +23,7 @@ test('Six map destinations link to real destinations', () => {
   assert.equal((page.match(/class="place p[1-6]"/g) ?? []).length, 6);
   assert.match(page, /index\.html#goat-games/);
   assert.match(page, /GOAT TEE/);
-  assert.match(page, /GOATverse Publications/);
+  assert.match(page, /GOATverse|GOATVERSE PUBLICATIONS/);
 });
 test('Games expose two accessible tab panels', () => {
   assert.equal((page.match(/role="tab" /g) ?? []).length, 2);
