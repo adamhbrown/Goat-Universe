@@ -30,7 +30,8 @@ test('no duplicate element IDs and all internal anchors resolve',()=>{
  for(const [,hash] of city.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(hash),hash);
 });
 test('no remote code, tracking, or payment widgets',()=>{
- assert.doesNotMatch(city,/<script\b[^>]+src=|fetch\(|<iframe|checkout\.stripe|paypal/);
+ assert.match(city,/<script defer src="experience\/city-atlas\.js"><\/script>/);
+ assert.doesNotMatch(city,/<script\b[^>]+src="https?:|fetch\(|<iframe|checkout\.stripe|paypal/);
 });
 
 test('premium cinematic entrance is explicitly opt-in, three chapters and skippable',()=>{
