@@ -5,7 +5,7 @@ import {GOAT_GAMES} from '../rules/goat-games.mjs';
 import {setupProgress} from './overview.mjs';
 
 const KEYS = Object.freeze(GOAT_GAMES.map(game => game.id));
-const SEASONS = /^(20[2-9][0-9])$/;
+const SEASONS = /^20(?:2[6-9]|[3-9][0-9])$/;
 const REQUIRES_EXTERNAL = Object.freeze([
   'Verified primary sports data and founder-signed rulebook for every competition',
   'Hosted Auth/RLS and cross-account acceptance on an isolated healthy target',
