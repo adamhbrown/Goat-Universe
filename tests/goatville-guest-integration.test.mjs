@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {readFileSync} from 'node:fs';
 import {createGuestSession,createGuestJournal} from '../guest/protocol.mjs';
+import {resolveApprovedGuestEntry} from '../guest/catalog.mjs';
 
 const root=new URL('../',import.meta.url);
 const read=path=>readFileSync(new URL(path,root),'utf8');
@@ -16,6 +17,32 @@ const sourcePointer={};
 const attribution={id:'field-vision',version:1,title:'Field Vision',achievements:['field-vision-clear']};
 const session='1234567890abcdef1234567890abcdef';
 const validMessage=()=>({channel:'goatville.guest.v1',session,attraction:'field-vision',version:1,sequence:1,type:'achievement',achievement:'field-vision-clear'});
+
+test('only the exact reviewed Field Vision game path and metadata can be framed',()=>{
+ const origin='https://goat.example',hostModuleURL=origin+'/Goat-Universe/guest/host.mjs';
+ const approved={
+   id:'field-vision',version:1,
+   title:'GOATVILLE Field Vision strategy drill',achievements:['field-vision-clear']
+ };
+ const valid=origin+'/Goat-Universe/guest/field-vision.html';
+ const accepted=resolveApprovedGuestEntry({attraction:approved,entryURL:valid,origin,hostModuleURL});
+ assert.equal(accepted.href,valid);
+ for(const entryURL of [
+   origin+'/Goat-Universe/guest/private.html',
+   origin+'/guest/field-vision.html',
+   valid+'?member=secret',valid+'#override',
+   'https://outsider.example/Goat-Universe/guest/field-vision.html',
+   'javascript:alert(1)'
+ ]) assert.throws(()=>resolveApprovedGuestEntry({attraction:approved,entryURL,origin,hostModuleURL}),/invalid_game_entry/);
+ for(const change of [
+   {id:'admin'}, {version:2}, {title:'Forged admin frame'},
+   {achievements:['official-baas']},{achievements:['field-vision-clear','extra']}
+ ])assert.throws(()=>resolveApprovedGuestEntry({
+   attraction:{...approved,...change},entryURL:valid,origin,hostModuleURL
+ }),/unreviewed_game/);
+ assert.match(host,/resolveApprovedGuestEntry/);
+ assert.match(host,/setAttribute\\('sandbox', 'allow-scripts'\\)/);
+});
 
 test('the city links to a real free-play guest destination',()=>{
  assert.match(city,/href="goatville-field-vision\.html"/);
@@ -94,7 +121,7 @@ test('child game performs three keyboard-compatible decisions and sends one stri
  let onMessage,payloads=[];
  const p={postMessage:(data,target)=>payloads.push({data,target})};
  new Function('document','addEventListener','parent','location',source)(
-  document,(name,fn)=>{if(name==='message')onMessage=fn;},p,{origin:'https://goat.example'}
+  document,(name,fn)=>{if(name==='message')onMessage=fn;},p,{origin:'null',href:'https://goat.example/guest/field-vision.html'}
  );
  onMessage({source:p,origin:'https://evil.example',data:{channel:'goatville.guest.v1'}});
  assert.equal(els.choices.children.length,0);
@@ -108,7 +135,7 @@ test('child game performs three keyboard-compatible decisions and sends one stri
   els.next.click();
  }
  assert.equal(payloads.length,1);
- assert.equal(payloads[0].target,'https://goat.example');
+ assert.equal(payloads[0].target,'https://goat.example'); // even when sandboxed location.origin === 'null'
  assert.deepEqual(payloads[0].data,validMessage());
  assert.equal(els.next.disabled,true);
  els.next.click();
