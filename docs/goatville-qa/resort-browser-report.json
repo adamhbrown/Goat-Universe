@@ -1,0 +1,1383 @@
+{
+  "layouts": [
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "town-square-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "championship-district-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "tee-district-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "club-goat-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "goat-island-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "mountain-lodge-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-intro-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-question-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "iq-feedback-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "small_buttons": [],
+      "name": "passport-1440x1000"
+    }
+  ],
+  "checks": [
+    "120 layout checks: six districts, IQ intro/question/feedback and passport at 12 phone/landscape/tablet/desktop sizes",
+    "390: six discovery clues, wrong-answer retry, honest completion and local stamps",
+    "390: six-sport play, pass, locked answers, full answer review and replay",
+    "390: shared sports/discovery journal restores only after explicit opt-in on each page",
+    "390: clear removes the saved cross-page journal and turns saving off",
+    "390: Club GOAT opens silently, plays on demand, closes with pause/focus return",
+    "390: deep links, browser history, keyboard route navigation and world-preview labels",
+    "1440: six discovery clues, wrong-answer retry, honest completion and local stamps",
+    "1440: six-sport play, pass, locked answers, full answer review and replay",
+    "1440: shared sports/discovery journal restores only after explicit opt-in on each page",
+    "1440: clear removes the saved cross-page journal and turns saving off",
+    "1440: Club GOAT opens silently, plays on demand, closes with pause/focus return",
+    "1440: deep links, browser history, keyboard route navigation and world-preview labels",
+    "mobile bracket round jump and selection preserve horizontal position",
+    "all five rooms download valid labeled SVG cards, clipboard denial has a manual path, next-room journey completes",
+    "blocked storage preserves working discovery play",
+    "no-JavaScript fallback retains ordinary destination navigation",
+    "unavailable game model leaves the visible fallback intact",
+    "resort meta CSP blocks injected inline scripts and outbound fetch without unsafe-eval"
+  ],
+  "page_errors": [],
+  "screenshots": [
+    "/tmp/goatville-resort-qa-final/resort-390.png",
+    "/tmp/goatville-resort-qa-final/sports-iq-390.png",
+    "/tmp/goatville-resort-qa-final/resort-1440.png",
+    "/tmp/goatville-resort-qa-final/sports-iq-1440.png",
+    "/tmp/goatville-resort-qa-final/sports-iq-result-390.png",
+    "/tmp/goatville-resort-qa-final/sports-iq-result-1440.png",
+    "/tmp/goatville-resort-qa-final/championship-keepsake-390.png"
+  ],
+  "downloads": [
+    {
+      "room": "gridiron",
+      "filename": "GOAT-1st-BAA-practice.svg",
+      "bytes": 2761
+    },
+    {
+      "room": "hoops",
+      "filename": "GOAT-Horns-Hoops-practice.svg",
+      "bytes": 3014
+    },
+    {
+      "room": "crossover",
+      "filename": "GOAT-GOAT-Crossover-practice.svg",
+      "bytes": 2638
+    },
+    {
+      "room": "greatness",
+      "filename": "GOAT-League-of-Greatness-practice.svg",
+      "bytes": 2830
+    },
+    {
+      "room": "classic",
+      "filename": "GOAT-The-GOAT-Classic-practice.svg",
+      "bytes": 3123
+    }
+  ],
+  "result": "passed"
+}

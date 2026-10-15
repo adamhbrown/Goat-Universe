@@ -46,15 +46,32 @@ A missed 10-putt hole is marked unfinished with an asterisk. The final scorecard
 reports cups sunk honestly, then offers replay. No storage, rewards or official
 scoring is used for golf.
 
-**GOATVILLE Passport.** Completing each of the five sports rooms stamps a local
-experience. It starts in memory and never acquires browser storage until explicit
-opt-in. The namespaced `goatville-kodak-practice-passport-v1` record has version 1,
-`verification: "local-unverified"`, at most five permitted keys and one preset
-franchise identity. Reads are bounded to 2 KiB and validate the schema. Blocked,
-corrupt or full storage falls back to memory. Opt-in is required again after reload
-before reading a saved record. The clear control removes opted-in saved data and
-turns saving off. Stamps are recreational souvenirs, not an account, credential,
-competitive achievement or redeemable reward.
+**GOATVILLE Passport.** A shared first-party journal now connects the five sports
+rooms, six Night Circuit discovery stops and Sports IQ (12 permitted stamps).
+`assets/guest-passport.js` exposes a memory-first `createJournal(getStorage)` API.
+Only `remember(true)` acquires storage. Version 2 uses
+`goatville-kodak-guest-journal-v2`, literal `local-unverified`, exact schema fields,
+a 4 KiB read bound, unique catalog IDs and three preset franchise identities.
+Each page/reload requires explicit opt-in again before restoration. The older v1
+sports-only key is not silently migrated. Opt-out deletes the opted-in saved copy;
+clear also resets current memory and identity. No account, official award or ledger
+is connected. Cross-tab concurrent reconciliation remains future work.
+
+**The Night Circuit.** Six district dossiers pair a readable lore clue with three
+answer choices. Wrong answers allow another attempt; correct answers collect one
+unverified discovery souvenir. Island and Lodge remain explicitly world previews:
+the clue works, but no underlying resort/ski attraction is claimed.
+
+**Sports IQ / Six-Sport Switch.** Each replay draws one of four original rule
+prompts for football, basketball, hockey, baseball, golf and fictional-format
+fantasy (24 prompts, six per round). Answers lock immediately, passing counts as
+incorrect, and the result includes all six explanations. There is no timer or real
+athlete/result data. The phone play view compacts the header and answered options.
+
+**Practice keepsakes.** Each sports result can download a portable self-contained
+SVG or copy plain text with a manual-copy fallback. Cards escape dynamic XML,
+carry fictional/local-unverified labels, and make no network request. Round-jump
+controls and preserved bracket scroll position keep mobile selections in place.
 
 **GPI lab.** Three sliders expose the effect of an illustrative blend: form 40%,
 moment 35%, resolve 25%. The lab is labeled fictional and is separate from the
@@ -79,7 +96,7 @@ For a verified video, set `data-video-src` and optional `data-captions-src` befo
 initialization. Use short, optimized, captioned assets; supply a poster. The native
 video uses `playsinline`, `muted`, `preload="none"` and controls. The component caps
 an entrance segment at 15 seconds (default 8). Test the exact file on Safari before
-release. No founder video is included. The supplied theme has a 96 kbps web derivative
+release. No founder video is included. The supplied theme has a 96 kbps AAC-LC, audio-only fast-start MP4 derivative
 under the proposed 4 MiB media budget, with embedded cover art and metadata removed.
 The founder’s designation is recorded; commercial clearance is not independently
 documented and remains a release item.
@@ -137,7 +154,7 @@ and actual CSP response headers on a separate recreational origin. Classic scrip
 are already used here. Never pass identity, tokens or competition authority into
 guest games, and never import local stamps into the official award ledger.
 
-The static export utility includes only `index.html`, `play.html` and reviewed
+The static export utility includes only `index.html`, `play.html`, `resort.html` and reviewed
 `assets/`; it excludes backend, Git, docs, tests, credentials and operational files.
 Its budget checks mirror the supplied initial file/image/code/media limits. This
 is a packaging check, not a deployment authorization, full secret audit, CSP audit

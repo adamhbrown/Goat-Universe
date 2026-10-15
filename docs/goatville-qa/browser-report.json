@@ -752,18 +752,17 @@
   ],
   "page_errors": [],
   "screenshots": [
-    "home-390.png",
-    "gridiron-390.png",
-    "hoops-390.png",
-    "greatness-390.png",
-    "classic-390.png",
-    "home-1440.png",
-    "gridiron-1440.png",
-    "hoops-1440.png",
-    "greatness-1440.png",
-    "classic-1440.png",
-    "goat-tee-result-390.png"
+    "/tmp/goatville-sprint2-final/home-390.png",
+    "/tmp/goatville-sprint2-final/gridiron-390.png",
+    "/tmp/goatville-sprint2-final/hoops-390.png",
+    "/tmp/goatville-sprint2-final/greatness-390.png",
+    "/tmp/goatville-sprint2-final/classic-390.png",
+    "/tmp/goatville-sprint2-final/home-1440.png",
+    "/tmp/goatville-sprint2-final/gridiron-1440.png",
+    "/tmp/goatville-sprint2-final/hoops-1440.png",
+    "/tmp/goatville-sprint2-final/greatness-1440.png",
+    "/tmp/goatville-sprint2-final/classic-1440.png",
+    "/tmp/goatville-sprint2-final/goat-tee-result-390.png"
   ],
-  "result": "passed",
-  "browser": "Chromium 154.0.8037.57, headless Linux"
+  "result": "passed"
 }

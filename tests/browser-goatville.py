@@ -11,7 +11,7 @@ if args.base_url:
 else:
  public_export=tempfile.TemporaryDirectory(prefix='goatville-public-')
  checkout=Path(__file__).resolve().parent.parent
- for name in ('index.html','play.html'):shutil.copy2(checkout/name,Path(public_export.name)/name)
+ for name in ('index.html','play.html','resort.html'):shutil.copy2(checkout/name,Path(public_export.name)/name)
  shutil.copytree(checkout/'assets',Path(public_export.name)/'assets')
  class QuietHandler(http.server.SimpleHTTPRequestHandler):
   def log_message(self,*args):pass
@@ -26,7 +26,7 @@ def ready(page,path='index.html'):
 def screenshot(page,name):
  path=out/(name+'.png');page.screenshot(path=str(path));report['screenshots'].append(str(path))
 def audit(page,name):
- data=page.evaluate('''() => ({overflow:document.documentElement.scrollWidth>innerWidth+1,fonts:[document.fonts.check('700 20px Manrope'),document.fonts.check('400 16px Inter')],broken:[...document.images].filter(i=>!i.complete||!i.naturalWidth).map(i=>i.getAttribute('src')),clipped:[...document.querySelectorAll('h1,h2,h3,h4,.team-option,.roster-player,.primary-button,.prototype-link')].filter(e=>e.getClientRects().length&&e.scrollWidth>e.clientWidth+2).map(e=>e.textContent.trim().slice(0,60))})''')
+ data=page.evaluate('''() => ({overflow:document.documentElement.scrollWidth>innerWidth+1,fonts:[document.fonts.check('700 20px Manrope'),document.fonts.check('400 16px Inter')],broken:[...document.images].filter(i=>(i.loading!=='lazy'||i.complete)&&(!i.complete||!i.naturalWidth)).map(i=>i.getAttribute('src')),clipped:[...document.querySelectorAll('h1,h2,h3,h4,.team-option,.roster-player,.primary-button,.prototype-link')].filter(e=>e.getClientRects().length&&e.scrollWidth>e.clientWidth+2).map(e=>e.textContent.trim().slice(0,60))})''')
  data['name']=name;report['layouts'].append(data);assert not data['overflow'],name;assert not data['broken'],str(data);assert not data['clipped'],str(data);assert all(data['fonts']),name
 keys=['gridiron','hoops','crossover','greatness','classic']
 def bracket(page,key,series=False):
