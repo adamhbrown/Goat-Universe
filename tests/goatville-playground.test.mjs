@@ -10,7 +10,7 @@ test('GOATVILLE is reachable from both main and mobile homepage navigation', () 
   assert.match(home, /<a href="goatville\.html">GOATVILLE<\/a>/);
   assert.match(home, /<a href="goatville\.html">Play<\/a>/);
   assert.match(home, /id="goatville"/);
-  assert.match(home, /ENTER GOATVILLE USA/);
+  assert.match(home, /ENTER GOATVILLE CITY/);
 });
 test('GOATVILLE has a coherent entrance and accessible landmark structure', () => {
   assert.match(page, /WELCOME TO/);
