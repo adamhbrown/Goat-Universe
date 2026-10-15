@@ -1,9 +1,12 @@
 import {mountGuestGame} from './host.mjs';
 import {createGuestJournal} from './protocol.mjs';
+import {getReviewedAttraction} from './catalog.mjs';
 
 // Approved catalog entry only. Do not accept arbitrary visitor-supplied game URLs.
-const spec=Object.freeze({id:'field-vision',version:1,title:'GOATVILLE Field Vision strategy drill',achievements:['field-vision-clear']});
-const entry=new URL('./field-vision.html',import.meta.url);
+const reviewed=getReviewedAttraction(document.body.dataset.guestAttraction);
+const spec=reviewed.spec;
+const entry=new URL(reviewed.path,window.location.href);
+const displayName=spec.id==='field-vision'?'FIELD VISION':'SPOTLIGHT CIRCUIT';
 const $=id=>document.getElementById(id);
 let journal=createGuestJournal();
 let game=null;
@@ -18,7 +21,7 @@ function showStamps(){
   }
   for(const stamp of saved){
     const li=document.createElement('li');
-    li.textContent='FIELD VISION COMPLETED · Unverified guest souvenir';
+    li.textContent=(stamp.attraction==='field-vision'?'FIELD VISION':'SPOTLIGHT CIRCUIT')+' COMPLETED · Unverified guest souvenir';
     li.setAttribute('data-verification',stamp.verification);
     list.append(li);
   }
@@ -27,7 +30,7 @@ function stop({returnFocus=true}={}){
   if(game){game.destroy();game=null;}
   $('game').replaceChildren();
   const empty=document.createElement('div');empty.className='empty';
-  const strong=document.createElement('strong');strong.textContent='THE FIELD IS WAITING.';
+  const strong=document.createElement('strong');strong.textContent=displayName+' IS WAITING.';
   const sub=document.createElement('span');sub.textContent='Start another round whenever you are ready.';
   empty.append(strong,sub);$('game').append(empty);
   $('stop').disabled=true;
@@ -43,7 +46,7 @@ $('start').addEventListener('click',()=>{
     }});
     $('stop').disabled=false;
     game.frame.addEventListener('load',()=>game?.frame.focus(),{once:true});
-    announce('Field Vision started in an isolated guest frame. Use Tab and Enter to play, or close the attraction.');
+    announce(displayName+' started in an isolated guest frame. Use Tab and Enter to play, or close the attraction.');
   }catch{
     stop({returnFocus:false});
     announce('This challenge cannot run in this preview. Please open it from an HTTPS site or local server.');
