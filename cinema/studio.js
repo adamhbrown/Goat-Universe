@@ -233,6 +233,14 @@
     announce('All selected media removed from this screening room. Nothing was uploaded.');
   });
 
+  // Opening the shared universe navigation should not leave video or music playing behind a modal.
+  document.addEventListener('goatverse:portal-open', () => {
+    if(!video.paused || !music.paused){
+      pausePlayback();
+      announce('Screening paused while you explore GOAT Universe.');
+    }
+  });
+
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && !video.paused) pausePlayback();
   });
