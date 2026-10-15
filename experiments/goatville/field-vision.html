@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101317">
+  <title>GOATVILLE — Field Vision Drill</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #101317; color: #f4f2ed; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 50% -30%, #343326 0, #101317 62%); }
+    main { width: min(100% - 32px, 720px); margin: 0 auto; padding: clamp(24px, 7vw, 64px) 0; }
+    .eyebrow { color: #d8b45a; font-size: .76rem; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; }
+    h1 { margin: 10px 0 8px; font-size: clamp(2rem, 8vw, 4rem); line-height: .98; letter-spacing: -.055em; }
+    .intro { max-width: 48ch; color: #b8bbc0; line-height: 1.6; }
+    .panel { margin-top: 28px; padding: clamp(18px, 5vw, 30px); border: 1px solid #383b3d; border-radius: 20px; background: #191c20eF; box-shadow: 0 24px 70px #0005; }
+    .scoreline { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 24px; }
+    .metric-label { display: block; color: #aeb1b5; font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .metric-value { display: block; margin-top: 3px; font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+    #target { min-height: 92px; display: grid; place-content: center; margin-bottom: 18px; border-radius: 14px; background: linear-gradient(110deg, #25292d, #1e2226); text-align: center; }
+    #target strong { color: #e4c36e; font-size: clamp(2rem, 10vw, 3.2rem); line-height: 1; }
+    #target span { margin-top: 7px; color: #b8bbc0; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }
+    .board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+    .tile { min-height: 58px; border: 1px solid #464a4d; border-radius: 11px; background: #24282c; color: #f4f2ed; font: inherit; font-size: 1.1rem; font-weight: 750; cursor: pointer; transition: background-color .12s ease, border-color .12s ease, transform .12s ease; }
+    .tile:hover { border-color: #d8b45a; background: #32312a; transform: translateY(-1px); }
+    .tile:focus-visible, .action:focus-visible { outline: 3px solid #f4d779; outline-offset: 3px; }
+    .tile[disabled] { cursor: default; opacity: .5; }
+    .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .action { min-height: 46px; padding: 0 18px; border: 1px solid #d8b45a; border-radius: 999px; background: #d8b45a; color: #171819; font: inherit; font-weight: 800; cursor: pointer; }
+    .action.secondary { border-color: #4d5154; background: transparent; color: #f4f2ed; }
+    .action:disabled { cursor: default; opacity: .55; }
+    #status { min-height: 1.5em; margin: 16px 0 0; color: #d0d2d4; }
+    .note { margin-top: 22px; color: #92969b; font-size: .82rem; line-height: 1.5; }
+    @media (max-width: 420px) { .board { gap: 7px; } .tile { min-height: 54px; } .panel { border-radius: 16px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">GOATVILLE · Skills Lab</p>
+    <h1>Field Vision</h1>
+    <p class="intro">A quick scouting drill. Track the highlighted position and make the call before the clock runs out.</p>
+    <section class="panel" aria-labelledby="drill-title">
+      <h2 id="drill-title" class="eyebrow">20-second reaction drill</h2>
+      <div class="scoreline" aria-label="Drill status">
+        <div><span class="metric-label">Correct calls</span><strong class="metric-value" id="score">0</strong></div>
+        <div><span class="metric-label">Time left</span><strong class="metric-value"><span id="time">20</span>s</strong></div>
+      </div>
+      <div id="target" aria-live="polite" aria-atomic="true"><strong id="target-number">—</strong><span>Call this position</span></div>
+      <div class="board" role="group" aria-label="Choose the highlighted field position">
+        <button class="tile" type="button" data-position="1" aria-label="Position 1">01</button>
+        <button class="tile" type="button" data-position="2" aria-label="Position 2">02</button>
+        <button class="tile" type="button" data-position="3" aria-label="Position 3">03</button>
+        <button class="tile" type="button" data-position="4" aria-label="Position 4">04</button>
+        <button class="tile" type="button" data-position="5" aria-label="Position 5">05</button>
+        <button class="tile" type="button" data-position="6" aria-label="Position 6">06</button>
+        <button class="tile" type="button" data-position="7" aria-label="Position 7">07</button>
+        <button class="tile" type="button" data-position="8" aria-label="Position 8">08</button>
+        <button class="tile" type="button" data-position="9" aria-label="Position 9">09</button>
+        <button class="tile" type="button" data-position="10" aria-label="Position 10">10</button>
+        <button class="tile" type="button" data-position="11" aria-label="Position 11">11</button>
+        <button class="tile" type="button" data-position="12" aria-label="Position 12">12</button>
+        <button class="tile" type="button" data-position="13" aria-label="Position 13">13</button>
+        <button class="tile" type="button" data-position="14" aria-label="Position 14">14</button>
+        <button class="tile" type="button" data-position="15" aria-label="Position 15">15</button>
+        <button class="tile" type="button" data-position="16" aria-label="Position 16">16</button>
+      </div>
+      <div class="controls"><button class="action" id="start" type="button">Start drill</button><button class="action secondary" id="reset" type="button">Reset</button></div>
+      <p id="status" role="status">Ready when you are.</p>
+      <p class="note">Prototype only. Your score exists in this page’s memory and disappears when you leave. No account, network request, competition points, or saved achievement is involved.</p>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const scoreNode = document.querySelector('#score');
+      const timeNode = document.querySelector('#time');
+      const targetNode = document.querySelector('#target-number');
+      const statusNode = document.querySelector('#status');
+      const startButton = document.querySelector('#start');
+      const tiles = [...document.querySelectorAll('[data-position]')];
+      let score = 0;
+      let seconds = 20;
+      let target = 0;
+      let timer = null;
+      const chooseTarget = () => Math.floor(Math.random() * 16) + 1;
+      const finish = () => {
+        clearInterval(timer);
+        timer = null;
+        target = 0;
+        targetNode.textContent = '—';
+        startButton.disabled = false;
+        tiles.forEach(tile => { tile.disabled = true; });
+        statusNode.textContent = `Drill complete. ${score} correct calls.`;
+      };
+      const start = () => {
+        clearInterval(timer);
+        score = 0;
+        seconds = 20;
+        scoreNode.textContent = '0';
+        timeNode.textContent = String(seconds);
+        statusNode.textContent = 'Drill live. Call the highlighted position.';
+        startButton.disabled = true;
+        tiles.forEach(tile => { tile.disabled = false; });
+        target = chooseTarget();
+        targetNode.textContent = String(target).padStart(2, '0');
+        timer = setInterval(() => {
+          seconds -= 1;
+          timeNode.textContent = String(seconds);
+          if (seconds <= 0) finish();
+        }, 1000);
+      };
+      tiles.forEach(tile => tile.addEventListener('click', () => {
+        if (!timer) return;
+        if (Number(tile.dataset.position) === target) {
+          score += 1;
+          scoreNode.textContent = String(score);
+          statusNode.textContent = `Correct call. ${score} so far.`;
+          target = chooseTarget();
+          targetNode.textContent = String(target).padStart(2, '0');
+        } else {
+          statusNode.textContent = 'Not that position. Track the highlight.';
+        }
+      }));
+      startButton.addEventListener('click', start);
+      document.querySelector('#reset').addEventListener('click', () => {
+        clearInterval(timer);
+        timer = null;
+        score = 0;
+        seconds = 20;
+        target = 0;
+        scoreNode.textContent = '0';
+        timeNode.textContent = '20';
+        targetNode.textContent = '—';
+        statusNode.textContent = 'Ready when you are.';
+        startButton.disabled = false;
+        tiles.forEach(tile => { tile.disabled = true; });
+      });
+      tiles.forEach(tile => { tile.disabled = true; });
+    })();
+  </script>
+</body>
+</html>
