@@ -5,11 +5,13 @@
   'use strict';
   const points=Object.freeze([
     {id:'athletic',number:'01',title:'THE ATHLETIC DISTRICT',status:'PLAYABLE DEMOS',
-     description:'Enter the GOAT Stadium experience through five sports practice challenges, Spotlight Circuit, and Field Vision. Fictional practice only.'},
+     description:'Enter the GOAT Stadium experience through five sports practice challenges, Spotlight Circuit, and Field Vision. Fictional practice only.',
+     directPath:'goat-games-play-lab.html',directLabel:'PLAY FIVE-SPORT PRACTICE ↗'},
     {id:'campus',number:'02',title:'GOAT UNIVERSITY',status:'IN DEVELOPMENT',
      description:'The planned home of GOAT Academy, training experiences, skills and creative learning. This is a digital concept, not a physical campus.'},
     {id:'culture',number:'03',title:'THE CULTURE DISTRICT',status:'PRIVATE CREATIVE PREVIEW',
-     description:'Rehearse video and music inside the Cinematic Screening Room, or discover original media in GOATverse Publications.'},
+     description:'Rehearse video and music inside the Cinematic Screening Room, or discover original media in GOATverse Publications.',
+     directPath:'goatville-cinema.html',directLabel:'OPEN CINEMATIC STUDIO ↗'},
     {id:'legends',number:'04',title:'THE LEGENDS DISTRICT',status:'IN DEVELOPMENT',
      description:'The future Hall of Fame and Vault: a home for verified histories, franchise stories, and competition legacies.'},
     {id:'market',number:'05',title:'GOATVILLE MARKET',status:'PLANNED / NO CHECKOUT',
@@ -24,8 +26,8 @@
   const $=id=>document.getElementById(id);
   const title=$('map-detail-title'),status=$('map-detail-status'),
     detail=$('map-detail-description'),route=$('map-detail-route'),
-    counter=$('map-detail-number');
-  if(!buttons.length||!title||!status||!detail||!route||!counter)return;
+    counter=$('map-detail-number'),direct=$('map-detail-direct');
+  if(!buttons.length||!title||!status||!detail||!route||!counter||!direct)return;
   let selected='athletic';
   function select(id,{focus=false}={}){
     const target=ids.get(id);
@@ -37,6 +39,9 @@
     counter.textContent=target.number+' / 07';
     route.href='#district-'+target.id;
     route.setAttribute('aria-label','Explore '+target.title+' details');
+    direct.hidden=!target.directPath;
+    if(target.directPath){direct.href=target.directPath;direct.textContent=target.directLabel;}
+    else{direct.removeAttribute('href');direct.textContent='';}
     for(const button of buttons){
       const active=button.dataset.mapPoint===id;
       button.setAttribute('aria-pressed',String(active));
