@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
-const files = new Set(['demo.html','demo.mjs','demo.css','host.mjs','protocol.mjs','challenge.html','challenge.js']);
+const files = new Set(['demo.html','demo.mjs','demo.css','host.mjs','catalog.mjs','protocol.mjs','challenge.html','challenge.js']);
 let browser, server, started = false;
 try {
   const {chromium}=await import(process.env.GOAT_PLAYWRIGHT_MODULE || 'playwright');
