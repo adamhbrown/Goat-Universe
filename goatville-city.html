@@ -6,8 +6,63 @@
 .feature{padding:30px 0 75px}.feature h2{font-size:clamp(2rem,4vw,3.5rem)}.feature p{color:var(--dim);max-width:730px}.disclosure{border-left:3px solid var(--gold);padding:14px 18px;background:#22221d;color:#e6d9c4;font-size:.87rem;margin:35px 0}footer{border-top:1px solid #665c4b;padding:28px 0 55px;font-size:.8rem;color:var(--dim)}
 @media(max-width:700px){.districts{grid-template-columns:1fr}.district[data-district="athletic"]{grid-column:auto}.district{min-height:270px}.hero{padding-top:45px}.nav a:last-child{font-size:.7rem}.city-title{bottom:14px}.city-title small{letter-spacing:.12em}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
-</style></head><body><a href="#districts" class="skip">Skip to city districts</a><header><div class="wrap nav"><a class="brand" href="index.html">GOAT <b>UNIVERSE</b></a><a href="goatville.html">GOATVILLE PLAYGROUND ↗</a></div></header><main><section class="hero"><div class="wrap"><div class="eyebrow">GOAT UNIVERSE PRESENTS / A CITY BUILT FOR EVERY GOAT</div><h1>WELCOME TO<br><em>GOATVILLE.</em></h1><p class="lead">Every great city has a story. This one is built around competition, creativity, community and the pursuit of greatness. You don't just watch the GOAT Universe. <strong>You enter it.</strong></p><div class="buttons"><a class="btn" href="#districts">ENTER THE CITY ↗</a><a class="btn alt" href="goat-games-play-lab.html">PLAY ALL FIVE SPORTS ↗</a></div></div><div class="city" role="img" aria-label="Illustrated nighttime GOATVILLE skyline with a stadium, illuminated buildings and a golden city entrance"><svg class="skyline" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><linearGradient id="night" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#1d2a46"/><stop offset="1" stop-color="#090b12"/></linearGradient><linearGradient id="gold" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#e7c177"/><stop offset="1" stop-color="#654922"/></linearGradient><pattern id="windows" width="23" height="27" patternUnits="userSpaceOnUse"><rect x="8" y="9" width="5" height="8" fill="#d3b374" opacity=".55"/></pattern></defs><rect width="1200" height="400" fill="url(#night)"/><circle cx="870" cy="90" r="90" fill="#b48a4b" opacity=".08"/><path d="M0 310V190h75v-55h70v175h30V100h65v210h45V155h65v155h45V78h70v232h35V120h100v190h30V55h62v255h30V145h80v165h25V85h90v225h35V170h100v140h30V120h80v190h60V205h80v105" fill="#121b26" stroke="#8f7247" stroke-width="2"/><path d="M0 310V190h75v-55h70v175h30V100h65v210h45V155h65v155h45V78h70v232h35V120h100v190h30V55h62v255h30V145h80v165h25V85h90v225h35V170h100v140h30V120h80v190h60V205h80v105" fill="url(#windows)"/><ellipse cx="595" cy="307" rx="285" ry="68" fill="#080b0f" stroke="#caa768" stroke-width="13"/><ellipse cx="595" cy="303" rx="234" ry="39" fill="#b8c7ba" stroke="#efcf8a" stroke-width="5"/><path d="M310 305L370 267M875 305L820 267" stroke="#e7bd70" stroke-width="5"/><path d="M0 350H1200" stroke="#b58e4b" stroke-width="3"/><path d="M120 400V235M1080 400V235M120 235Q600 -15 1080 235" fill="none" stroke="url(#gold)" stroke-width="17" opacity=".9"/><path d="M160 400V255M1040 400V255" stroke="#c79c55" stroke-width="18"/><path d="M125 235L120 220M1075 235L1080 220" stroke="#ffdb93" stroke-width="12"/></svg><div class="city-title">GOATVILLE<small>WHERE THE GOATS PLAY.</small></div></div></section>
+
+/* === Tiffany's GOATVILLE entrance: progressive, optional and sound-free by default === */
+.cinema-launch{position:relative;border-color:#f0c879;background:linear-gradient(110deg,#f9dc98,#edbc62);box-shadow:0 12px 42px #b88a4252;color:#161107;gap:11px}
+.cinema-launch:hover{box-shadow:0 14px 65px #e8bc686f}
+.cinema-launch .playmark{display:grid;place-items:center;background:#11171d;color:#f6d797;width:25px;height:25px;border-radius:50%;font-size:.75rem}
+.city-gate{padding:0;width:min(1140px,calc(100vw - 30px));max-width:none;height:min(770px,calc(100dvh - 30px));max-height:none;inset:0;margin:auto;border:1px solid #bb944f;border-radius:17px;background:#080a0c;color:#f7f1e4;overflow:hidden;box-shadow:0 20px 110px #000}
+.city-gate:not([open]){display:none}
+.city-gate::backdrop{background:#000e;backdrop-filter:blur(11px)}
+.cinema-shell{height:100%;position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;justify-content:flex-end;background:radial-gradient(ellipse at 53% 60%,#d0a04a33,transparent 45%),linear-gradient(180deg,#090d17,#18202b 50%,#0a0a0a)}
+.cinema-shell:before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(ellipse at 55% 72%,#9c72284d,transparent 55%)}
+.cinema-shell:after{content:"";position:absolute;bottom:0;left:0;right:0;height:57%;background:linear-gradient(transparent,#08090cf0);z-index:-1;pointer-events:none}
+.cinema-sky{position:absolute;inset:0;overflow:hidden;z-index:-2}
+.cinema-sky svg{position:absolute;bottom:8%;height:75%;width:100%;filter:drop-shadow(0 0 30px #d2a56320)}
+.cinema-beam{position:absolute;bottom:0;left:calc(var(--x)*1%);height:120%;width:9%;opacity:.2;background:linear-gradient(to top,#f7d8995e,transparent 78%);clip-path:polygon(45% 100%,55% 100%,100% 0%,0% 0%);transform-origin:bottom;animation:gate-sweep 10s ease-in-out infinite alternate}
+.cinema-beam.b2{--x:22;animation-delay:-4s;opacity:.14;transform:rotate(-12deg)}.cinema-beam.b3{--x:73;animation-delay:-7s;opacity:.16;transform:rotate(8deg)}
+@keyframes gate-sweep{0%{transform:rotate(-15deg);opacity:.06}100%{transform:rotate(15deg);opacity:.27}}
+.cinema-top{position:absolute;top:24px;left:25px;right:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:4}
+.cinema-brand{font:800 .72rem Inter,Arial,sans-serif;letter-spacing:.22em;color:#f2d495;text-shadow:0 2px 9px #000}
+.cinema-exit{color:#f8e3bb;background:#111820bb;border:1px solid #bb9a62;border-radius:6px;padding:10px 13px;font:800 .72rem Inter,sans-serif;letter-spacing:.11em;min-height:44px}
+.cinema-content{position:relative;z-index:3;padding:clamp(24px,5vw,65px);max-width:950px;margin:0 auto;width:100%;text-align:center}
+.cinema-kicker{font-size:.75rem;font-weight:850;letter-spacing:.27em;color:#f3c977;text-transform:uppercase}
+.cinema-content h2{font-size:clamp(2.6rem,8vw,7rem);margin:18px 0 16px;line-height:.98;letter-spacing:-.06em;text-shadow:0 5px 35px #050505}
+.cinema-content h2 span{color:#eec578}
+.cinema-content p{font-size:clamp(.95rem,1.6vw,1.2rem);color:#e9dfce;max-width:610px;margin:0 auto;line-height:1.65;text-shadow:0 3px 10px #000}
+.cinema-controls{margin-top:30px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px}
+.cinema-controls button{min-height:52px;padding:13px 20px;border-radius:5px;font-weight:850;font-size:.8rem;letter-spacing:.065em}
+.cinema-next{background:#f3cd7c;border:1px solid #f3cd7c;color:#15120b}
+.cinema-skip{background:#111923da;border:1px solid #ad986c;color:#f2dfb7}
+.cinema-progress{display:flex;gap:9px;justify-content:center;margin-top:24px}
+.cinema-progress span{width:29px;height:3px;background:#666663;border-radius:5px}
+.cinema-progress span.on{background:#f3cd7c}
+.cinema-foot{color:#d5c4a6;font-size:.74rem;text-transform:uppercase;letter-spacing:.15em;margin-top:19px}
+.cinema-gate-icon{position:absolute;top:18%;left:50%;transform:translateX(-50%);width:clamp(150px,23vw,270px);height:auto;z-index:1;opacity:.64;filter:drop-shadow(0 0 26px #f6cd7c55)}
+.cinema-gate-icon path{stroke:#efc46b;stroke-width:3;fill:none}
+.cinema-shell[data-scene="2"]{background:radial-gradient(ellipse at 55% 50%,#7561253e,transparent 51%),linear-gradient(180deg,#0e1523,#112b2f 55%,#080a0a)}
+.cinema-shell[data-scene="3"]{background:radial-gradient(ellipse at 53% 46%,#bb96522d,transparent 50%),linear-gradient(180deg,#101116,#292218 55%,#090a0c)}
+.cinema-shell[data-scene="2"] .cinema-gate-icon{opacity:.18;transform:translateX(-50%) scale(1.23)}
+.cinema-shell[data-scene="3"] .cinema-gate-icon{opacity:.54;transform:translateX(-50%) scale(.9)}
+.cinema-shell[data-scene="3"] .cinema-beam{opacity:.25}
+.city-wayfinding{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:26px 0 5px}
+.city-wayfinding .filter-label{font-size:.72rem;color:#f0c879;letter-spacing:.15em;font-weight:800;margin-right:9px}
+.city-filter{font-size:.78rem;letter-spacing:.02em;color:#ecdfcb;background:#182024;border:1px solid #807459;border-radius:50px;min-height:44px;padding:10px 17px;font-weight:800}
+.city-filter:hover{border-color:#efc677}
+.city-filter[aria-pressed="true"]{color:#17120a;background:#f0c879;border-color:#f0c879}
+.districts>.district[hidden]{display:none!important}
+.city-filter-status{margin:12px 0 5px;color:#d5cbb8;font-size:.83rem;min-height:24px}
+@media(max-width:600px){.city-gate{width:100vw;height:100dvh;border:0;border-radius:0}.cinema-content{padding:26px 18px 42px}.cinema-content h2{font-size:clamp(3rem,12.5vw,5rem)}.cinema-top{top:15px;left:15px;right:15px}.cinema-gate-icon{top:20%;opacity:.33}.cinema-controls{gap:9px}.cinema-controls button{width:100%}.cinema-beam{width:22%}.city-filter{padding:9px 12px;font-size:.72rem}}
+@media(prefers-reduced-motion:reduce){.cinema-beam{animation:none;opacity:.07}.cinema-shell[data-scene] .cinema-gate-icon{transform:translateX(-50%)}.cinema-launch{transition:none}}
+</style></head><body><a href="#districts" class="skip">Skip to city districts</a><header><div class="wrap nav"><a class="brand" href="index.html">GOAT <b>UNIVERSE</b></a><a href="goatville.html">GOATVILLE PLAYGROUND ↗</a></div></header><main><section class="hero"><div class="wrap"><div class="eyebrow">GOAT UNIVERSE PRESENTS / A CITY BUILT FOR EVERY GOAT</div><h1>WELCOME TO<br><em>GOATVILLE.</em></h1><p class="lead">Every great city has a story. This one is built around competition, creativity, community and the pursuit of greatness. You don't just watch the GOAT Universe. <strong>You enter it.</strong></p><div class="buttons"><button class="btn cinema-launch" id="open-cinema" type="button"><span class="playmark" aria-hidden="true">▶</span> EXPERIENCE THE ENTRANCE</button><a class="btn alt" href="#districts">SKIP TO THE CITY ↗</a><a class="btn alt" href="goat-games-play-lab.html">PLAY FIVE SPORTS ↗</a></div><p style="font-size:.77rem;color:#dacaa7;letter-spacing:.03em">Optional cinematic introduction. No forced video or sound.</p></div><div class="city" role="img" aria-label="Illustrated nighttime GOATVILLE skyline with a stadium, illuminated buildings and a golden city entrance"><svg class="skyline" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><linearGradient id="night" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#1d2a46"/><stop offset="1" stop-color="#090b12"/></linearGradient><linearGradient id="gold" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#e7c177"/><stop offset="1" stop-color="#654922"/></linearGradient><pattern id="windows" width="23" height="27" patternUnits="userSpaceOnUse"><rect x="8" y="9" width="5" height="8" fill="#d3b374" opacity=".55"/></pattern></defs><rect width="1200" height="400" fill="url(#night)"/><circle cx="870" cy="90" r="90" fill="#b48a4b" opacity=".08"/><path d="M0 310V190h75v-55h70v175h30V100h65v210h45V155h65v155h45V78h70v232h35V120h100v190h30V55h62v255h30V145h80v165h25V85h90v225h35V170h100v140h30V120h80v190h60V205h80v105" fill="#121b26" stroke="#8f7247" stroke-width="2"/><path d="M0 310V190h75v-55h70v175h30V100h65v210h45V155h65v155h45V78h70v232h35V120h100v190h30V55h62v255h30V145h80v165h25V85h90v225h35V170h100v140h30V120h80v190h60V205h80v105" fill="url(#windows)"/><ellipse cx="595" cy="307" rx="285" ry="68" fill="#080b0f" stroke="#caa768" stroke-width="13"/><ellipse cx="595" cy="303" rx="234" ry="39" fill="#b8c7ba" stroke="#efcf8a" stroke-width="5"/><path d="M310 305L370 267M875 305L820 267" stroke="#e7bd70" stroke-width="5"/><path d="M0 350H1200" stroke="#b58e4b" stroke-width="3"/><path d="M120 400V235M1080 400V235M120 235Q600 -15 1080 235" fill="none" stroke="url(#gold)" stroke-width="17" opacity=".9"/><path d="M160 400V255M1040 400V255" stroke="#c79c55" stroke-width="18"/><path d="M125 235L120 220M1075 235L1080 220" stroke="#ffdb93" stroke-width="12"/></svg><div class="city-title">GOATVILLE<small>WHERE THE GOATS PLAY.</small></div></div></section>
 <section class="wrap intro" id="districts"><div class="eyebrow">EXPLORE / THE CITY NEVER STOPS PLAYING</div><h2>THE CITY HAS <span style="color:var(--gold)">NEIGHBORHOODS.</span></h2><p>Every GOAT has a place. Start in the Athletic District for working free-play challenges, then explore the developing destinations that will connect sports, stories, culture, and commerce.</p>
+<div class="city-wayfinding" role="group" aria-label="Explore GOATVILLE neighborhoods"><span class="filter-label">CITY DIRECTORY /</span>
+<button class="city-filter" type="button" data-filter="all" aria-pressed="true">ALL DISTRICTS</button>
+<button class="city-filter" type="button" data-filter="athletic" aria-pressed="false">THE STADIUM</button>
+<button class="city-filter" type="button" data-filter="culture" aria-pressed="false">THE CULTURE</button>
+<button class="city-filter" type="button" data-filter="legends" aria-pressed="false">THE LEGENDS</button>
+<button class="city-filter" type="button" data-filter="afterdark" aria-pressed="false">AFTER DARK</button>
+</div><p class="city-filter-status" role="status" aria-live="polite" id="filter-status">Exploring all seven districts.</p>
 <div class="districts">
 <article class="district" data-district="athletic"><div><small>01 / THE ATHLETIC DISTRICT</small><h3>GOAT STADIUM.</h3><p>The biggest games. The wildest rivalries. Five signature sports competitions—and five playable practice challenges today.</p><span class="tag">PLAYABLE PROTOTYPES</span></div><a class="link" href="goat-games-play-lab.html">ENTER THE FIVE-SPORT PLAY LAB ↗</a></article>
 <article class="district" data-district="campus"><div><small>02 / THE CAMPUS</small><h3>GOAT UNIVERSITY.</h3><p>Study. Train. Create. Lead. The future home for skill challenges, GOAT Academy and the GOATometer.</p><span class="tag">IN DEVELOPMENT</span></div><a class="link" href="goatville.html#arcade">TRY AN ARCADE SKILL CHALLENGE ↗</a></article>
@@ -17,4 +72,67 @@
 <article class="district" data-district="commons"><div><small>06 / THE COMMONS</small><h3>GOATVILLE COMMONS.</h3><p>Where fans, athletes, creators and competitors belong. The future home of community and member experiences.</p><span class="tag">IN DEVELOPMENT</span></div><a class="link" href="goatville.html#town-square">VISIT MAYOR BILLY'S TOWN SQUARE ↗</a></article>
 <article class="district" data-district="afterdark"><div><small>07 / THE NIGHTLIFE DISTRICT</small><h3>GOATVILLE AFTER DARK.</h3><p>When the games end, the energy doesn't. The future home of premium music, entertainment and live digital events.</p><span class="tag">IN DEVELOPMENT</span></div><a class="link" href="goatville.html#world">EXPLORE GOATVILLE ↗</a></article>
 </div></section>
-<section class="wrap feature" id="commercial"><div class="eyebrow">THE NEXT CHAPTER</div><h2>MORE THAN A <span style="color:var(--gold)">GAME.</span></h2><p>GOATVILLE is designed to connect competition, original media, community and future commerce. Real membership, market and championship systems require their own product, security, licensing and legal readiness before activation.</p><div class="buttons"><a class="btn" href="goat-games-play-lab.html">PLAY THE GOAT GAMES ↗</a><a class="btn alt" href="goatville.html">EXPLORE THE PLAYGROUND ↗</a></div><div class="disclosure">Development experience. All fictional game scenarios are clearly labeled. The city map is an original CSS/SVG illustration—not a claim that physical GOATVILLE facilities exist. No store checkout, memberships, prizes or official tournament registrations are activated here.</div></section></main><footer><div class="wrap">GOAT UNIVERSE · WHERE THE GOATS PLAY · CAN'T STOP THE BAA. &nbsp; © GOAT Universe. Development preview.</div></footer></body></html>
+<section class="wrap feature" id="commercial"><div class="eyebrow">THE NEXT CHAPTER</div><h2>MORE THAN A <span style="color:var(--gold)">GAME.</span></h2><p>GOATVILLE is designed to connect competition, original media, community and future commerce. Real membership, market and championship systems require their own product, security, licensing and legal readiness before activation.</p><div class="buttons"><a class="btn" href="goat-games-play-lab.html">PLAY THE GOAT GAMES ↗</a><a class="btn alt" href="goatville.html">EXPLORE THE PLAYGROUND ↗</a></div><div class="disclosure">Development experience. All fictional game scenarios are clearly labeled. The city map is an original CSS/SVG illustration—not a claim that physical GOATVILLE facilities exist. No store checkout, memberships, prizes or official tournament registrations are activated here.</div></section></main><dialog class="city-gate" id="goatville-intro" aria-labelledby="cinema-title" aria-describedby="cinema-description">
+<div class="cinema-shell" id="cinema-shell" data-scene="1">
+<div class="cinema-sky" aria-hidden="true">
+<span class="cinema-beam" style="--x:43"></span><span class="cinema-beam b2"></span><span class="cinema-beam b3"></span>
+<svg viewBox="0 0 1200 640" preserveAspectRatio="xMidYMax slice">
+<defs><linearGradient id="cinema-gold" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#f7dba1" stop-opacity=".94"/><stop offset="1" stop-color="#7f612d" stop-opacity=".24"/></linearGradient><pattern id="cinema-windows" width="29" height="30" patternUnits="userSpaceOnUse"><rect x="10" y="9" width="6" height="9" fill="#e2bd76" opacity=".45"/></pattern></defs>
+<path d="M0 595V300h72V220h65v375h35V145h86v450h34V250h66v345h29V188h103v407h33V105h79v490h35V250h90v345h35V130h87v465h28V210h118v385h37V250h90v345h23V180h87v415h64V320h66v275" fill="#151b23" stroke="#907248" stroke-width="2"/>
+<path d="M0 595V300h72V220h65v375h35V145h86v450h34V250h66v345h29V188h103v407h33V105h79v490h35V250h90v345h35V130h87v465h28V210h118v385h37V250h90v345h23V180h87v415h64V320h66v275" fill="url(#cinema-windows)"/>
+<ellipse cx="597" cy="561" rx="370" ry="83" fill="#121319" stroke="#d8af6e" stroke-width="13"/><ellipse cx="597" cy="555" rx="303" ry="44" fill="#5d7266" stroke="#e8ce93" stroke-width="5"/>
+<path d="M100 640V295M1100 640V295M100 295Q600 -80 1100 295" fill="none" stroke="url(#cinema-gold)" stroke-width="20"/>
+<path d="M115 640V315M1085 640V315" stroke="#9d7138" stroke-width="36"/>
+</svg>
+</div>
+<svg class="cinema-gate-icon" aria-hidden="true" viewBox="0 0 150 150"><path d="M28 83 12 34l39 24L75 18l24 40 39-24-16 49-18 28H46L28 83Z"/><path d="M49 77l16 7m36-7-16 7M65 102l10 7 10-7"/></svg>
+<div class="cinema-top"><span class="cinema-brand">GOAT UNIVERSE / ORIGINAL WORLD</span><button class="cinema-exit" id="cinema-close" type="button" aria-label="Close cinematic introduction">CLOSE ✕</button></div>
+<div class="cinema-content"><div class="cinema-kicker" id="cinema-kicker">THE STORY BEGINS</div><h2 id="cinema-title">EVERY LEGEND<br><span>STARTS SOMEWHERE.</span></h2><p id="cinema-description">Every dream starts somewhere. Every legend has a beginning. Now there's a city built for everyone who has ever dreamed of greatness.</p>
+<div class="cinema-controls"><button class="cinema-next" id="cinema-next" type="button">NEXT / THE CITY →</button><button class="cinema-skip" id="cinema-skip" type="button">SKIP &amp; EXPLORE</button></div>
+<div class="cinema-progress" aria-label="Chapter 1 of 3" id="cinema-progress"><span class="on"></span><span></span><span></span></div>
+<div class="cinema-foot">A GOAT UNIVERSE ORIGINAL EXPERIENCE · SOUND OFF BY DESIGN</div>
+</div></div></dialog><footer><div class="wrap">GOAT UNIVERSE · WHERE THE GOATS PLAY · CAN'T STOP THE BAA. &nbsp; © GOAT Universe. Development preview.</div></footer>
+<script>
+(()=>{'use strict';
+const byId=id=>document.getElementById(id);
+const dialog=byId('goatville-intro');
+const shell=byId('cinema-shell');
+const chapters=[
+ {eyebrow:'THE STORY BEGINS',title:'EVERY LEGEND<br><span>STARTS SOMEWHERE.</span>',body:'Every dream starts somewhere. Every legend has a beginning. Now there is a city built for everyone who has dreamed of greatness.',button:'NEXT / THE CITY →'},
+ {eyebrow:'WELCOME TO A BIGGER WORLD',title:'ONE CITY.<br><span>EVERY GAME.</span>',body:'The stadium. The stories. The music. The legends. Five championship experiences and an entire world beyond the scoreboard.',button:'NEXT / THE UNIVERSE →'},
+ {eyebrow:'THE GATES ARE OPEN',title:'WELCOME TO<br><span>THE GOAT UNIVERSE.</span>',body:'Where the GOATs play. You do not just watch the story. You enter it. Choose your destination and make this world your own.',button:'ENTER GOATVILLE ↗'}
+];
+let chapter=0;
+const next=byId('cinema-next');
+const progress=byId('cinema-progress');
+function renderChapter(){
+ const c=chapters[chapter];
+ shell.dataset.scene=String(chapter+1);
+ byId('cinema-kicker').textContent=c.eyebrow;
+ byId('cinema-title').innerHTML=c.title;
+ byId('cinema-description').textContent=c.body;
+ next.textContent=c.button;
+ progress.setAttribute('aria-label','Chapter '+(chapter+1)+' of '+chapters.length);
+ [...progress.children].forEach((bar,i)=>bar.classList.toggle('on',i<=chapter));
+}
+function finish(scroll){if(dialog.open)dialog.close();if(scroll)byId('districts').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});}
+byId('open-cinema').addEventListener('click',()=>{
+ chapter=0;renderChapter();
+ if(typeof dialog.showModal==='function')dialog.showModal();
+ else{location.hash='#districts';}
+});
+next.addEventListener('click',()=>{if(chapter+1===chapters.length){finish(true);}else{chapter++;renderChapter();}});
+byId('cinema-close').addEventListener('click',()=>finish(false));
+byId('cinema-skip').addEventListener('click',()=>finish(true));
+dialog.addEventListener('click',event=>{if(event.target===dialog)finish(false);});
+const filters=[...document.querySelectorAll('[data-filter]')];
+const districts=[...document.querySelectorAll('[data-district]')];
+filters.forEach(button=>button.addEventListener('click',()=>{
+ const target=button.dataset.filter;
+ filters.forEach(x=>x.setAttribute('aria-pressed',String(x===button)));
+ let visible=0;
+ districts.forEach(d=>{const show=target==='all'||d.dataset.district===target;d.hidden=!show;if(show)visible++;});
+ byId('filter-status').textContent=target==='all'?'Exploring all seven districts.':'Showing '+visible+' district'+(visible===1?'':'s')+'. Choose ALL DISTRICTS to return.';
+}));
+})();
+</script></body></html>
