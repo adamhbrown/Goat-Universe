@@ -3,6 +3,10 @@ import {renderNfl} from './nfl.mjs';
 import {renderSeries} from './series.mjs';
 import {renderFantasy} from './fantasy.mjs';
 import {renderAnnual} from './annual.mjs';
+import {selectionDrafts} from './drafts.mjs';
+import {serverClock,deadlineGuard} from './deadlines.mjs';
+import {renderImportEditor} from './imports.mjs';
+import {renderOverview} from './overview.mjs';
 
 const keys=['first-and-baa','horns-and-hoops','goat-crossover','league-of-greatness','goat-classic'];
 const readiness={
@@ -12,11 +16,14 @@ const readiness={
  'league-of-greatness':'12 franchises · 14 regular weeks · Seven playoff qualifiers',
  'goat-classic':'MLB series workspace · Scoring requires approved rules'
 };
-export async function mountGames({document,location,history,createClient,fetchPublic}){
+export async function mountGames({document,location,history,createClient,fetchPublic,now:elapsedNow}){
  const $=id=>document.getElementById(id),win=document.defaultView;
+ const drafts=selectionDrafts(document),guards=new Set(),guardByForm=new WeakMap(),guardByButton=new WeakMap();
+ const elapsed=elapsedNow||(()=>win.performance.now());
+ const stopDeadlines=()=>{for(const guard of guards)guard.stop();guards.clear();};
  const catalogResponse=await fetchPublic('/goat-games');if(!catalogResponse.ok)throw new Error('catalog_unavailable');
  const catalog=(await catalogResponse.json()).games.filter(g=>keys.includes(g.id));
- let api=createClient(),account,dashboard,generation=0,view=0,activeLeague,activeAnnual;
+ let api=createClient(),account,dashboard,generation=0,view=0,dashboardRequest=0,activeLeague,activeAnnual;
  let selected=catalog.find(g=>location.pathname==='/games/'+g.id)?.id||'';
  const node=(tag,text,attrs={})=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=String(text);for(const [k,v]of Object.entries(attrs))e.setAttribute(k,String(v));return e;};
  const notify=text=>{const notice=$('notice');if(notice)notice.textContent=text;};
@@ -32,26 +39,32 @@ export async function mountGames({document,location,history,createClient,fetchPu
   headers.forEach(h=>head.append(node('th',h,{scope:'col'})));const thead=node('thead');thead.append(head);t.append(thead);
   for(const row of rows){const tr=node('tr');row.forEach(v=>tr.append(node('td',v??'—')));body.append(tr);}t.append(body);wrap.append(t);parent.append(wrap);
  };
- function context(panel,capturedApi,g,v,refresh){
+ function context(panel,capturedApi,g,v,refresh,serverTime){
   const current=()=>g===generation&&v===view;
-  async function run(fn,b){if(b?.disabled||!current())return;if(b)b.disabled=true;try{await fn();}catch(e){if(current())notify(e.message.replaceAll('_',' '));}finally{if(b)b.disabled=false;}}
+  const clock=serverClock(serverTime,elapsed);let submissionTicket;
+  async function run(fn,b){if(b?.disabled||!current())return;if(b)b.disabled=true;try{await fn();}catch(e){if(current())notify(e.message.replaceAll('_',' '));}finally{if(b){b.disabled=false;guardByButton.get(b)?.update();}}}
   function button(text,fn){const b=node('button',text,{type:'button'});b.addEventListener('click',()=>run(fn,b));return b;}
-  function form(parent,title,fields,label,submit){
+  function trackDeadline(f,deadline,items){const guard=deadlineGuard({document,form:f,deadline,items,now:clock,current,schedule:(fn,ms)=>win.setTimeout(fn,ms),cancel:id=>win.clearTimeout(id)});guards.add(guard);guardByForm.set(f,guard);guardByButton.set(guard.submit,guard);}
+  function form(parent,title,fields,label,submit,options={}){
    const f=node('form');if(title)f.append(node('h3',title));
    for(const spec of fields){const l=node('label',spec.label),input=node(['textarea','select'].includes(spec.type)?spec.type:'input',undefined,{name:spec.name,...(!['textarea','select'].includes(spec.type)?{type:spec.type}:{}),...(spec.type==='textarea'?{maxlength:30000}:{}),...spec.attrs});
     for(const [value,text]of spec.options||[])input.append(node('option',text,{value}));
     if(spec.type==='checkbox')input.checked=Boolean(spec.value);else input.value=spec.value??'';l.append(input);f.append(l);
    }
    const b=node('button',label,{type:'submit'});f.append(b);
-   f.addEventListener('submit',event=>{event.preventDefault();if(b.disabled||!current()||!f.checkValidity())return;run(async()=>{
+   drafts.bind(f,{scope:activeLeague,label,fields,current,discard:()=>refresh()});
+   f.addEventListener('submit',event=>{event.preventDefault();if(guardByForm.get(f)?.update()||b.disabled||!current()||!f.checkValidity())return;run(async()=>{
     const p={};for(const spec of fields){const input=f.elements[spec.name];p[spec.name]=spec.type==='checkbox'?input.checked:spec.type==='number'?Number(input.value):spec.type==='datetime-local'?new Date(input.value).toISOString():input.value.trim();}
-    await submit(p);
-   },b);});parent.append(f);return f;
+    const ticket=drafts.capture(f),previous=submissionTicket;let pending;
+    try{submissionTicket=ticket;pending=submit(p);}finally{submissionTicket=previous;}
+    await pending;drafts.acknowledge(ticket);
+   },b);});parent.append(f);if(options.deadline||options.deadlines)trackDeadline(f,options.deadline,options.deadlines);return f;
   }
-  async function command(p){if(!current())throw new Error('view_changed');const result=await capturedApi.command(p);if(current()){await refresh(result);if(g===generation)notify('Saved.');}return result;}
-  return {panel,account,api:capturedApi,node,form,details,table,button,field,select,command,required,datetime,message:text=>{if(current())notify(text);},fetchPublic,current};
+  async function command(p){if(!current())throw new Error('view_changed');const ticket=submissionTicket,result=await capturedApi.command(p);drafts.acknowledge(ticket);if(current()){await refresh(result);if(g===generation)notify(drafts.pending(ticket)?'Submitted selections saved. Newer edits remain unsaved in this tab.':'Saved.');}return result;}
+  const ctx={panel,account,api:capturedApi,node,form,details,table,button,field,select,command,required,datetime,trackDeadline,serverNow:clock,message:text=>{if(current())notify(text);},fetchPublic,current};
+  ctx.importer=(parent,options)=>renderImportEditor(parent,options,ctx);return ctx;
  }
- function clearPrivate(){generation++;view++;account=undefined;dashboard=undefined;activeLeague=undefined;activeAnnual=undefined;api=createClient();
+ function clearPrivate(){generation++;view++;dashboardRequest++;stopDeadlines();drafts.clear();account=undefined;dashboard=undefined;activeLeague=undefined;activeAnnual=undefined;api=createClient();
   for(const id of ['league-list','member-actions','league-panel','annual-panel'])$(id).replaceChildren();
   $('account-panel').hidden=false;for(const id of ['member-panel','league-panel','annual-panel'])$(id).hidden=true;
   $('account-form').elements.password.value='';
@@ -71,11 +84,11 @@ export async function mountGames({document,location,history,createClient,fetchPu
    const link=node('a','Open '+g.name,{href:'/games/'+g.id,class:'button'});link.addEventListener('click',e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();chooseGame(g.id);});card.append(link);$('catalog').append(card);
   }
  }
- function chooseGame(id,push=true){selected=id;view++;activeLeague=undefined;activeAnnual=undefined;$('league-panel').replaceChildren();$('league-panel').hidden=true;$('annual-panel').replaceChildren();$('annual-panel').hidden=true;
+ function chooseGame(id,push=true){selected=id;view++;stopDeadlines();activeLeague=undefined;activeAnnual=undefined;$('league-panel').replaceChildren();$('league-panel').hidden=true;$('annual-panel').replaceChildren();$('annual-panel').hidden=true;
   if(push)history.pushState({},'',id?'/games/'+id:'/games');chrome();if(account)renderDashboard();$('game-title').focus();
  }
- async function loadDashboard(){const g=generation,capturedApi=api;const [me,d]=await Promise.all([capturedApi.query({op:'me'}),capturedApi.query({op:'competition_dashboard'})]);
-  if(g!==generation)return;account=me;dashboard=d;$('account-panel').hidden=true;$('member-panel').hidden=false;renderDashboard();
+ async function loadDashboard(){const g=generation,request=++dashboardRequest,capturedApi=api;const [me,d]=await Promise.all([capturedApi.query({op:'me'}),capturedApi.query({op:'competition_dashboard'})]);
+  if(g!==generation||request!==dashboardRequest)return;account=me;dashboard=d;$('account-panel').hidden=true;$('member-panel').hidden=false;renderDashboard();
  }
  function renderDashboard(){
   if(!account||!dashboard)return;$('member-name').textContent=(selected?'My '+catalog.find(g=>g.id===selected).name+' entries':'My competitions')+' · '+account.profile.display_name;
@@ -91,14 +104,16 @@ export async function mountGames({document,location,history,createClient,fetchPu
   else $('member-actions').append(button('Annual GOAT Championship',openAnnual));
  }
  async function openLeague(id){
-  const g=generation,v=++view,capturedApi=api;activeLeague=id;activeAnnual=undefined;
+  const g=generation,v=++view,request=++dashboardRequest,capturedApi=api;stopDeadlines();activeLeague=id;activeAnnual=undefined;
   $('annual-panel').hidden=true;$('league-panel').hidden=false;$('league-panel').replaceChildren(node('p','Loading your competition…'));
   try{
-   const [data,standings,historyRows]=await Promise.all([capturedApi.query({op:'league',league_id:id}),capturedApi.query({op:'standings',league_id:id}),capturedApi.query({op:'history',league_id:id})]);
+   const [data,standings,historyRows,freshDashboard]=await Promise.all([capturedApi.query({op:'league',league_id:id}),capturedApi.query({op:'standings',league_id:id}),capturedApi.query({op:'history',league_id:id}),capturedApi.query({op:'competition_dashboard'})]);
    if(g!==generation||v!==view)return;
-   const panel=node('div'),ctx=context(panel,capturedApi,g,v,()=>openLeague(id));
-   panel.append(ctx.button('Back to my competitions',async()=>{view++;activeLeague=undefined;$('league-panel').replaceChildren();$('league-panel').hidden=true;renderDashboard();}),ctx.button('Refresh competition',()=>openLeague(id)),node('h2',data.league.name),node('p',data.league.season+' · '+data.league.status));
+   if(request===dashboardRequest)dashboard=freshDashboard;
+   const panel=node('div'),ctx=context(panel,capturedApi,g,v,()=>openLeague(id),data.server_time);
+   panel.append(ctx.button('Back to my competitions',async()=>{view++;stopDeadlines();activeLeague=undefined;$('league-panel').replaceChildren();$('league-panel').hidden=true;renderDashboard();}),ctx.button('Refresh competition',()=>openLeague(id)),node('h2',data.league.name),node('p',data.league.season+' · '+data.league.status));
    const key=data.league.game_key||(data.league.strategy==='ranked_ats_v1'?'first-and-baa':'horns-and-hoops');selected=key;chrome();
+   renderOverview(data,ctx);
    if(key==='horns-and-hoops')await renderBracket(data,ctx);
    else if(key==='first-and-baa')await renderNfl(data,standings,ctx);
    else if(key==='league-of-greatness')await renderFantasy(data,standings,ctx);
@@ -109,11 +124,11 @@ export async function mountGames({document,location,history,createClient,fetchPu
     const cert=ctx.details(panel,'Certify official finishing positions for the annual championship');cert.append(node('p','Known engine places cannot be changed. Unresolved fantasy places require a sourced official order. No BAAS conversion is assumed.'));
     ctx.form(cert,'Official final places',[...standings.map((r,i)=>ctx.field('place_'+i,(r.display_name||r.name)+' — place','number',r.rank??'',{required:'',min:1,max:standings.length,step:1})),ctx.field('source_url','Official finishing-position source','url','',{required:''}),ctx.field('source_reference','Reviewed finishing-position policy / source','text','',ctx.required),ctx.field('verified','I verified these finishing positions against the source.','checkbox',false,{required:''})],'Certify finishing positions',p=>ctx.command({op:'competition_finish_certify',league_id:id,finishes:standings.map((r,i)=>({user_id:r.user_id,place:p['place_'+i]})),verified:p.verified,source_url:p.source_url,source_reference:p.source_reference}));
    }
-   if(g===generation&&v===view){$('league-panel').replaceChildren(panel);renderDashboard();}
+   if(g===generation&&v===view){drafts.restore(panel);$('league-panel').replaceChildren(panel);renderDashboard();}
   }catch(e){if(g===generation&&v===view){$('league-panel').replaceChildren(node('p','Competition unavailable. Return to your entries and try again.'));notify(e.message.replaceAll('_',' '));}}
  }
  async function openAnnual(){
-  const g=generation,v=++view,capturedApi=api;activeLeague=undefined;$('league-panel').hidden=true;$('annual-panel').hidden=false;
+  const g=generation,v=++view,capturedApi=api;stopDeadlines();activeLeague=undefined;$('league-panel').hidden=true;$('annual-panel').hidden=false;$('annual-panel').replaceChildren(node('p','Loading annual championship…'));
   const panel=node('div'),ctx=context(panel,capturedApi,g,v,async result=>{if(result.id)activeAnnual=result.id;await openAnnual();});
   try{await renderAnnual(activeAnnual,dashboard,ctx,id=>{activeAnnual=id;return openAnnual();});if(g===generation&&v===view)$('annual-panel').replaceChildren(panel);}catch(e){if(g===generation&&v===view)notify(e.message.replaceAll('_',' '));}
  }
@@ -128,6 +143,8 @@ export async function mountGames({document,location,history,createClient,fetchPu
  $('sign-out').addEventListener('click',async()=>{const oldApi=api;clearPrivate();const g=generation;notify('Private competition views cleared.');try{await oldApi.logout();if(g===generation)notify('Signed out.');}catch{if(g===generation)notify('Private views cleared. Server sign-out was not confirmed; retry from your account workspace.');}});
  win?.addEventListener('pagehide',()=>{clearPrivate();notify('Sign in again to load private competitions.');});
  win?.addEventListener('popstate',()=>chooseGame(catalog.find(g=>location.pathname==='/games/'+g.id)?.id||'',false));
+ win?.addEventListener('focus',()=>{for(const guard of guards)guard.update();});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)for(const guard of guards)guard.update();});
  chrome();
  return {openLeague,chooseGame,openAnnual,loadDashboard,clear:clearPrivate};
 }

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {LocalDatabase} from '../database.mjs';
 import {LocalAuth} from '../auth.mjs';
+import {prepareImport} from '../games/imports.mjs';
 
 // Every team, policy, event and result below is synthetic TEST data.
 let db, owner, member, other, outsider;
@@ -29,7 +30,8 @@ async function setup(key, configure = true) {
     {code: sport+'-B', sport, round:'Opening', stage:1, lock_at:future(24), home_team:sport+' HOME B', away_team:sport+' AWAY B', source_url:'https://fixture.invalid/schedule'},
     {code: sport+'-F', sport, round:'Final', stage:2, lock_at:future(48), home_from_code:sport+'-A', away_from_code:sport+'-B', source_url:'https://fixture.invalid/schedule'}
   ]);
-  await command({op:'series_schedule_import', league_id:league.id, events});
+  const imported=prepareImport('series_schedule',JSON.stringify(events),{league:{...league,game_key:key}});
+  await command(imported.payload);
   return {league, events:(await query({op:'league',league_id:league.id})).series_events};
 }
 async function enter(league, actors = [member, other]) {
@@ -97,7 +99,9 @@ test('combined Crossover picks, privacy, server deadlines, standings, correction
   const results=events.map(e=>({event_id:e.id,winner:e.code.endsWith('-B')?e.sport+' HOME B':e.sport+' HOME A',source_url:'https://fixture.invalid/result'}));
   await assert.rejects(command({op:'series_results_import',league_id:league.id,results:results.map((e,i)=>i===5?{...e,winner:'UNKNOWN'}:e)}),/sourced_series_winner_required/);
   assert.equal((await query({op:'history',league_id:league.id})).length,0,'Failed batch rolls back results and history');
-  await command({op:'series_results_import',league_id:league.id,results:results.toReversed()});
+  const snapshot=await query({op:'league',league_id:league.id});
+  const csv='code,winner,source_url\n'+events.toReversed().map(e=>[e.code,results.find(r=>r.event_id===e.id).winner,'https://fixture.invalid/result'].join(',')).join('\n');
+  await command(prepareImport('series_results',csv,snapshot).payload);
   const standings=await query({op:'standings',league_id:league.id},member);
   assert.deepEqual(standings.map(r=>[Number(r.points),Number(r.rank)]),[[32,1],[32,1]]);
   assert.deepEqual(standings[0].sports.map(s=>[s.sport,Number(s.points)]),[['NBA',13],['NHL',19]]);

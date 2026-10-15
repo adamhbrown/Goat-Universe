@@ -1,4 +1,4 @@
-# Competition workspace — October 14, 2026
+# Competition workspace — October 15, 2026
 
 Isolated branch: `work/qa-security`. Review target: `codex/backend-foundations`.
 The public `index.html`, publication experience, account/security branches and
@@ -25,6 +25,43 @@ Sign-out and Safari pagehide clear private screens. Tokens are never stored in
 browser storage or game URLs. Recovery and password settings remain in the
 existing account workspace. The new screens reuse its account client and bracket
 module; they do not replace Pope's identity implementation.
+
+### October 15 usability sprint
+
+Commissioners can upload CSV/JSON files or paste records, review normalized rows
+in pages of 20, confirm they compared the records against the official source,
+then explicitly apply one atomic import. Nothing is uploaded during review.
+The editor shows blank CSV headers only; it never seeds sample schedules/results.
+Supported imports: NCAA schedules/results, combined NBA/NHL and MLB series
+schedules/results, fantasy regular-season schedules and verified score batches.
+Unexpected fields, foreign/conflicting IDs, duplicate results, malformed dates,
+cross-sport feeders, missing evidence and missing bonus flags fail local review.
+The authenticated server still validates permissions, state, deadlines and rules.
+Files are limited to 256 KB; normalized commands must fit the existing 32 KB
+request limit. Oversized result imports can be split; complete schedules must
+remain compact. Both CSV and JSON use the headers displayed by each editor.
+
+Fantasy schedule CSV accepts `home_external_id`/`away_external_id` from the
+registered ESPN roster, or matching internal `home_id`/`away_id`. Score CSV accepts
+`matchup_id` or `week` plus official home/away ESPN IDs. Identifiers must agree
+when supplied together. Scores require explicit `source_includes_home_bonus`
+and `verified` booleans; no extra home points are added in the browser.
+
+NFL, NCAA and series pick forms show a countdown calibrated to the server
+snapshot and monotonic elapsed time. At the cutoff, submit is disabled and
+unsaved edits are clearly identified. Series lock independently; later series
+remain editable and elapsed series are omitted from a partial submission.
+These controls improve feedback; database wall-clock checks remain authoritative.
+
+Selection edits survive navigation within the tab in memory only. A visible
+notice distinguishes restored drafts from saved picks, and a discard action
+reloads the saved records. An in-flight save cannot discard newer edits.
+Sign-out/pagehide clears drafts; page reload does not restore them. Drafts never
+use browser storage or background saves and never include account credentials.
+Every game includes a saved-record receipt. Commissioner setup observations show
+known schedule/roster/policy gaps without treating counts as rule approval or
+launch readiness. Reopening a competition refreshes the member dashboard, so a
+new finish certification is immediately eligible for annual attachment.
 
 ## Actual functionality
 
@@ -82,16 +119,14 @@ finishes cannot be rewritten through ordinary commands.
   no credentials or whitespace. URLs remain evidence supplied by a commissioner;
   the code does not independently certify a source's truth.
 
-Targeted local verification: 28 tests, zero failed/skipped:
-series (5), fantasy (4), annual integration (3), deadline regressions (4), input
-validation (2), game-screen DOM/routing (10). The earlier unmodified integration
-baseline passed 63 tests. The full updated suite and three new HTTP/DOM/database
-tests must be verified on the final commit; see the draft PR's CI evidence.
-JSDOM checks prove functional DOM behavior, not physical iPhone rendering.
-The initial complete CI run passed all 93 cases but caught an asynchronous
-sign-out notice after browser-test teardown. The follow-up waits for actual
-HTTP sign-out, safely ignores notices after document teardown, and adds a
-deterministic teardown regression. Final-commit CI is the authoritative result.
+Previous verified head `e6fd5d6`: complete CI suite passed 94 tests with no
+failures, cancellations or skips. October 15 targeted verification passed 41
+UI/import/clock/draft/database tests. Two new regressions first failed against
+the previous UI: stale annual eligibility after certification and lost unsaved
+picks on navigation. Both now pass. Complete final-head CI evidence is recorded
+in draft PR #13; HTTP tests include a real CSV review/apply through DOM, account
+client, HTTP and the local database. JSDOM proves functional DOM behavior, not
+physical iPhone rendering or hosted acceptance.
 
 ## Integration boundaries and next work
 
@@ -100,7 +135,10 @@ shared identity and existing player/manager screens. This change adds isolated
 `backend/games/` modules, tests, three development migration files and a separate
 CI workflow. Shared `backend/server.mjs` edits only serve the new allowlisted
 screen/assets and aliases for reused modules; the scoring-helper edit only
-hardens timestamps/evidence. Review both through this draft before integration.
+hardens timestamps/evidence. The shared bracket renderer has optional import
+and deadline hooks for `/games`; `/manage` retains its existing forms when those
+hooks are absent. Review these shared-file edits through this draft before
+integration. This follow-up adds no database migrations or identity changes.
 
 The migrations were exercised only in local PGlite databases. No hosted migration,
 Supabase investigation, reset, secret rotation, purchase, deployment, production

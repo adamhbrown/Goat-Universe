@@ -2,6 +2,7 @@ import test,{before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {LocalDatabase} from '../database.mjs';
 import {LocalAuth} from '../auth.mjs';
+import {prepareImport} from '../games/imports.mjs';
 
 let db,owner,members,outsider;
 const command=(p,actor=owner)=>db.rpc('goat_command',p,actor);
@@ -23,7 +24,10 @@ async function setup(year=2026){
  return {league,teams,matchups};
 }
 async function open(f){
- await command({op:'fantasy_schedule_import',league_id:f.league.id,matchups:f.matchups});
+ const data=await query({op:'league',league_id:f.league.id});
+ const external=id=>data.fantasy_teams.find(t=>t.id===id).external_team_id;
+ const csv='week,home_external_id,away_external_id,starts_at,source_url\n'+f.matchups.map(m=>[m.week,external(m.home_id),external(m.away_id),m.starts_at,m.source_url].join(',')).join('\n');
+ await command(prepareImport('fantasy_schedule',csv,data).payload);
  await command({op:'fantasy_open',league_id:f.league.id,approved:true,source_reference:'Verified architecture; SYNTHETIC fixture schedule and roster'});
  return (await query({op:'league',league_id:f.league.id})).fantasy_matchups;
 }
@@ -68,7 +72,9 @@ test('complete fantasy season tracks records, seven supplied seeds, Wildcat upse
  const imports=games.map(result);
  await assert.rejects(command({op:'fantasy_results_import',league_id:lid,results:imports.map((m,i)=>i===83?{...m,source_url:'javascript:bad'}:m)}),/check constraint/);
  assert.equal((await query({op:'history',league_id:lid})).length,0);
- await command({op:'fantasy_results_import',league_id:lid,results:imports});
+ const data=await query({op:'league',league_id:lid}),external=id=>data.fantasy_teams.find(t=>t.id===id).external_team_id;
+ const scoreCsv='week,home_external_id,away_external_id,home_score,away_score,source_includes_home_bonus,verified,source_url\n'+games.map(m=>[m.week,external(m.home_id),external(m.away_id),100.25,90.5,true,true,source].join(',')).join('\n');
+ await command(prepareImport('fantasy_results',scoreCsv,data).payload);
  const records=await query({op:'standings',league_id:lid},members[0]);
  assert.ok(records.every(r=>Number(r.played)===14));assert.ok(records.every(r=>r.rank===null&&r.seed===null),'No implicit record or playoff tiebreaker');
  assert.equal(Number(records.find(r=>r.team_id===f.teams[0]).wins),14);

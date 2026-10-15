@@ -10,6 +10,7 @@ export async function renderSeries(data,standings,ctx){
  if(owner){
   panel.append(node('p','Invitation ID: '+l.id));
   if(l.status==='draft'){
+   if(!events.length)ctx.importer(panel,{kind:'series_schedule',title:'Review sourced series schedule import',data});
    const schedule=details(panel,'Commissioner: add sourced series');schedule.open=true;
    const prior=[['','No feeder — use the team name'],...events.map(e=>[e.id,e.sport+' · '+e.code])];
    form(schedule,'Series / bracket administration',[field('code','Series code','text','',required),select('sport','Sport',sports.map(s=>[s,s])),field('round','Official round name','text','',required),field('stage','Advancement stage','number','',{required:'',min:1,max:32,step:1}),datetime('lock_at','Pick deadline'),field('source_url','Official schedule source','url','',{required:''}),field('home_team','First entrant, if known'),select('home_from','Or first entrant comes from series',prior,'',{}),field('away_team','Second entrant, if known'),select('away_from','Or second entrant comes from series',prior,'',{})],'Add sourced series',p=>{const {home_team,away_team,home_from,away_from,...rest}=p;return command({op:'series_event_create',league_id:l.id,...rest,...(home_from?{home_from}:{home_team}),...(away_from?{away_from}:{away_team})});});
@@ -18,6 +19,7 @@ export async function renderSeries(data,standings,ctx){
    if(policy)form(review,'Open the sourced competition',[field('reason','Approval reason','text','',required)],'Open development entries',p=>command({op:'series_open',league_id:l.id,...p}));
   }
   if(l.status==='open'){
+   ctx.importer(panel,{kind:'series_results',title:'Review sourced series result import',data});
    const approvals=details(panel,'Commissioner: entry approvals');
    for(const e of data.entries.filter(e=>e.status==='pending'))form(approvals,e.display_name||e.user_id,[select('approved','Decision',[['true','Approve'],['false','Reject']])],'Save decision',p=>command({op:'entry_decide',league_id:l.id,user_id:e.user_id,approved:p.approved==='true'}));
    if(!data.entries.some(e=>e.user_id===account.profile.user_id))panel.append(button('Request a competitor entry',()=>command({op:'enroll',league_id:l.id})));
@@ -28,7 +30,7 @@ export async function renderSeries(data,standings,ctx){
   table(group,['Series','Round','Entrants / feeders','Pick lock','Winner'],rows.map(e=>[e.code,e.round,(e.home_team||events.find(n=>n.id===e.home_from)?.code||'Feeder')+' vs '+(e.away_team||events.find(n=>n.id===e.away_from)?.code||'Feeder'),new Date(e.lock_at).toLocaleString(),e.winner||'Awaiting sourced result']));
   if(entered&&l.status==='open'){
    const unlocked=rows.filter(e=>Date.parse(e.lock_at)>now);
-   if(unlocked.length)form(group,'Your '+sport+' selections',unlocked.map((e,i)=>select('team_'+i,e.code+' · '+e.round,[['','Keep unchanged / no selection'],...candidates(events,e.id).map(t=>[t,t])],data.series_picks?.find(k=>k.user_id===account.profile.user_id&&k.event_id===e.id)?.team||'',{})),'Save '+sport+' picks',p=>{const picks=unlocked.flatMap((e,i)=>p['team_'+i]?[{event_id:e.id,team:p['team_'+i]}]:[]);if(!picks.length)throw new Error('Choose at least one series winner.');return command({op:'series_submit',league_id:l.id,picks});});
+   if(unlocked.length)form(group,'Your '+sport+' selections',unlocked.map(e=>select('team_'+e.id,e.code+' · '+e.round,[['','Keep unchanged / no selection'],...candidates(events,e.id).map(t=>[t,t])],data.series_picks?.find(k=>k.user_id===account.profile.user_id&&k.event_id===e.id)?.team||'',{})),'Save '+sport+' picks',p=>{const picks=unlocked.flatMap(e=>p['team_'+e.id]&&Date.parse(e.lock_at)>ctx.serverNow()?[{event_id:e.id,team:p['team_'+e.id]}]:[]);if(!picks.length)throw new Error('Choose at least one series winner before its deadline.');return command({op:'series_submit',league_id:l.id,picks});},{deadlines:Object.fromEntries(unlocked.map(e=>['team_'+e.id,e.lock_at]))});
    for(const e of rows.filter(e=>Date.parse(e.lock_at)<=now)){const pick=data.series_picks?.find(p=>p.event_id===e.id&&p.user_id===account.profile.user_id);group.append(node('p',e.code+' locked · Your pick: '+(pick?.team||'No pick submitted')));}
   }
   if(owner&&l.status==='open')for(const e of rows){

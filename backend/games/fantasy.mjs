@@ -10,7 +10,7 @@ export async function renderFantasy(data,standings,ctx){
  if(owner&&l.status==='draft'){
   roster.open=true;
   if(teams.length<12)form(roster,'Add a sourced franchise',[field('name','Franchise name','text','',required),field('franchise_key','Stable franchise identifier','text','',required),field('external_team_id','ESPN team ID','text','',required),field('user_id','Owner GOAT account ID','text','',{required:'',pattern:'[a-fA-F0-9-]{36}'}),field('source_url','Verified roster source','url','',{required:''})],'Add franchise',p=>command({op:'fantasy_team_create',league_id:l.id,...p}));
-  if(teams.length===12&&!matchups.length)form(roster,'Import the official 14-week schedule',[field('matchups','Schedule JSON: week, home_id, away_id, starts_at, source_url','textarea','',{required:''})],'Import 84 sourced matchups',p=>command({op:'fantasy_schedule_import',league_id:l.id,matchups:JSON.parse(p.matchups)}));
+  if(teams.length===12&&!matchups.length)ctx.importer(roster,{kind:'fantasy_schedule',title:'Review official 14-week schedule import',data});
   if(teams.length===12&&matchups.length===84)form(roster,'Approve sourced season records',[field('source_reference','Verified roster and schedule reference','text','',required),field('approved','I reviewed this official roster and schedule.','checkbox',false,{required:''})],'Open fantasy season workspace',p=>command({op:'fantasy_open',league_id:l.id,...p}));
  }
  panel.append(node('h3','Regular-season records'));table(panel,['Seed','Franchise','Played','W','L','T','Points for','Points against'],standings.map(r=>[r.seed,r.name,r.played,r.wins,r.losses,r.ties,r.points_for,r.points_against]));
@@ -38,7 +38,7 @@ export async function renderFantasy(data,standings,ctx){
   if(owner&&l.status==='open')playoffs.append(button('Finalize fantasy championship',()=>command({op:'fantasy_finalize',league_id:l.id})));
  }
  const schedule=details(panel,'Weekly matchups and commissioner result entry');
- if(owner&&l.status==='open')form(schedule,'Import a verified ESPN result batch',[field('results','Result JSON: matchup_id, home_score, away_score, source_includes_home_bonus, verified, source_url','textarea','',{required:''})],'Import sourced fantasy scores',p=>command({op:'fantasy_results_import',league_id:l.id,results:JSON.parse(p.results)}));
+ if(owner&&l.status==='open')ctx.importer(schedule,{kind:'fantasy_results',title:'Review verified ESPN score import',data});
  for(const week of [...new Set(matchups.map(m=>m.week))].sort((a,b)=>a-b)){
   const section=details(schedule,'Week '+week+(week>14?' · Playoffs':''));const rows=matchups.filter(m=>m.week===week);
   table(section,['Home','Away','Official start','Home score','Away score'],rows.map(m=>[name(m.home_id),name(m.away_id),new Date(m.starts_at).toLocaleString(),m.home_score,m.away_score]));

@@ -1,7 +1,7 @@
 import {readFile} from 'node:fs/promises';
 
 const gameKeys=new Set(['first-and-baa','horns-and-hoops','goat-crossover','league-of-greatness','goat-classic']);
-const assets=new Map(['boot.mjs','ui.mjs','nfl.mjs','series.mjs','fantasy.mjs','annual.mjs','style.css'].map(file=>['/games/'+file,file]));
+const assets=new Map(['boot.mjs','ui.mjs','nfl.mjs','series.mjs','fantasy.mjs','annual.mjs','drafts.mjs','deadlines.mjs','imports.mjs','overview.mjs','style.css'].map(file=>['/games/'+file,file]));
 export async function competitionAsset(pathname){
  let file=assets.get(pathname);
  if(pathname==='/games'||pathname==='/games/'||pathname.startsWith('/games/')&&gameKeys.has(pathname.split('/')[2])&&pathname.split('/').length===3)file='index.html';
