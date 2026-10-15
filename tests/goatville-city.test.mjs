@@ -61,6 +61,7 @@ test('cinema and district interactions run in simulated DOM',()=>{
   showModal(){this.open=true;}
   close(){this.open=false;}
   scrollIntoView(){this.scrolls++;}
+  focus(){}
  }
  const ids=[...city.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
  const nodes=Object.fromEntries(ids.map(id=>[id,new Node(id)]));
@@ -71,14 +72,14 @@ test('cinema and district interactions run in simulated DOM',()=>{
  const doc={getElementById:id=>nodes[id],querySelectorAll:sel=>sel==='[data-filter]'?filters:sel==='[data-district]'?districts:[]};
  const script=city.match(/<script>([\s\S]*?)<\/script>/)?.[1];
  assert.ok(script);
- assert.doesNotThrow(()=>new Function('document','matchMedia','location',script)(doc,()=>({matches:true}),{hash:''}));
+ assert.doesNotThrow(()=>new Function('document','window','location',script)(doc,{matchMedia:()=>({matches:true})},{hash:''}));
  nodes['open-cinema'].click();
  assert.equal(nodes['goatville-intro'].open,true);
- assert.match(nodes['cinema-title'].innerHTML,/EVERY LEGEND/);
+ assert.match(nodes['cinema-heading'].textContent,/EVERY LEGEND/);
  nodes['cinema-next'].click();
- assert.match(nodes['cinema-title'].innerHTML,/ONE CITY/);
+ assert.match(nodes['cinema-heading'].textContent,/ONE CITY/);
  nodes['cinema-next'].click();
- assert.match(nodes['cinema-title'].innerHTML,/WELCOME TO/);
+ assert.match(nodes['cinema-heading'].textContent,/WELCOME TO/);
  nodes['cinema-next'].click();
  assert.equal(nodes['goatville-intro'].open,false);
  assert.equal(nodes.districts?.scrolls||nodes['districts'].scrolls,1);
