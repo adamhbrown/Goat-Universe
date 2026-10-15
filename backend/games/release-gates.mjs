@@ -21,7 +21,7 @@ function seasonIsValid(value) {
 }
 function isValidTimestamp(value) {
   if (typeof value !== 'string') return false;
-  const m=/^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})(?:\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$/.exec(value);
+  const m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(Z|[+-]\d{2}:\d{2})$/.exec(value);
   if (!m) return false;
   const year=Number(m[1]),month=Number(m[2]),day=Number(m[3]);
   const leap=year%4===0&&(year%100!==0||year%400===0);
