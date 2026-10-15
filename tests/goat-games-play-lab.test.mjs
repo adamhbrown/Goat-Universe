@@ -135,9 +135,9 @@ test('all five sports can be played, scored and reset in a simulated DOM', () =>
   }
   assert.match(elements['hoops-result'].textContent,/YOUR MINI-BRACKET CHAMPION/);
   assert.equal(elements.completion.textContent,'5 / 5');
-  assert.equal(elements.perfect.textContent,'7');
+  assert.equal(String(elements.perfect.textContent),'7');
   assert.equal(elements['last-play'].textContent,'Horns & Hoops');
   elements['reset-session'].click();
   assert.equal(elements.completion.textContent,'0 / 5');
-  assert.equal(elements.perfect.textContent,'0');
+  assert.equal(String(elements.perfect.textContent),'0');
 });
