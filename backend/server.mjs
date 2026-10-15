@@ -7,11 +7,12 @@ import { configuration } from './config.mjs';
 import { checkout, paymentRecord, verifiedStripeEvent } from './billing.mjs';
 import { publicCatalog } from './rules/goat-games.mjs';
 import { competitionAsset } from './games/routes.mjs';
+import { createRequestLimiter } from './security/request-limiter.mjs';
 
 export async function application(config = configuration()) {
   const db = config.mode === 'local' ? await new LocalDatabase(config.localPath).init() : new SupabaseDatabase(config);
   const auth = config.mode === 'local' ? new LocalAuth(db) : new SupabaseAuth(config);
-  const limits = new Map();
+  const limiter = createRequestLimiter();
   const server = createServer(async (req, res) => {
     const headers = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store',
       'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer',
@@ -48,13 +49,10 @@ export async function application(config = configuration()) {
         res.writeHead(200, headers); return res.end(content);
       }
       if (req.method !== 'POST') return respond(404, { error: 'route_not_found' });
+      // Limit by the real socket peer. Do not trust visitor-supplied forwarding
+      // headers to create unlimited identities. Bounded memory with periodic sweep.
       const key = req.socket.remoteAddress;
-      const now = Date.now();
-      for (const [k, value] of limits) if (value.until <= now) limits.delete(k);
-      if (!limits.has(key) && limits.size >= 10000) return respond(429, { error: 'rate_limit' });
-      const rate = limits.get(key) || { count: 0, until: now + 60000 };
-      limits.set(key, rate);
-      if (++rate.count > 120) return respond(429, { error: 'rate_limit' });
+      if (!limiter.allow(key, 'post')) return respond(429, { error: 'rate_limit' });
       let size = 0; const chunks = [];
       const max = url.pathname === '/billing/webhook' ? 262144 : 32768;
       for await (const chunk of req) { size += chunk.length; if (size > max) throw new Error('request_too_large'); chunks.push(chunk); }
@@ -68,9 +66,7 @@ export async function application(config = configuration()) {
       const p = JSON.parse(raw.toString('utf8'));
       if (p === null || Array.isArray(p) || typeof p !== 'object') throw new Error('invalid_request');
       if (['/auth/signup','/auth/login','/auth/refresh','/auth/recover','/auth/confirm','/auth/reset','/auth/password'].includes(url.pathname)) {
-        const authKey = `auth:${key}`;
-        const authRate = limits.get(authKey) || { count: 0, until: now + 60000 }; limits.set(authKey, authRate);
-        if (++authRate.count > 10) return respond(429, { error: 'rate_limit' });
+        if (!limiter.allow(key, 'auth')) return respond(429, { error: 'rate_limit' });
         if(url.pathname!=='/auth/password')return respond(url.pathname.endsWith('signup') ? 201 : 200, await auth[url.pathname.split('/').at(-1)](p));
       }
       const token = req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.slice(7) : null;
