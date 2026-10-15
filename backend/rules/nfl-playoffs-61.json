@@ -1,0 +1,21 @@
+{
+  "name": "1st & BAA — Goats of the Gridiron Playoff League",
+  "sport": "NFL",
+  "season": "Super Bowl 61",
+  "strategy": "ranked_ats_v1",
+  "rules": {
+    "approved": false,
+    "max_points": 61,
+    "game_selection_points": 59,
+    "mvp_bonus": 2,
+    "tiebreaker": "ats_record",
+    "source_reference": "Adam's 2026 NFL Playoff League.xlsx, sheet1 E2/S2/N2/I2 and sheet4 B13:B15; founder's October 13, 2026 correction: 59 game-selection points + 2 MVP = Super Bowl 61",
+    "unresolved": ["ATS push scoring", "missed submission policy", "exact ATS record tiebreak comparison and remaining ties", "round deadlines and approved event/spread sources"]
+  },
+  "round_templates": [
+    {"name":"Wild Card","weights":[1,2,3,4,5,6],"mvp_bonus":0},
+    {"name":"Divisional","weights":[2,4,5,7],"mvp_bonus":0},
+    {"name":"Conference","weights":[4,9],"weight_options":[[4,9],[5,8],[6,7]],"mvp_bonus":0},
+    {"name":"Super Bowl","weights":[7],"mvp_bonus":2}
+  ]
+}

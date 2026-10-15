@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GOAT Universe · Management Workspace</title><link rel="stylesheet" href="/manage/style.css"></head>
+<body><header><a href="/manage">GOAT GAMES</a><span>Management workspace · WHERE THE GOATS PLAY.</span><a href="/play">Participant portal</a><button id="logout" hidden>Sign out</button></header>
+<main><p id="environment">Development portal · Not the public production website. Payments and external outreach are disabled.</p>
+<p id="message" role="status" aria-live="polite"></p>
+<section id="auth"><h1>Your GOAT Games account</h1><p>Create an account or sign in. Your password is never stored in this browser.</p>
+<form id="account"><label>Email<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+<label>Password<input name="password" type="password" autocomplete="current-password" required minlength="12" maxlength="200"></label>
+<label>Display name <small>(registration only)</small><input name="display_name" autocomplete="nickname" maxlength="80"></label>
+<div class="actions"><button name="action" value="login" type="submit">Sign in</button><button name="action" value="signup" type="submit">Create account</button></div></form><details><summary>Forgot your password?</summary><form id="recovery"><label>Account email<input name="email" type="email" autocomplete="email" required maxlength="254"></label><button type="submit">Request recovery email</button></form></details></section>
+<section id="dashboard" hidden></section><section id="league" hidden></section><section id="commercial" hidden></section>
+</main><footer>GOAT Universe · Downtown Sports Nation · CAN’T STOP THE BAA.</footer><script type="module" src="/manage/ui.mjs"></script></body></html>
