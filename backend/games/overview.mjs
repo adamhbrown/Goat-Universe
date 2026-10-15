@@ -19,7 +19,7 @@ export function setupProgress(data){
   add('Sourced '+sports.join(' + ')+' series',sports.every(s=>events.some(e=>e.sport===s)),sports.map(s=>s+': '+events.filter(e=>e.sport===s).length).join(' · '));
   add('Approved scoring configuration',data.series_config?.policy?.approved===true,data.series_config?.policy?.source_reference||'No scoring matrix is assumed');
  }
- add('Recorded rule approval',rules.approved===true&&Array.isArray(rules.unresolved)&&rules.unresolved.length===0,rules.unresolved?.length?rules.unresolved.join('; '):rules.source_reference||'Awaiting a reviewed source reference');
+ add('Rules approval with source',rules.approved===true&&Array.isArray(rules.unresolved)&&rules.unresolved.length===0&&typeof rules.source_reference==='string'&&rules.source_reference.trim().length>=4,rules.unresolved?.length?rules.unresolved.join('; '):rules.source_reference||'Awaiting a reviewed source reference');
  return checks;
 }
 
