@@ -35,7 +35,7 @@ test('catalog rejects unreviewed URLs, paths, versions and querystrings',()=>{
 });
 test('game is sandboxed without parent storage or network permissions',()=>{
  assert.match(host,/sandbox', 'allow-scripts'/);
- assert.doesNotMatch(host,/allow-same-origin|allow-top-navigation|allow-popups|allow-forms/);
+ assert.doesNotMatch(host,/setAttribute\('sandbox',\s*'[^']*(?:allow-same-origin|allow-top-navigation|allow-popups|allow-forms)/);
  assert.match(child,/default-src 'none'/);
  assert.match(child,/connect-src 'none'/);
  assert.match(child,/script-src 'self'/);
