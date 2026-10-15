@@ -16,7 +16,7 @@
 
 ### Separate GitHub authentication finding
 
-Repository records show the GitHub Actions management-token workflow received HTTP 401 on October 13. That token authenticates the GitHub workflow to Supabase's management API; it is distinct from this connected Supabase session, which can read the project today. Replacing that token may restore workflow authentication, but cannot repair a project stuck in `COMING_UP`. The secret value and GitHub secret-management endpoint are not available for inspection. Do not paste a replacement into chat or code.
+The actual GitHub Actions job log (job `115627054496`, October 14 at `01:13:06 UTC`) confirms the status workflow sent a masked `SUPABASE_ACCESS_TOKEN` and the Supabase management API returned HTTP 401. That token authenticates the GitHub workflow to the management API; it is distinct from this connected Supabase session, which can read the project today. A seven-day token created roughly 30 days earlier is consistent with expiry, but the 401 alone cannot distinguish expiry from revocation or an incorrect secret. A replacement token may restore workflow authentication; it cannot repair a project stuck in `COMING_UP`. The secret value and GitHub secret-management endpoint are not available for inspection. Do not paste a replacement into chat or code.
 
 ### Safe next step
 
