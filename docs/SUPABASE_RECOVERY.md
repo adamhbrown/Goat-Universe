@@ -36,3 +36,19 @@ Only place a replacement Supabase management token in appropriately protected Gi
 > Our project opvoemihfyxidzbdyory in us-east-1 is stuck in COMING_UP. PostgreSQL accepts read-only queries, but the platform is not reaching healthy status. On October 14, 2026 at approximately 09:12 UTC, Realtime logs reported MigrationsFailedToRun, a 15-second DBConnection queue timeout, and missing realtime.subscription. Storage health requests were aborted. storage.objects was also not present during a read-only check. Please inspect managed-service startup/provisioning and advise the safest repair. We have not reset the project or modified managed schemas.
 
 No hosted database mutation, payment, outreach, or production deployment was performed during this investigation.
+
+## October 15, 2026 support follow-up
+
+The existing email case is **SU-507996**. Supabase replied on October 14 that
+the ticket had been escalated to its infrastructure team, but supplied no
+technical diagnosis, repair instructions or ETA. On October 15, Adam Brown
+replied in that same thread. He reported the read-only `COMING_UP` check and
+previous symptoms, asked for the provisioning cause, Storage/Realtime status,
+and a data-preserving in-place recovery path, and asked whether the separate
+GitHub Actions HTTP 401 was an authentication issue. The follow-up expressly
+requested diagnosis only and did not authorize modifications, spending or
+actions affecting data. No technical response is available yet.
+
+The acknowledgement says direct email is treated as a Free-plan request; paid
+organizations should submit through `supabase.help` for plan-based prioritization.
+It says Free-plan tickets do not have a guaranteed support response time.

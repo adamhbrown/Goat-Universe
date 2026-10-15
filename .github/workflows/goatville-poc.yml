@@ -1,0 +1,33 @@
+name: GOATVILLE isolated guest-game checks
+on:
+  pull_request:
+    paths:
+      - 'experiments/goatville/**'
+      - 'tests/goatville-poc.test.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/goatville-poc.yml'
+  push:
+    branches: ['codex/backend-foundations']
+    paths:
+      - 'experiments/goatville/**'
+      - 'tests/goatville-poc.test.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/goatville-poc.yml'
+permissions:
+  contents: read
+jobs:
+  guest-poc:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node --test tests/goatville-poc.test.mjs
