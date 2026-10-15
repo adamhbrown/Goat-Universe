@@ -80,6 +80,7 @@
     if(dialog.open)return;
     dialog.showModal();
     trigger.setAttribute('aria-expanded','true');
+    document.dispatchEvent(new CustomEvent('goatverse:portal-open'));
     close.focus();
   };
   trigger.addEventListener('click',open);
