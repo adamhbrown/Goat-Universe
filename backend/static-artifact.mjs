@@ -1,7 +1,7 @@
 import {lstat, readdir, readFile, realpath} from 'node:fs/promises';
 import path from 'node:path';
 
-const ALLOWED = new Set(['.html','.css','.js','.mjs','.json','.svg','.png','.jpg','.jpeg','.webp','.avif','.ico','.woff','.woff2','.txt','.mp4','.webm']);
+const ALLOWED = new Set(['.html','.css','.js','.mjs','.json','.svg','.png','.jpg','.jpeg','.webp','.avif','.ico','.woff','.woff2','.txt','.mp4','.webm','.mp3','.ogg','.wav']);
 const TEXT = new Set(['.html','.css','.js','.mjs','.json','.svg','.txt']);
 const PRIVATE = /^(backend|supabase|node_modules|docs|coverage|tests?|\.git|\.github|\.local)(\/|$)|(^|\/)(?:\.env(?:\..*)?|package(?:-lock)?\.json|Dockerfile|.*\.(?:pem|key|sql|map|zip|tar|gz|sqlite|db))$/i;
 const SENSITIVE = /sb_secret_[A-Za-z0-9_-]{12,}|sbp_[A-Za-z0-9_-]{20,}|(?:ghp_|github_pat_)[A-Za-z0-9_]{20,}|sk_(?:live|test)_[A-Za-z0-9]{16,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|postgres(?:ql)?:\/\/[^\s"'<>]+:[^\s"'<>]+@/;
@@ -43,7 +43,7 @@ export async function auditStaticArtifact(directory) {
       const extension = path.extname(rel).toLowerCase();
       if (!ALLOWED.has(extension)) { issue(rel, 'file_type_forbidden'); continue; }
       const code = ['.html','.js','.mjs','.css','.json','.svg','.txt'].includes(extension);
-      const budget = code ? report.limits.code_file_bytes : /\.(mp4|webm)$/.test(rel) ? report.limits.media_file_bytes : report.limits.image_file_bytes;
+      const budget = code ? report.limits.code_file_bytes : /\.(mp4|webm|mp3|ogg|wav)$/.test(rel) ? report.limits.media_file_bytes : report.limits.image_file_bytes;
       if (stat.size > budget) { issue(rel, 'file_budget_exceeded'); continue; }
       if (['.html','.js','.mjs','.css'].includes(extension)) report.initial_code_bytes += stat.size;
       if (TEXT.has(extension)) {
