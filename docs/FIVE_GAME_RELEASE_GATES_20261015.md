@@ -43,6 +43,38 @@ A complete synthetic fixture is sufficient to exercise the audit, but it is
 never official sports evidence. Snapshot fields may be missing until the
 chosen commissioner export format is reviewed.
 
+## Optional explicit annual season mapping
+
+Do not assume the football season label equals the calendar year in which its
+championship is played. The commissioner/founder can supply a reviewed year for
+**each** of the five game identities. The audit then rejects a saved competition
+whose season differs from its expected value. Without a mapping, the report says
+`season_mapping_checked:false` and no annual season alignment is asserted.
+
+Private local JSON (illustrative schema; numeric years are **not** authorized
+production values):
+
+```json
+{
+  "snapshots": [],
+  "season_by_game": {
+    "first-and-baa": 2027,
+    "horns-and-hoops": 2027,
+    "goat-crossover": 2027,
+    "league-of-greatness": 2027,
+    "goat-classic": 2027
+  }
+}
+```
+
+The array is deliberately empty here; the example is *not* a complete
+candidate. The chosen years must match an approved annual competition calendar.
+This does not pick annual BAAS conversions or permit mixed-season awards.
+
+The candidate also rejects an impossible, normalized date such as February 30
+or a timezone offset with invalid hours on the NCAA main-bracket lock field.
+Actual scoring deadlines remain enforced transactionally by the database.
+
 ## Outstanding independent launch gates
 
 1. Official sports sources and CEO-approved final rulebooks, including NFL
