@@ -10,7 +10,7 @@ test('GOATVILLE is reachable from both main and mobile homepage navigation', () 
   assert.match(home, /<a href="goatville\.html">GOATVILLE<\/a>/);
   assert.match(home, /<a href="goatville\.html">Play<\/a>/);
   assert.match(home, /id="goatville"/);
-  assert.match(home, /ENTER GOATVILLE USA/);
+  assert.match(home, /ENTER GOATVILLE CITY/);
 });
 test('GOATVILLE has a coherent entrance and accessible landmark structure', () => {
   assert.match(page, /WELCOME TO/);
@@ -44,13 +44,18 @@ test('GOAT TEE includes three holes, skill inputs, scoring and reset', () => {
   assert.match(page, /addStamp\('golf'\)/);
   assert.match(page, /id="golf-reset"/);
 });
-test('Local passport has transparent storage and clearing controls', () => {
-  assert.match(page, /localStorage\.getItem/);
-  assert.match(page, /localStorage\.setItem/);
+test('Guest passport saves only by opt-in and clearly marks progress unverified', () => {
+  assert.match(page, /id="passport-save" aria-pressed="false"/);
   assert.match(page, /id="clear-passport"/);
-  assert.match(page, /stored only in this browser/);
+  assert.match(page, /local-unverified/);
+  assert.match(page, /const storage=window.localStorage/);
+  assert.match(page, /Guest stamps start in memory only/);
+  assert.match(page, /STOP SAVING/);
+  assert.match(page, /deviceStore.removeItem\(key\)/);
+  assert.match(page, /Saving is unavailable here/);
   assert.doesNotMatch(page, /fetch\(|XMLHttpRequest|WebSocket|<form\b/);
 });
+
 test('Internal links resolve to unique IDs', () => {
   const ids = [...page.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
   assert.equal(ids.length, new Set(ids).size);
@@ -75,4 +80,30 @@ test('Mayor Billy GOAT town square has three interactive visitor choices', () =>
   assert.equal((page.match(/class="town-choice"/g) ?? []).length, 3);
   assert.match(page, /const mayorLines=/);
   assert.match(page, /id="mayor-response"/);
+});
+
+test('Guest passport does not access localStorage before explicit save action',()=>{
+  const prefix=script.slice(0,script.indexOf("const mayorLines="));
+  assert.ok(prefix);
+  const ids=[...page.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
+  const nodes=Object.fromEntries(ids.map(id=>{
+    const listeners={},classes=new Set();
+    const node={id,style:{},children:[],attributes:{},disabled:false,hidden:false,
+      classList:{toggle:(name,on)=>on?classes.add(name):classes.delete(name),
+        contains:name=>classes.has(name)},listeners,
+      addEventListener:(name,fn)=>{listeners[name]=fn;},
+      setAttribute(name,value){this.attributes[name]=value;}};
+    return [id,node];
+  }));
+  let touches=0;
+  const storage={getItem(){touches++;return null;},setItem(){touches++;},removeItem(){touches++;}};
+  const fakeWindow={get localStorage(){touches++;return storage;}};
+  const fakeDocument={getElementById:id=>nodes[id]};
+  new Function('document','window',prefix+'})();')(fakeDocument,fakeWindow);
+  assert.equal(touches,0,'storage untouched on load');
+  nodes['passport-save'].listeners.click();
+  assert.ok(touches>=2,'explicit opt-in touches storage');
+  assert.equal(nodes['passport-save'].attributes['aria-pressed'],'true');
+  nodes['passport-save'].listeners.click();
+  assert.equal(nodes['passport-save'].attributes['aria-pressed'],'false');
 });
