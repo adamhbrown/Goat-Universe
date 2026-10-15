@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="760" viewBox="0 0 1000 760" fill="none">
+  <defs>
+    <linearGradient id="land" x1="340" y1="270" x2="650" y2="690" gradientUnits="userSpaceOnUse"><stop stop-color="#353b31"/><stop offset=".55" stop-color="#202c28"/><stop offset="1" stop-color="#121e1c"/></linearGradient>
+    <linearGradient id="edge" x1="500" y1="460" x2="500" y2="740" gradientUnits="userSpaceOnUse"><stop stop-color="#8c7541"/><stop offset=".4" stop-color="#342c1e"/><stop offset="1" stop-color="#111516"/></linearGradient>
+    <linearGradient id="roof" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c9a860"/><stop offset="1" stop-color="#6b5732"/></linearGradient>
+    <linearGradient id="water"><stop stop-color="#16383b"/><stop offset="1" stop-color="#0b2029"/></linearGradient>
+    <linearGradient id="peak" x1="610" y1="130" x2="770" y2="380" gradientUnits="userSpaceOnUse"><stop stop-color="#849d98"/><stop offset=".4" stop-color="#344e4d"/><stop offset="1" stop-color="#182b2b"/></linearGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e7c985" stop-opacity="0"/><stop offset="1" stop-color="#e7c985" stop-opacity=".24"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#dfb65b" stop-opacity=".25"/><stop offset="1" stop-color="#dfb65b" stop-opacity="0"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="4"/></filter>
+    <filter id="shadow"><feGaussianBlur stdDeviation="16"/></filter>
+    <pattern id="windows" width="14" height="20" patternUnits="userSpaceOnUse"><rect x="4" y="6" width="4" height="7" rx="1" fill="#e9c675" opacity=".85"/></pattern>
+    <symbol id="tree" viewBox="0 0 30 55"><path d="M15 35v17" stroke="#9a8353" stroke-width="3"/><path d="M15 2 2 30h7L0 43h30l-9-13h7Z" fill="#315047"/><path d="m15 2 1 41H3l7-13H4Z" fill="#416157"/></symbol>
+    <symbol id="lamp" viewBox="0 0 12 55"><path d="M6 10v43" stroke="#a38a54" stroke-width="2"/><circle cx="6" cy="6" r="6" fill="#edc777" opacity=".2"/><circle cx="6" cy="6" r="2.5" fill="#ffe4aa"/></symbol>
+    <symbol id="palm" viewBox="0 0 50 65"><path d="M26 20c-4 17-5 28-3 43" stroke="#9d824f" stroke-width="4"/><path d="M26 23C4 7 4 16 1 26c8-5 12-6 25-3Zm0 0C8-2 27-1 30 3l-4 20Zm0 0C33-3 43 7 49 15c-11-1-17 2-23 8Zm0 0c27-5 24 8 22 15-8-8-14-12-22-15Z" fill="#51765b"/></symbol>
+  </defs>
+  <ellipse cx="500" cy="655" rx="350" ry="70" fill="#000" opacity=".55" filter="url(#shadow)"/>
+  <ellipse cx="495" cy="380" rx="460" ry="330" fill="url(#halo)"/>
+  <!-- A miniature world, drawn especially for GOAT Universe. -->
+  <path d="m73 458 405-207q21-11 44 0l401 207q23 12 0 27L532 701q-30 16-61 0L73 488q-22-13 0-30Z" fill="url(#edge)"/>
+  <path d="m73 436 405-207q21-11 44 0l401 207q23 12 0 27L532 679q-30 16-61 0L73 466q-22-13 0-30Z" fill="url(#land)" stroke="#a88b4e" stroke-width="2"/>
+  <path d="m90 455 391 206q21 11 43-1l386-209" stroke="#e1b965" stroke-opacity=".8" stroke-width="2"/>
+  <path d="m104 464 377 199q21 11 43-1l370-207" stroke="#e4c278" stroke-width="5" opacity=".25" filter="url(#glow)"/>
+  <path d="m91 483 390 205q21 11 43-1l388-210" stroke="#544629"/>
+  <!-- Golden promenades connect every district. -->
+  <path d="m198 427 295 152 311-163M337 305l-76 199 252 131M610 298 401 410l346 182M512 361v218" stroke="#0c1717" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m198 427 295 152 311-163M337 305l-76 199 252 131M610 298 401 410l346 182M512 361v218" stroke="#9c854d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m198 427 295 152 311-163M337 305l-76 199 252 131M610 298 401 410l346 182" stroke="#eccf8f" stroke-width="2" stroke-dasharray="1 17"/>
+  <!-- Mountain GOAT rises behind downtown. -->
+  <path d="m531 332 109-202 51 94 30-41 101 170-130 60Z" fill="url(#peak)" stroke="#72928a" stroke-opacity=".4"/>
+  <path d="m640 130 1 146 51 137-114-55Z" fill="#233b3a"/>
+  <path d="m640 130-39 72 23-7 16 21 18-13 33 21Z" fill="#d7e1d6"/>
+  <path d="m721 183-25 57 24-8 21 13Z" fill="#b6cfca"/>
+  <path d="m644 238-16 41 18 35-11 34" stroke="#9fb7ae" stroke-opacity=".55" stroke-width="3"/>
+  <path d="m645 260 111 54" stroke="#cebb8a"/><path d="m665 269v19m34-3v19m34-3v19" stroke="#cebb8a"/>
+  <path d="m656 286 18 8v14l-18-8Zm34 16 18 8v14l-18-8Zm34 16 18 8v14l-18-8Z" fill="#c9a45f"/>
+  <use href="#tree" x="549" y="292" width="30" height="55"/><use href="#tree" x="777" y="322" width="25" height="46"/>
+  <!-- Downtown skyline, with lit windows and a rooftop observatory. -->
+  <g stroke="#9c8556" stroke-width="1.4">
+    <path d="m413 341 45-24v-97l-45 24Z" fill="#514c38"/><path d="m458 317 39 20v-97l-39-20Z" fill="#242c29"/><path d="m413 244 45-24 39 20-45 24Z" fill="#a68f57"/>
+    <path d="m467 350 44-24V175l-44 24Z" fill="#5f5740"/><path d="m511 326 42 23V197l-42-22Z" fill="#26302d"/><path d="m467 199 44-24 42 22-44 24Z" fill="#ae9558"/>
+    <path d="m530 368 39-21v-87l-39 21Z" fill="#4c4b3b"/><path d="m569 347 36 19v-87l-36-19Z" fill="#1d2927"/><path d="m530 281 39-21 36 19-39 21Z" fill="#b49b61"/>
+  </g>
+  <path d="m423 251 24-12v70l-24 12Zm56-43 22-12v117l-22 11Zm62 80 17-9v59l-17 9Z" fill="url(#windows)"/>
+  <path d="M511 174v-42" stroke="#d3b775" stroke-width="2"/><circle cx="511" cy="131" r="4" fill="#f0d694"/>
+  <ellipse cx="511" cy="167" rx="23" ry="8" fill="#879084" stroke="#d7ba72"/>
+  <path d="m474 147 11-112 33 113Zm45 19 69-124-32 139Z" fill="url(#beam)" opacity=".5"/>
+  <!-- GOAT Games stadium, an illuminated arena without league branding. -->
+  <path d="M152 355v47c0 38 54 69 120 69s120-31 120-69v-47Z" fill="#292d26" stroke="#a38d53"/>
+  <ellipse cx="272" cy="355" rx="120" ry="69" fill="#4a4c36" stroke="#c9ac68" stroke-width="2"/>
+  <ellipse cx="272" cy="355" rx="101" ry="55" fill="#202d29" stroke="#7c8256" stroke-width="7"/>
+  <ellipse cx="272" cy="355" rx="80" ry="42" fill="#375c44" stroke="#b1bc8a"/>
+  <path d="m208 355 64-32 64 32-64 33Z" stroke="#d2d2a7"/><path d="m240 339 64 33m-48-41 64 33m-80-8 64-32" stroke="#d2d2a7" stroke-opacity=".6"/>
+  <path d="M167 365v29m18-15v28m20-17v28m112-26v28m21-42v28m21-43v28m18-43v28" stroke="#ccaf62" stroke-width="4"/>
+  <path d="m174 292-19-104 57 86Zm159-4 53-113-13 131Z" fill="url(#beam)"/>
+  <path d="M173 312v-54m196 54v-54" stroke="#8a8f78" stroke-width="3"/><path d="m158 256 30-4m166 0 31 5" stroke="#f5d899" stroke-width="5"/>
+  <path d="M170 313c40-33 120-55 197 0" stroke="#f4d185" stroke-width="3" opacity=".8"/>
+  <!-- GOATverse: a glowing open-book roof above the press house. -->
+  <path d="m670 411 61-31 76 39v66l-61 32-76-39Z" fill="#23322f" stroke="#8f845b"/>
+  <path d="m670 411 76 39v67l-76-39Z" fill="#444733"/>
+  <path d="m670 411 61-31 76 39-61 32Z" fill="#a39761"/>
+  <path d="m681 375 50-16 15 17 15-2 44 21-59 30-65-33Z" fill="#e3d5ac" stroke="#edda9e" stroke-width="2"/>
+  <path d="m746 376 0 49m0-3-55-32m55 32 48-25" stroke="#776f49" stroke-width="2"/>
+  <path d="m691 378 31-9m-27 17 29-8m38 6 28 13" stroke="#8d8966" stroke-width="2"/>
+  <path d="m682 432 50 25v35l-50-25Z" fill="url(#windows)"/>
+  <!-- City hall and the unmistakable GOATVILLE gateway. -->
+  <path d="m455 516 65-34 82 43v51l-65 35-82-43Z" fill="#333b2e" stroke="#a28b52"/>
+  <path d="m455 516 82 42v53l-82-43Z" fill="#53503a"/>
+  <path d="m443 513 77-43 95 49-78 43Z" fill="url(#roof)" stroke="#e0bb71"/>
+  <path d="m481 489 38-20 39 20-38 21Z" fill="#d2b477"/>
+  <path d="m490 485 29-69 31 70-31 17Z" fill="#747453" stroke="#c7ac6c"/>
+  <path d="M519 416v-30m0 0 23 7-23 10" stroke="#dfc180" fill="#d9b563"/>
+  <path d="m467 533 9 4v27l-9-4Zm22 11 9 4v27l-9-4Zm22 12 9 4v27l-9-4Z" fill="#ebcf91"/>
+  <path d="M443 584v-61q0-27-25-27h-31q-25 0-25 27v17m10 6v-23q0-16 16-16h29q16 0 16 16v56" stroke="#bc9b54" stroke-width="5"/>
+  <path d="m350 539 107 55v17l-107-55Z" fill="#c6a263"/>
+  <text x="364" y="550" transform="rotate(27 364 550)" font-family="Arial,sans-serif" font-weight="700" font-size="11" letter-spacing="2" fill="#171d18">GOATVILLE</text>
+  <!-- Championship Hall: columns, a crown and the promise of history. -->
+  <path d="m706 541 63-31 89 44-64 35Z" fill="#968756" stroke="#dbc387"/>
+  <path d="m706 541 88 47v60l-88-47Z" fill="#514e35"/><path d="m794 588 64-34v61l-64 33Z" fill="#24312a"/>
+  <path d="m699 537 70-45 97 48-71 39Z" fill="#b6a36a" stroke="#e4c77c"/>
+  <path d="m718 554 0 43m23-31v44m24-30v43m50-44v41m20-51v40" stroke="#c7b57f" stroke-width="7"/>
+  <path d="m751 507-5-20 13 9 8-17 9 18 12-8-5 21Z" fill="#f2cb78"/>
+  <!-- GOAT TEE's little island green. -->
+  <ellipse cx="204" cy="514" rx="92" ry="47" fill="url(#water)" stroke="#39635d"/>
+  <path d="M141 512c0-24 81-32 109-9s-5 44-44 38-65-6-65-29Z" fill="#628064" stroke="#9fa375"/>
+  <ellipse cx="211" cy="520" rx="5" ry="2.5" fill="#152e24"/><path d="M211 520v-42l26 12-26 8" stroke="#eed18e" stroke-width="2" fill="#dab86b"/>
+  <circle cx="175" cy="516" r="3" fill="#ffefcf"/>
+  <path d="m249 533 34 19" stroke="#ac925d" stroke-width="9"/><path d="m249 533 34 19" stroke="#e3c888" stroke-width="1" stroke-dasharray="1 5"/>
+  <use href="#palm" x="120" y="449" width="45" height="65"/>
+  <!-- Baa Board plaza. -->
+  <path d="m326 534 35-18 39 20v53l-35 18-39-20Z" fill="#2c3730" stroke="#ab945c"/>
+  <path d="m332 538 28-14v33l-28 15Z" fill="#102323" stroke="#d4b976"/>
+  <path d="m338 542 16-8m-16 17 16-8m-16 17 16-8" stroke="#d6bd7a" stroke-width="2"/>
+  <path d="m354 519 5-9 7 5 7-9 4 13" stroke="#e3c47c" stroke-width="3"/>
+  <g opacity=".9">
+    <use href="#tree" x="328" y="276" width="25" height="46"/><use href="#tree" x="355" y="284" width="22" height="41"/>
+    <use href="#tree" x="817" y="419" width="30" height="55"/><use href="#tree" x="848" y="434" width="23" height="42"/>
+    <use href="#tree" x="610" y="535" width="27" height="49"/><use href="#tree" x="635" y="523" width="22" height="41"/>
+    <use href="#tree" x="542" y="603" width="25" height="46"/><use href="#tree" x="566" y="591" width="20" height="37"/>
+    <use href="#tree" x="284" y="437" width="25" height="46"/>
+  </g>
+  <g>
+    <use href="#lamp" x="301" y="405" width="12" height="55"/><use href="#lamp" x="389" y="449" width="12" height="55"/>
+    <use href="#lamp" x="560" y="401" width="12" height="55"/><use href="#lamp" x="636" y="361" width="12" height="55"/>
+    <use href="#lamp" x="642" y="458" width="12" height="55"/><use href="#lamp" x="670" y="559" width="12" height="55"/>
+    <use href="#lamp" x="447" y="581" width="12" height="55"/>
+  </g>
+  <g fill="#f9dda0"><circle cx="390" cy="635" r="2"/><circle cx="418" cy="649" r="2"/><circle cx="581" cy="632" r="2"/><circle cx="612" cy="615" r="2"/><circle cx="639" cy="600" r="2"/></g>
+  <path d="m57 345 7-3m812-57 7-3m-27 77 7 3M342 169l7-3" stroke="#e8cb86" stroke-width="2" stroke-linecap="round"/>
+</svg>
