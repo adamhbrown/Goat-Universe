@@ -97,19 +97,52 @@ section{padding:86px 0;border-top:1px solid #ffffff19}.section-head{display:flex
 <div class="panel" id="panel-golf" role="tabpanel" aria-labelledby="tab-golf" hidden><div class="game-head"><div class="eyebrow">THE GOAT ARCADE / CHALLENGE 02</div><div class="chip" id="golf-count">HOLE 01 / 03</div></div><h3 class="game-title">GOAT TEE.</h3><p class="game-copy">Three precision targets. Correct for the breeze. Set your power. Swing for the flag. An arcade challenge—not a real golf course.</p>
 <div class="golf"><div><div class="green" role="img" aria-label="A striped golf green with a target flag and the ball position"><div class="flag" aria-hidden="true">🚩</div><div class="ball" id="ball"></div></div><div class="tee-meta"><span id="wind">BREEZE +4°</span><span id="target">TARGET POWER 64%</span></div></div><div class="controls"><label for="aim">Aim <strong id="aim-value">0°</strong></label><input id="aim" type="range" min="-30" max="30" value="0" step="1"><label for="power">Power <strong id="power-value">60%</strong></label><input id="power" type="range" min="0" max="100" value="60" step="1"><div class="feedback" id="golf-feedback" role="status" aria-live="polite"></div><div class="actions"><button type="button" class="button primary" id="swing">SWING →</button><button type="button" class="button primary" id="next-hole" hidden>NEXT HOLE →</button><button type="button" class="button" id="golf-reset">RESTART</button></div></div></div></div>
 <p class="fine" style="text-align:center;margin-top:20px">Arcade challenges are separate from official GOAT Games scoring, leaderboards and rankings.</p></div></section>
-<section class="passport" id="passport"><div class="shell"><div class="section-head"><div><div class="eyebrow">04 / THE GOATVILLE PASSPORT</div><h2>YOUR WORLD.<br><span class="gold">YOUR STORY.</span></h2></div><p>Complete games and explore the world to collect your first visitor stamps. Everything stays on your device.</p></div><div class="book"><div class="cover"><div class="seal">G</div><h3>GOATVILLE<br>PASSPORT</h3><small>OFFICIAL VISITOR FIELD GUIDE</small><p>WHERE THE GOATS PLAY</p></div><div class="stamps"><h3 id="passport-count" aria-live="polite">0 / 3 STAMPS COLLECTED</h3><p>There's no account, sign-up or payment. Finish a challenge, collect a stamp, and keep exploring.</p><div class="stamp-grid"><div class="stamp" id="stamp-explore"><span class="symbol" aria-hidden="true">🗺️</span><span><strong>WORLD EXPLORER</strong><small>Visit the map</small></span></div><div class="stamp" id="stamp-quiz"><span class="symbol" aria-hidden="true">🧠</span><span><strong>GOAT IQ</strong><small>Finish trivia</small></span></div><div class="stamp" id="stamp-golf"><span class="symbol" aria-hidden="true">⛳</span><span><strong>GOAT TEE</strong><small>Finish 3 holes</small></span></div><div class="stamp on"><span class="symbol" aria-hidden="true">🐐</span><span><strong>FOUNDING VISITOR</strong><small>Welcome to GOATVILLE</small></span></div></div><button type="button" class="button" id="clear-passport">CLEAR MY PASSPORT</button><p class="fine" id="passport-note" role="status" aria-live="polite">Stamp progress is stored only in this browser if local storage is permitted.</p></div></div></div></section>
+<section class="passport" id="passport"><div class="shell"><div class="section-head"><div><div class="eyebrow">04 / THE GOATVILLE PASSPORT</div><h2>YOUR WORLD.<br><span class="gold">YOUR STORY.</span></h2></div><p>Complete games and explore the world to collect your first visitor stamps. Your guest experience stays private. Only save progress on this device if you choose.</p></div><div class="book"><div class="cover"><div class="seal">G</div><h3>GOATVILLE<br>PASSPORT</h3><small>OFFICIAL VISITOR FIELD GUIDE</small><p>WHERE THE GOATS PLAY</p></div><div class="stamps"><h3 id="passport-count" aria-live="polite">0 / 3 STAMPS COLLECTED</h3><p>There's no account, sign-up or payment. Finish a challenge, collect a stamp, and keep exploring.</p><div class="stamp-grid"><div class="stamp" id="stamp-explore"><span class="symbol" aria-hidden="true">🗺️</span><span><strong>WORLD EXPLORER</strong><small>Visit the map</small></span></div><div class="stamp" id="stamp-quiz"><span class="symbol" aria-hidden="true">🧠</span><span><strong>GOAT IQ</strong><small>Finish trivia</small></span></div><div class="stamp" id="stamp-golf"><span class="symbol" aria-hidden="true">⛳</span><span><strong>GOAT TEE</strong><small>Finish 3 holes</small></span></div><div class="stamp on"><span class="symbol" aria-hidden="true">🐐</span><span><strong>FOUNDING VISITOR</strong><small>Welcome to GOATVILLE</small></span></div></div><div class="actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><button type="button" class="button primary" id="passport-save" aria-pressed="false">SAVE ON THIS DEVICE</button><button type="button" class="button" id="clear-passport">CLEAR MY PASSPORT</button></div><p class="fine" id="passport-note" role="status" aria-live="polite">Guest stamps start in memory only. Saving on this device is optional and unverified: it cannot grant BAAS, GPI, prizes, or official competition awards.</p></div></div></div></section>
 <section class="outro"><div class="shell"><div class="eyebrow">BEYOND THE GATES</div><h2>THE ADVENTURE<br><span class="gold">IS JUST BEGINNING.</span></h2><p class="game-copy">The digital town will grow to include characters, music, events, shops and more attractions. The playable arcade is the first step.</p><div class="ctas"><a class="button primary" href="goatville-city.html">EXPLORE THE GOATVILLE CITY ↗</a><a class="button" href="goat-games-play-lab.html">PLAY ALL FIVE SPORTS ↗</a><a class="button" href="index.html#goat-games">DISCOVER THE OFFICIAL GAMES ↗</a><a class="button" href="https://goatverse-publications.downtownadamb.chatgpt.site/" rel="noopener noreferrer" target="_blank">READ GOATVERSE PUBLICATIONS ↗</a></div></div></section></main>
 <footer><div class="shell footer-row"><div><div class="brand">GOAT UNIVERSE</div><p>GOATVILLE USA is a fictional digital entertainment destination. No official competition registration, prizes or verified competitive rankings are offered on this preview.</p></div><div><a href="index.html">GOAT UNIVERSE HOME ↗</a></div></div></footer>
 <script>
 (function(){
 'use strict';
-const el=id=>document.getElementById(id),key='goatville-passport-v1';
-let stamps={explore:false,quiz:false,golf:false};
-try{const o=JSON.parse(localStorage.getItem(key)||'{}');for(const k in stamps)stamps[k]=o[k]===true;}catch(e){}
-function save(){try{localStorage.setItem(key,JSON.stringify(stamps));}catch(e){}}
+const el=id=>document.getElementById(id),key='goatville-guest-passport-v2';
+const emptyStamps=()=>({explore:false,quiz:false,golf:false});
+let stamps=emptyStamps(),saving=false,deviceStore=null;
+function storeRecord(){return{version:2,verification:'local-unverified',stamps:{...stamps}};}
+function save(){if(!saving||!deviceStore)return;try{deviceStore.setItem(key,JSON.stringify(storeRecord()));}catch(e){el('passport-note').textContent='Device storage is unavailable; stamps will remain in memory until you leave.';saving=false;deviceStore=null;el('passport-save').textContent='SAVE ON THIS DEVICE';el('passport-save').setAttribute('aria-pressed','false');}}
 function update(){el('passport-count').textContent=Object.values(stamps).filter(Boolean).length+' / 3 STAMPS COLLECTED';for(const k in stamps)el('stamp-'+k).classList.toggle('on',stamps[k]);}
-function addStamp(k){if(!stamps[k]){stamps[k]=true;save();update();}}update();
-el('clear-passport').addEventListener('click',()=>{stamps={explore:false,quiz:false,golf:false};save();update();el('passport-note').textContent='Your passport has been cleared on this device.';});
+function addStamp(k){if(!Object.prototype.hasOwnProperty.call(stamps,k))return;if(!stamps[k]){stamps[k]=true;save();update();}}
+update();
+el('passport-save').addEventListener('click',()=>{
+ if(saving){
+  try{deviceStore.removeItem(key);}catch(e){}
+  saving=false;deviceStore=null;
+  el('passport-save').textContent='SAVE ON THIS DEVICE';el('passport-save').setAttribute('aria-pressed','false');
+  el('passport-note').textContent='Device saving is off. Current stamps remain only in memory. Any saved copy was cleared.';
+  return;
+ }
+ try{
+  const storage=window.localStorage;
+  if(!storage)throw Error('unavailable');
+  const raw=storage.getItem(key);
+  if(raw&&raw.length<=2048){
+   try{
+    const saved=JSON.parse(raw);
+    if(saved.version===2&&saved.verification==='local-unverified'&&saved.stamps&&typeof saved.stamps==='object'&&!Array.isArray(saved.stamps))
+     for(const k in stamps)if(saved.stamps[k]===true)stamps[k]=true;
+   }catch(e){}
+  }
+  deviceStore=storage;saving=true;save();update();
+  el('passport-save').textContent='STOP SAVING';el('passport-save').setAttribute('aria-pressed','true');
+  el('passport-note').textContent='Saving enabled on this device for this visit. Stamps are unverified souvenirs, not official awards. You can stop saving or clear them anytime.';
+ }catch(e){
+  saving=false;deviceStore=null;
+  el('passport-note').textContent='Saving is unavailable here. Guest stamps remain in memory only.';
+ }
+});
+el('clear-passport').addEventListener('click',()=>{
+ stamps=emptyStamps();update();
+ if(saving)save();
+ el('passport-note').textContent=saving?'Your saved passport has been cleared on this device.':'Your temporary passport has been cleared.';
+});
 const mayorLines={
 competitor:'"A competitor! I like that. The GOAT Arcade is open, and the five flagship GOAT Games are waiting. Show us what you have. — Mayor Billy GOAT"',
 explorer:'"An explorer! Excellent. There is more to GOATVILLE than meets the eye. Follow the map, collect your passport stamps, and keep your horns up. — Mayor Billy GOAT"',
