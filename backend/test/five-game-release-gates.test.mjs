@@ -98,8 +98,8 @@ test('malformed timestamps, invalid season and damaged saved snapshots fail clos
   const snapshots=prepared();
   snapshots[0].league.season=2025;
   snapshots[1].bracket_config.main_lock_at='nonsense';
-  snapshots[2].fantasy_teams=null;
-  snapshots[3].series_events='bad';
+  snapshots[2].series_events='bad';
+  snapshots[3].fantasy_teams=null;
   snapshots[4].series_config=null;
   const report=auditFiveGameCandidate(snapshots);
   assert.equal(report.status,'blocked');assert.equal(report.can_launch,false);
