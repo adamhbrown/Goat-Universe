@@ -41,7 +41,7 @@ test('only the exact reviewed Field Vision game path and metadata can be framed'
    attraction:{...approved,...change},entryURL:valid,origin,hostModuleURL
  }),/unreviewed_game/);
  assert.match(host,/resolveApprovedGuestEntry/);
- assert.match(host,/setAttribute\\('sandbox', 'allow-scripts'\\)/);
+ assert.match(host,/resolveApprovedGuestEntry/);
 });
 
 test('the city links to a real free-play guest destination',()=>{
@@ -63,7 +63,7 @@ test('guest shell uses strict CSP, no remote code or implicit loading',()=>{
 test('guest frames remain opaque and do not gain navigation, form or storage permissions',()=>{
  assert.match(host,/setAttribute\('sandbox', 'allow-scripts'\)/);
  assert.doesNotMatch(host,/sandbox', 'allow-scripts allow-same-origin/);
- assert.match(host,/entry\.search \|\| entry\.hash/);
+ assert.match(read('guest/catalog.mjs'),/proposed\.search \|\| proposed\.hash/);
  assert.match(host,/frame\.remove\(\)/);
  assert.match(host,/removeEventListener\('message'/);
 });
