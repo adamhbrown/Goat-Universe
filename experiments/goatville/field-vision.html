@@ -79,13 +79,16 @@
       const startButton = document.querySelector('#start');
       const tiles = [...document.querySelectorAll('[data-position]')];
       let score = 0;
-      let seconds = 20;
+      const durationMs = 20_000;
+      let deadline = 0;
       let target = 0;
       let timer = null;
+      const remainingSeconds = () => Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
       const chooseTarget = () => Math.floor(Math.random() * 16) + 1;
       const finish = () => {
         clearInterval(timer);
         timer = null;
+        deadline = 0;
         target = 0;
         targetNode.textContent = '—';
         startButton.disabled = false;
@@ -95,22 +98,27 @@
       const start = () => {
         clearInterval(timer);
         score = 0;
-        seconds = 20;
+        deadline = Date.now() + durationMs;
         scoreNode.textContent = '0';
-        timeNode.textContent = String(seconds);
+        timeNode.textContent = String(remainingSeconds());
         statusNode.textContent = 'Drill live. Call the highlighted position.';
         startButton.disabled = true;
         tiles.forEach(tile => { tile.disabled = false; });
         target = chooseTarget();
         targetNode.textContent = String(target).padStart(2, '0');
         timer = setInterval(() => {
-          seconds -= 1;
+          const seconds = remainingSeconds();
           timeNode.textContent = String(seconds);
-          if (seconds <= 0) finish();
-        }, 1000);
+          if (seconds === 0) finish();
+        }, 200);
       };
       tiles.forEach(tile => tile.addEventListener('click', () => {
-        if (!timer) return;
+        if (!deadline) return;
+        if (Date.now() >= deadline) {
+          timeNode.textContent = '0';
+          finish();
+          return;
+        }
         if (Number(tile.dataset.position) === target) {
           score += 1;
           scoreNode.textContent = String(score);
@@ -126,7 +134,7 @@
         clearInterval(timer);
         timer = null;
         score = 0;
-        seconds = 20;
+        deadline = 0;
         target = 0;
         scoreNode.textContent = '0';
         timeNode.textContent = '20';

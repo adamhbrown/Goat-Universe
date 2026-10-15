@@ -32,9 +32,11 @@ test('guest drill starts, accepts correct calls, and resets without persistent s
   const dom = new JSDOM(html, { runScripts: 'outside-only', pretendToBeVisual: true, url: 'https://goatville.test/' });
   const { window } = dom;
   let intervalCallback;
+  let now = 0;
   window.setInterval = callback => { intervalCallback = callback; return 7; };
   window.clearInterval = () => {};
   window.Math.random = () => 0;
+  window.Date.now = () => now;
   const script = [...window.document.querySelectorAll('script')].map(node => node.textContent).join('\n');
   window.eval(script);
 
@@ -49,7 +51,12 @@ test('guest drill starts, accepts correct calls, and resets without persistent s
   assert.equal(window.document.querySelector('#score').textContent, '1');
   assert.match(window.document.querySelector('#status').textContent, /Correct call/);
 
-  for (let i = 0; i < 20; i++) intervalCallback();
+  // Simulate a backgrounded mobile tab where interval callbacks are delayed.
+  now = 19_500;
+  intervalCallback();
+  assert.equal(window.document.querySelector('#time').textContent, '1');
+  now = 20_000;
+  intervalCallback();
   assert.equal(start.disabled, false);
   assert.equal(tiles[0].disabled, true);
   assert.match(window.document.querySelector('#status').textContent, /Drill complete/);
@@ -57,5 +64,62 @@ test('guest drill starts, accepts correct calls, and resets without persistent s
   assert.equal(window.document.querySelector('#score').textContent, '0');
   assert.equal(window.document.querySelector('#time').textContent, '20');
   assert.equal(window.localStorage.length, 0);
+  window.close();
+});
+
+test('a late tap ends the drill even when a throttled timer has not fired', () => {
+  const dom = new JSDOM(html, { runScripts: 'outside-only', url: 'https://goatville.test/' });
+  const { window } = dom;
+  let now = 0;
+  let intervalCallback;
+  window.Date.now = () => now;
+  window.setInterval = callback => { intervalCallback = callback; return 7; };
+  window.clearInterval = () => {};
+  window.Math.random = () => 0;
+  window.eval([...window.document.querySelectorAll('script')].map(node => node.textContent).join('\n'));
+
+  const start = window.document.querySelector('#start');
+  const firstTile = window.document.querySelector('[data-position="1"]');
+  start.click();
+  firstTile.click();
+  assert.equal(window.document.querySelector('#score').textContent, '1');
+
+  now = 20_001; // No interval callback since start: the real deadline still wins.
+  firstTile.click();
+  assert.equal(window.document.querySelector('#score').textContent, '1');
+  assert.equal(window.document.querySelector('#time').textContent, '0');
+  assert.equal(firstTile.disabled, true);
+  assert.match(window.document.querySelector('#status').textContent, /Drill complete/);
+
+  // A stale callback after completion cannot alter the completed state.
+  intervalCallback();
+  assert.equal(window.document.querySelector('#time').textContent, '0');
+  window.close();
+});
+
+test('reset during a round clears its deadline and allows a fresh start', () => {
+  const dom = new JSDOM(html, { runScripts: 'outside-only', url: 'https://goatville.test/' });
+  const { window } = dom;
+  let now = 0;
+  window.Date.now = () => now;
+  window.setInterval = () => 7;
+  window.clearInterval = () => {};
+  window.Math.random = () => 0;
+  window.eval([...window.document.querySelectorAll('script')].map(node => node.textContent).join('\n'));
+
+  const start = window.document.querySelector('#start');
+  const tile = window.document.querySelector('[data-position="1"]');
+  start.click();
+  tile.click();
+  window.document.querySelector('#reset').click();
+  now = 25_000;
+  tile.click();
+  assert.equal(window.document.querySelector('#score').textContent, '0');
+  assert.equal(tile.disabled, true);
+  assert.equal(window.document.querySelector('#time').textContent, '20');
+
+  start.click();
+  tile.click();
+  assert.equal(window.document.querySelector('#score').textContent, '1');
   window.close();
 });

@@ -13,7 +13,8 @@
 - A read-only unified-log query returned activity from PgBouncer, PostgreSQL, Realtime, Edge and Storage within its default 24-hour window. A separate search for prior startup-error phrases in `log_attributes` returned no matches. This bounded query does **not** establish that service startup is fixed; older documented log events remain the diagnostic evidence.
 - Supabase security and performance advisor calls both returned zero lints. Advisors do not validate service health.
 - The October 14 read-only investigation in `docs/SUPABASE_RECOVERY.md` recorded successful read-only PostgreSQL access, Realtime `MigrationsFailedToRun`, a 15-second DBConnection queue timeout, missing `realtime.subscription`, aborted Storage health checks and absent `storage.objects` at the time checked. No application migration was applied.
-- The supplied Supabase support email screenshot says the ticket was escalated to the infrastructure team and asks for patience. It does not contain a cause, repair instruction or ETA. No further support response was available in this workspace.
+- Support ticket **SU-507996** acknowledged the report and, on October 14, said it had been escalated to the infrastructure team. That reply provided no cause, repair instruction or ETA. On October 15, Adam Brown sent a diagnosis-only follow-up in the same email thread asking for the project cause, managed Storage/Realtime status, a data-preserving in-place recovery path, and confirmation that the GitHub Actions 401 is separate. It authorized no changes or spending. No technical response to that follow-up is yet available.
+- Supabase's ticket acknowledgement says direct email tickets are handled as Free-plan requests unless a paid-plan request is submitted through `supabase.help`; Free-plan tickets have no guaranteed response time. This affects support routing/priority, not the technical diagnosis.
 
 ### Separate GitHub authentication finding
 
@@ -65,7 +66,7 @@ Static HTML/CSS/JavaScript can immediately provide guest gameplay, local timer/s
 
 Run on the separate branch:
 
-- `node --test tests/goatville-poc.test.mjs` — isolated guest-play checks.
+- `node --test tests/goatville-poc.test.mjs` — isolated guest-play checks (4 tests after deadline hardening).
 - `npm test` — existing backend suite (63 tests on this branch).
 - `npm run check` and `npm audit --omit=dev --audit-level=high`.
 - `git diff --check`.
@@ -74,7 +75,9 @@ Run on the separate branch:
 
 Current GitHub PR metadata was checked October 15: competition PR #13 and Bullpen PR #11 both change `backend/server.mjs`; Bullpen #11 and account-readiness PR #6 both change `package.json` and `.github/workflows/backend-ci.yml`. These shared-file overlaps require a combined integration/retest; exact latest-head merge conflict status was not available from the connected GitHub permission set. PR #13 is a four-commit draft with its latest update at 10:00 UTC; PR #11 and #6 remain open drafts. Homepage PR #12 remains a draft targeting `main`. The new prototype is isolated and touches none of those shared files.
 
-Results: `node --test tests/goatville-poc.test.mjs` passed **2/2**; `npm test` passed **63/63**; `npm run check` and `git diff --check` passed; `npm audit --omit=dev --audit-level=high` reported **0 vulnerabilities**. The first prototype test run failed because its assertions assumed icon-only buttons and an opaque jsdom origin; those test-harness assumptions were corrected before the passing rerun.
+Results before the current change: `node --test tests/goatville-poc.test.mjs` passed **2/2**; `npm test` passed **63/63**; `npm run check` and `git diff --check` passed; `npm audit --omit=dev --audit-level=high` reported **0 vulnerabilities**. The first prototype test run failed because its assertions assumed icon-only buttons and an opaque jsdom origin; those test-harness assumptions were corrected before the passing rerun.
+
+October 15 follow-up: the Field Vision timer now uses an absolute deadline so delayed/background-tab timer callbacks cannot extend the round or allow a late score. The guest-play suite passes **4/4**, including delayed callbacks, post-deadline taps, reset and restart. The full backend suite passes **63/63**, `npm run check` passes and `git diff --check` passes. This is a local isolated-game verification only; no live mobile-browser test is claimed.
 
 ## 6. Blockers and next integration sequence
 
