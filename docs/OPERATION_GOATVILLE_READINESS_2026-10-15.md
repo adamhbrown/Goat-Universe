@@ -9,6 +9,7 @@
 ### Confirmed now
 
 - The connected Supabase project list and direct project lookup both returned Goat-Universe (`opvoemihfyxidzbdyory`, `us-east-1`) as **`COMING_UP`** on October 15. PostgreSQL version metadata is present, but status is not healthy.
+- The connected account's inventory still contains only four existing projects; the other three report `INACTIVE`. There is no separate GOAT Universe staging target in that inventory. The October 14 read-only catalog review also found zero application migrations and no application tables in the public schema; no application migration was applied during this sprint.
 - A read-only unified-log query returned activity from PgBouncer, PostgreSQL, Realtime, Edge and Storage within its default 24-hour window. A separate search for prior startup-error phrases in `log_attributes` returned no matches. This bounded query does **not** establish that service startup is fixed; older documented log events remain the diagnostic evidence.
 - Supabase security and performance advisor calls both returned zero lints. Advisors do not validate service health.
 - The October 14 read-only investigation in `docs/SUPABASE_RECOVERY.md` recorded successful read-only PostgreSQL access, Realtime `MigrationsFailedToRun`, a 15-second DBConnection queue timeout, missing `realtime.subscription`, aborted Storage health checks and absent `storage.objects` at the time checked. No application migration was applied.
