@@ -5,6 +5,7 @@ on:
     paths:
       - 'guest/**'
       - 'cinema/**'
+      - 'experience/**'
       - 'goatville*.html'
       - 'tests/goatville*.test.mjs'
       - '.github/workflows/goatville-creative-checks.yml'
@@ -28,6 +29,7 @@ jobs:
           node --check guest/spotlight-circuit.js
           node --check guest/parent.mjs
           node --check cinema/studio.js
+          node --check experience/universe-shell.js
           node --check guest/catalog.mjs
           node --check guest/host.mjs
-          node --test tests/goatville-guest-integration.test.mjs tests/goatville-spotlight.test.mjs tests/goatville-cinema.test.mjs
+          node --test tests/goatville-guest-integration.test.mjs tests/goatville-spotlight.test.mjs tests/goatville-cinema.test.mjs tests/goatville-universe-shell.test.mjs
