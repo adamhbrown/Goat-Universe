@@ -14,7 +14,7 @@ export function mountGuestGame({container, attraction, entryURL, onAchievement =
   frame.setAttribute('sandbox', 'allow-scripts'); // Intentionally omit allow-same-origin.
   frame.setAttribute('referrerpolicy', 'no-referrer');
   frame.setAttribute('allow', "camera 'none'; microphone 'none'; geolocation 'none'; payment 'none'; fullscreen 'none'");
-  frame.style.cssText = 'width:100%;height:300px;border:1px solid currentColor;';
+  frame.style.cssText = 'width:100%;border:0;'; // CSS owns responsive frame height.
   frame.src = entry.href;
   frame.addEventListener('load', () => {
     // '*' is necessary for an opaque sandbox target. This contains no identity,
