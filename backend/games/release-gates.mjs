@@ -19,6 +19,32 @@ function seasonIsValid(value) {
   if (typeof value !== 'string' && typeof value !== 'number') return false;
   return SEASONS.test(String(value));
 }
+function isValidTimestamp(value) {
+  if (typeof value !== 'string') return false;
+  const m=/^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})(?:\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$/.exec(value);
+  if (!m) return false;
+  const year=Number(m[1]),month=Number(m[2]),day=Number(m[3]);
+  const leap=year%4===0&&(year%100!==0||year%400===0);
+  const days=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
+  if (month<1||month>12||day<1||day>days[month-1]||Number(m[4])>23||
+      Number(m[5])>59||Number(m[6])>59) return false;
+  if (m[7]!=='Z') {
+    const h=Number(m[7].slice(1,3)),min=Number(m[7].slice(4,6));
+    if(h>23||min>59)return false;
+  }
+  return Number.isFinite(Date.parse(value));
+}
+function validateSeasonMap(seasonByGame) {
+  if (seasonByGame === undefined) return null;
+  if (!seasonByGame || typeof seasonByGame !== 'object' || Array.isArray(seasonByGame) ||
+      Object.keys(seasonByGame).sort().join('|') !== [...KEYS].sort().join('|') ||
+      KEYS.some(key => !seasonIsValid(seasonByGame[key])))
+    throw new Error('invalid_annual_season_map');
+  // Founder/commissioner supplies the annual mapping; never assume the NFL's
+  // season label is the same as the calendar year of its February championship.
+  return seasonByGame;
+}
+
 function recordedRulesAreComplete(rules) {
   return Boolean(rules && rules.approved === true &&
     Array.isArray(rules.unresolved) && rules.unresolved.length === 0 &&
@@ -31,9 +57,10 @@ function recordedRulesAreComplete(rules) {
  * @returns {{status: string, data_prepared: boolean, can_launch: false,
  *            games: Array<object>, external_approvals_required: Array<string>}}
  */
-export function auditFiveGameCandidate(snapshots) {
+export function auditFiveGameCandidate(snapshots, {seasonByGame} = {}) {
   if (!Array.isArray(snapshots) || snapshots.length > 100)
     throw new Error('invalid_competition_candidate');
+  const expectedSeasons = validateSeasonMap(seasonByGame);
   const grouped = new Map(KEYS.map(key => [key, []]));
   let unknown = 0;
   for (const snap of snapshots) {
@@ -53,6 +80,12 @@ export function auditFiveGameCandidate(snapshots) {
     }
     const data = records[0];
     if (!seasonIsValid(data.league.season)) issues.push('invalid_season');
+    if (expectedSeasons && seasonIsValid(data.league.season) &&
+        Number(data.league.season) !== Number(expectedSeasons[game_key]))
+      issues.push('annual_cycle_season_mismatch');
+    if (game_key === 'horns-and-hoops' &&
+        !isValidTimestamp(data.bracket_config?.main_lock_at))
+      issues.push('invalid_main_bracket_lock');
     if (!recordedRulesAreComplete(data.league.rules)) issues.push('rules_or_source_not_approved');
     let observations = [];
     try {
@@ -80,6 +113,7 @@ export function auditFiveGameCandidate(snapshots) {
     data_prepared,
     can_launch:false,
     unknown_snapshots:unknown,
+    season_mapping_checked:Boolean(expectedSeasons),
     games:Object.freeze(games),
     external_approvals_required:REQUIRES_EXTERNAL
   });
