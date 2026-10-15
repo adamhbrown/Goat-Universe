@@ -1,0 +1,117 @@
+// All examples in this suite are synthetic offline data, not official schedules,
+// player identities, approvals, competition results or release authorizations.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {GOAT_GAMES} from '../rules/goat-games.mjs';
+import {auditFiveGameCandidate} from '../games/release-gates.mjs';
+
+const ids=GOAT_GAMES.map(game=>game.id);
+const rulebook=JSON.parse(await readFile(new URL('../rules/nfl-playoffs-61.json', import.meta.url),'utf8'));
+
+function fixture(game_key) {
+  const data={
+    league:{game_key,season:2027,status:'draft',
+      rules:{approved:true,unresolved:[],source_reference:'SYNTHETIC-TEST-SOURCE'}},
+    rounds:[],games:[],bracket_nodes:[],fantasy_teams:[],fantasy_matchups:[],
+    series_events:[],series_config:{policy:{approved:true,source_reference:'SYNTHETIC-TEST-SOURCE'}}
+  };
+  if(game_key==='first-and-baa') {
+    data.rounds=rulebook.round_templates.map((r,i)=>({...r,id:'R'+i}));
+    data.games=data.rounds.flatMap(r=>r.weights.map((_,i)=>({id:r.id+'G'+i,round_id:r.id})));
+  } else if(game_key==='horns-and-hoops') {
+    data.bracket_config={main_lock_at:'2027-03-18T12:00:00Z'};
+    data.bracket_nodes=[32,16,8,4,2,1].flatMap((count,i)=>Array.from({length:count},()=>({stage:i+1})));
+  } else if(game_key==='league-of-greatness') {
+    data.fantasy_teams=Array.from({length:12},(_,i)=>({id:'T'+i}));
+    data.fantasy_matchups=Array.from({length:14},(_,w)=>Array.from({length:6},(_,i)=>({
+      week:w+1, home_id:'T'+(i*2), away_id:'T'+(i*2+1)
+    }))).flat();
+  } else data.series_events=(game_key==='goat-crossover'?['NBA','NHL']:['MLB']).map(sport=>({sport}));
+  return data;
+}
+const prepared=()=>ids.map(fixture);
+
+test('five-game audit begins blocked for missing and duplicate snapshots',()=>{
+  const empty=auditFiveGameCandidate([]);
+  assert.equal(empty.status,'blocked');assert.equal(empty.can_launch,false);
+  assert.deepEqual(empty.games.map(g=>g.game_key),ids);
+  assert.ok(empty.games.every(g=>g.issues.includes('missing_competition_snapshot')));
+  const duplicate=auditFiveGameCandidate([fixture(ids[0]),fixture(ids[0]),...ids.slice(1).map(fixture)]);
+  assert.equal(duplicate.status,'blocked');
+  assert.ok(duplicate.games[0].issues.includes('duplicate_competition_snapshot'));
+  const unexpected=auditFiveGameCandidate([...prepared(),{league:{game_key:'not-a-real-goat-game'}}]);
+  assert.equal(unexpected.status,'blocked');assert.equal(unexpected.unknown_snapshots,1);
+  for(const malformed of [null,{},undefined,{league:{game_key:42}}]){
+    const result=auditFiveGameCandidate([...prepared(),malformed]);
+    assert.equal(result.status,'blocked');
+    assert.equal(result.unknown_snapshots,1);
+  }
+  for(const bad of [null,{},Array(101).fill({})]) assert.throws(()=>auditFiveGameCandidate(bad),/invalid_competition_candidate/);
+});
+
+test('complete synthetic data can only reach manual review, never authorize launch',()=>{
+  const report=auditFiveGameCandidate(prepared().reverse());
+  assert.equal(report.status,'manual_review_required');
+  assert.equal(report.data_prepared,true);
+  assert.equal(report.can_launch,false);
+  assert.equal(report.games.length,5);
+  assert.ok(report.games.every(g=>g.saved_setup_complete&&g.observations_checked>=3&&!g.issues.length));
+  assert.ok(report.external_approvals_required.some(v=>/CEO authorization/.test(v)));
+  assert.ok(report.external_approvals_required.some(v=>/Hosted Auth\/RLS/.test(v)));
+  assert.ok(Object.isFrozen(report));
+  assert.ok(Object.isFrozen(report.games));
+  assert.doesNotMatch(JSON.stringify(report),/SYNTHETIC-TEST-SOURCE|T0|approved_by|access_token/i);
+});
+
+test('all five competitions require actual recorded structures and cannot claim readiness from only approved flags',()=>{
+  for(const key of ids){
+    const snapshots=prepared(),item=snapshots.find(x=>x.league.game_key===key);
+    if(key==='first-and-baa') item.games.pop();
+    if(key==='horns-and-hoops') item.bracket_nodes.pop();
+    if(key==='league-of-greatness') item.fantasy_matchups.pop();
+    if(key==='goat-crossover') item.series_events.pop();
+    if(key==='goat-classic') item.series_config.policy.approved=false;
+    const report=auditFiveGameCandidate(snapshots);
+    assert.equal(report.status,'blocked',key);
+    assert.ok(report.games.find(g=>g.game_key===key).issues.includes('saved_setup_incomplete'),key);
+  }
+});
+
+test('missing founder rule signoff, unresolved items and source reference always block the candidate',()=>{
+  for(const change of [
+    rules=>{rules.approved=false;},
+    rules=>{rules.unresolved=['PUSH POLICY PENDING'];},
+    rules=>{rules.unresolved=undefined;},
+    rules=>{rules.source_reference='';},
+    rules=>{rules.source_reference='  ';}
+  ]) {
+    const snapshots=prepared();change(snapshots[0].league.rules);
+    const report=auditFiveGameCandidate(snapshots);
+    assert.equal(report.status,'blocked');
+    assert.ok(report.games[0].issues.includes('rules_or_source_not_approved'));
+    assert.equal(report.can_launch,false);
+  }
+});
+
+test('malformed timestamps, invalid season and damaged saved snapshots fail closed without exception',()=>{
+  const snapshots=prepared();
+  snapshots[0].league.season=2025;
+  snapshots[1].bracket_config.main_lock_at='nonsense';
+  snapshots[2].fantasy_teams=null;
+  snapshots[3].series_events='bad';
+  snapshots[4].series_config=null;
+  const report=auditFiveGameCandidate(snapshots);
+  assert.equal(report.status,'blocked');assert.equal(report.can_launch,false);
+  assert.ok(report.games[0].issues.includes('invalid_season'));
+  for(const key of ids.slice(1)) assert.ok(report.games.find(g=>g.game_key===key).issues.length>0,key);
+});
+
+test('audit does not mutate caller data or promote sandbox game points to official standings',()=>{
+  const candidate=prepared(),before=JSON.stringify(candidate);
+  const result=auditFiveGameCandidate(candidate);
+  assert.equal(JSON.stringify(candidate),before);
+  assert.equal(result.can_launch,false);
+  assert.equal('baas' in result,false);
+  assert.equal('gpi' in result,false);
+});
