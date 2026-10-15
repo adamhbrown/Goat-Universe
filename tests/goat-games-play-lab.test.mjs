@@ -93,7 +93,7 @@ test('all five sports can be played, scored and reset in a simulated DOM', () =>
     'football-options':['Hawks','Wolves'],
     'cross-basket':['Kings','Comets'],
     'cross-hockey':['Blades','Frost'],
-    'fantasy-options':['Mason Reed','Jordan Vale'],
+    'fantasy-options':['WR archetype','RB archetype'],
     'baseball-options':['Admirals','Pioneers']
   };
   for(const [id,values] of Object.entries(selectionGroups)){
