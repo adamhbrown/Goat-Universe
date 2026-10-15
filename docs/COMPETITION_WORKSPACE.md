@@ -63,6 +63,13 @@ known schedule/roster/policy gaps without treating counts as rule approval or
 launch readiness. Reopening a competition refreshes the member dashboard, so a
 new finish certification is immediately eligible for annual attachment.
 
+The member dashboard also opens self-only completed-competition history, filtered
+by game, with certification status and links back to actual final competitions.
+The annual championship displays all five attachment states and the signed-in
+member's per-game certified place, approved conversion and source. Pending
+conversions never receive substitute values. Failed history loads can be retried;
+responses arriving after navigation/sign-out cannot restore private history.
+
 ## Actual functionality
 
 | Property | Working development features | Remaining rules / release gates |
@@ -127,6 +134,9 @@ picks on navigation. Both now pass. Complete final-head CI evidence is recorded
 in draft PR #13; HTTP tests include a real CSV review/apply through DOM, account
 client, HTTP and the local database. JSDOM proves functional DOM behavior, not
 physical iPhone rendering or hosted acceptance.
+Checkpoint `edcfa9a` passed the complete 117-test suite in both GitHub workflows,
+including the actual CSV DOM/HTTP/database import. The final follow-up adds
+member-history, annual-breakdown and repeat-apply/HTML-injection regressions.
 
 ## Integration boundaries and next work
 

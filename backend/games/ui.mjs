@@ -7,6 +7,7 @@ import {selectionDrafts} from './drafts.mjs';
 import {serverClock,deadlineGuard} from './deadlines.mjs';
 import {renderImportEditor} from './imports.mjs';
 import {renderOverview} from './overview.mjs';
+import {renderMemberHistory} from './history.mjs';
 
 const keys=['first-and-baa','horns-and-hoops','goat-crossover','league-of-greatness','goat-classic'];
 const readiness={
@@ -61,7 +62,7 @@ export async function mountGames({document,location,history,createClient,fetchPu
    },b);});parent.append(f);if(options.deadline||options.deadlines)trackDeadline(f,options.deadline,options.deadlines);return f;
   }
   async function command(p){if(!current())throw new Error('view_changed');const ticket=submissionTicket,result=await capturedApi.command(p);drafts.acknowledge(ticket);if(current()){await refresh(result);if(g===generation)notify(drafts.pending(ticket)?'Submitted selections saved. Newer edits remain unsaved in this tab.':'Saved.');}return result;}
-  const ctx={panel,account,api:capturedApi,node,form,details,table,button,field,select,command,required,datetime,trackDeadline,serverNow:clock,message:text=>{if(current())notify(text);},fetchPublic,current};
+  const ctx={panel,account,api:capturedApi,node,form,details,table,button,field,select,command,required,datetime,trackDeadline,serverNow:clock,message:text=>{if(current())notify(text);},fetchPublic,current,gameName:key=>catalog.find(g=>g.id===key)?.name||key};
   ctx.importer=(parent,options)=>renderImportEditor(parent,options,ctx);return ctx;
  }
  function clearPrivate(){generation++;view++;dashboardRequest++;stopDeadlines();drafts.clear();account=undefined;dashboard=undefined;activeLeague=undefined;activeAnnual=undefined;api=createClient();
@@ -101,7 +102,7 @@ export async function mountGames({document,location,history,createClient,fetchPu
   if(!$('league-list').childElementCount)$('league-list').append(node('p','No entries yet. Join with an invitation or create a competition draft.'));
   form($('member-actions'),'Join a private competition',[field('league_id','Invitation ID','text','',{required:'',pattern:'[a-fA-F0-9-]{36}',maxlength:36})],'Request entry',async p=>{await capturedApi.command({op:'enroll',...p});if(g===generation){await loadDashboard();notify('Entry requested. Your commissioner must approve it before picks are available.');}});
   if(selected)form($('member-actions'),'Start a commissioner draft',[field('name','Competition name','text','',{required:'',maxlength:120}),field('season','Season year','number','',{required:'',min:2019,max:2100,step:1})],'Create draft',p=>ctx.command({op:'game_draft_create',game_key:selected,...p,season:String(p.season)}));
-  else $('member-actions').append(button('Annual GOAT Championship',openAnnual));
+  $('member-actions').append(button('My competition history',openHistory),button('Annual GOAT Championship',openAnnual));
  }
  async function openLeague(id){
   const g=generation,v=++view,request=++dashboardRequest,capturedApi=api;stopDeadlines();activeLeague=id;activeAnnual=undefined;
@@ -132,6 +133,12 @@ export async function mountGames({document,location,history,createClient,fetchPu
   const panel=node('div'),ctx=context(panel,capturedApi,g,v,async result=>{if(result.id)activeAnnual=result.id;await openAnnual();});
   try{await renderAnnual(activeAnnual,dashboard,ctx,id=>{activeAnnual=id;return openAnnual();});if(g===generation&&v===view)$('annual-panel').replaceChildren(panel);}catch(e){if(g===generation&&v===view)notify(e.message.replaceAll('_',' '));}
  }
+ async function openHistory(){
+  const g=generation,v=++view,capturedApi=api;stopDeadlines();activeLeague=undefined;$('league-panel').hidden=true;$('annual-panel').hidden=false;$('annual-panel').replaceChildren(node('p','Loading your competition history…'));
+  const panel=node('div'),ctx=context(panel,capturedApi,g,v,openHistory);
+  panel.append(ctx.button('Back to my competitions',async()=>{view++;$('annual-panel').hidden=true;$('annual-panel').replaceChildren();renderDashboard();}),ctx.button('Refresh history',openHistory));
+  try{await renderMemberHistory(ctx,openLeague);if(g===generation&&v===view)$('annual-panel').replaceChildren(panel);}catch(e){if(g===generation&&v===view){panel.append(node('p','History unavailable. Refresh to try again.'));$('annual-panel').replaceChildren(panel);notify(e.message.replaceAll('_',' '));}}
+ }
  $('account-form').addEventListener('submit',async event=>{
   event.preventDefault();const f=event.currentTarget,controls=[...f.querySelectorAll('button')];if(controls.some(b=>b.disabled)||!f.checkValidity())return;
   controls.forEach(b=>b.disabled=true);const g=generation,capturedApi=api,action=event.submitter?.value||'login';
@@ -146,5 +153,5 @@ export async function mountGames({document,location,history,createClient,fetchPu
  win?.addEventListener('focus',()=>{for(const guard of guards)guard.update();});
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)for(const guard of guards)guard.update();});
  chrome();
- return {openLeague,chooseGame,openAnnual,loadDashboard,clear:clearPrivate};
+ return {openLeague,chooseGame,openAnnual,openHistory,loadDashboard,clear:clearPrivate};
 }

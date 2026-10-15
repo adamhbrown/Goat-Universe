@@ -14,5 +14,12 @@ export async function renderAnnual(id,dashboard,ctx,choose){
   if(c.policy&&c.competitions.length===5)panel.append(button('Finalize annual championship archive',()=>command({op:'annual_finalize',championship_id:id})));
  }
  table(panel,['Official game','Certified result source'],c.competitions.map(r=>[r.game_key,r.source_url]));
- if(c.policy){const board=await ctx.api.query({op:'annual_standings',championship_id:id});table(panel,['Rank','Member','BAAS under approved policy','Competitions'],board.map(r=>[r.rank,r.display_name,r.baas,r.competitions]));}
+ const status=details(panel,'Five-game championship progress');status.open=true;
+ table(status,['Official game','Certified competition attached'],['first-and-baa','horns-and-hoops','goat-crossover','league-of-greatness','goat-classic'].map(key=>[ctx.gameName(key),c.competitions.some(r=>r.game_key===key)?'Attached':'Awaiting certified final results']));
+ if(c.policy){
+  const board=await ctx.api.query({op:'annual_standings',championship_id:id});table(panel,['Rank','Member','BAAS under approved policy','Competitions'],board.map(r=>[r.rank,r.display_name,r.baas,r.competitions]));
+  const mine=board.find(r=>r.user_id===account.profile.user_id),breakdown=mine?.breakdown||[];
+  const personal=details(panel,'My annual performance by game');personal.open=true;personal.append(node('p','These values are calculated only from the attached certified finishes and approved conversion policy. This workspace issues no live BAAS awards.'));
+  table(personal,['Official game','Certified place','BAAS under approved policy','Certified source'],breakdown.map(r=>[ctx.gameName(r.game_key),r.place,r.baas,r.source_url]));
+ }
 }

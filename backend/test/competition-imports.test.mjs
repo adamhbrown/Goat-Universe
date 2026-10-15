@@ -76,6 +76,10 @@ test('a failed import preserves input and requires a new source review before re
  const p=editor('series_results',fixture(),async()=>{throw new Error('commissioner_required');});try{const {e}=p;e.input.value=p.text;e.review.click();e.verified.checked=true;p.change(e.verified,'change');e.apply.click();await tick();assert.match(e.status.textContent,/Import not confirmed.*commissioner required/);assert.equal(e.input.value,p.text);assert.equal(e.apply.disabled,true);assert.equal(e.verified.checked,false);e.apply.click();assert.equal(p.calls.length,1);}finally{p.dom.window.close();}
 });
 
+test('untrusted import text is displayed literally and a successful apply cannot be repeated without review',async()=>{
+ const p=editor();try{const malicious='<img src=x onerror=alert(1)>',e=p.e;e.input.value=JSON.stringify([{...seriesRow(),winner:malicious}]);e.review.click();assert.match(e.preview.textContent,/<img src=x/);assert.equal(e.preview.querySelector('img'),null);e.verified.checked=true;p.change(e.verified,'change');e.apply.click();await tick();assert.equal(p.calls.length,1);assert.equal(p.calls[0].results[0].winner,malicious);assert.equal(e.apply.disabled,true);e.apply.click();assert.equal(p.calls.length,1);}finally{p.dom.window.close();}
+});
+
 test('delayed local file reads cannot overwrite a manual edit or resurrect a signed-out preview',async()=>{
  const p=editor();try{let finish;const file={name:'SYNTHETIC.csv',size:20,text:()=>new Promise(r=>{finish=r;})};Object.defineProperty(p.e.file,'files',{value:[file],configurable:true});p.change(p.e.file,'change');assert.equal(p.e.review.disabled,true);
   p.e.input.value=p.text;p.change(p.e.input);finish('stale file contents');await tick();assert.equal(p.e.input.value,p.text);assert.equal(p.e.review.disabled,false);

@@ -35,7 +35,7 @@ const formWith=(root,text)=>[...root.querySelectorAll('form')].find(f=>f.querySe
 
 test('all five screens and assets are served from an explicit allowlist; traversal and unrelated screens are excluded',async()=>{
  for(const g of publicCatalog().games){const a=await competitionAsset('/games/'+g.id);assert.equal(a.type,'text/html');assert.match(a.content.toString(),/game-nav/);}
- for(const path of ['/games/boot.mjs','/games/ui.mjs','/games/nfl.mjs','/games/series.mjs','/games/fantasy.mjs','/games/annual.mjs','/games/drafts.mjs','/games/deadlines.mjs','/games/imports.mjs','/games/overview.mjs','/games/style.css','/portal/forms.mjs','/portal/bracket.mjs','/rules/goat-games.mjs'])assert.ok(await competitionAsset(path));
+ for(const path of ['/games/boot.mjs','/games/ui.mjs','/games/nfl.mjs','/games/series.mjs','/games/fantasy.mjs','/games/annual.mjs','/games/drafts.mjs','/games/deadlines.mjs','/games/imports.mjs','/games/overview.mjs','/games/history.mjs','/games/style.css','/portal/forms.mjs','/portal/bracket.mjs','/rules/goat-games.mjs'])assert.ok(await competitionAsset(path));
  for(const path of ['/','/games/bullpen','/games-extra/goat-crossover','/games/../server.mjs','/games/auth.mjs','/games/goat-classic/extra'])assert.equal(await competitionAsset(path),null);
 });
 test('five-game navigation distinguishes rule-gated workspaces and never displays demo scores or BAAS allocations',async()=>{
@@ -82,8 +82,9 @@ test('fantasy commissioner screen passes unchanged official scores and explicit 
 test('Horns & Hoops screen renders all 63 picks and submits one graph-consistent bracket with championship total',async()=>{
  const data=fixture('horns-and-hoops');data.bracket_config={main_lock_at:future};
  for(let stage=1;stage<=6;stage++){const prior=data.bracket_nodes.filter(n=>n.stage===stage-1);for(let i=0;i<2**(6-stage);i++)data.bracket_nodes.push({id:`S${stage}G${i}`,code:`S${stage}G${i}`,stage,...(stage===1?{home_team:'FIXTURE H '+i,away_team:'FIXTURE A '+i}:{home_from:prior[i*2].id,away_from:prior[i*2+1].id})});}
- const p=await workspace('horns-and-hoops',data);try{await p.open();const f=formWith(p.$('league-panel'),'Save complete bracket');assert.ok(f);assert.equal(f.querySelectorAll('select').length,63);
-  for(const n of data.bracket_nodes){const input=f.elements['pick_'+n.id];input.value=input.options[1].value;input.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));}f.elements.championship_total.value='150';p.submit(f);
+ const p=await workspace('horns-and-hoops',data);try{await p.open();let f=formWith(p.$('league-panel'),'Save complete bracket');assert.ok(f);assert.equal(f.querySelectorAll('select').length,63);
+  for(const n of data.bracket_nodes){const input=f.elements['pick_'+n.id];input.value=input.options[1].value;input.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));}f.elements.championship_total.value='150';f.elements.championship_total.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));await wait();
+  p.controller.chooseGame('goat-classic');await p.controller.openLeague(LID);f=formWith(p.$('league-panel'),'Save complete bracket');assert.match(f.textContent,/63 of 63 winners selected/);assert.equal(f.elements.championship_total.value,'150');assert.match(f.textContent,/Unsaved selections restored/);p.submit(f);
   await until(()=>p.calls.some(c=>c.type==='command'));const c=p.calls.find(c=>c.type==='command').p;assert.equal(c.op,'bracket_submit');assert.equal(c.picks.length,63);assert.equal(c.championship_total,150);
  }finally{p.dom.window.close();}
 });
@@ -147,4 +148,40 @@ test('newer pick edits made during a save remain visible and explicitly unsaved 
  try{await p.open();const f=formWith(p.$('league-panel'),'Save Super Bowl picks');f.elements.side_0.value='home';f.elements.weight_0.value='7';f.elements.mvp_pick.value='SYNTHETIC MVP';p.submit(f);f.elements.side_0.value='away';f.elements.side_0.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));await wait();release({id:LID});
   await until(()=>p.$('notice').textContent.includes('Newer edits remain unsaved'));const restored=formWith(p.$('league-panel'),'Save Super Bowl picks');assert.notEqual(restored,f);assert.equal(restored.elements.side_0.value,'away');assert.equal(p.calls.find(c=>c.type==='command').p.picks[0].side,'home');assert.match(restored.textContent,/not been submitted/);
  }finally{p.dom.window.close();}
+});
+
+test('member history filters actual certified results across games and opens the corresponding competition',async()=>{
+ const data=fixture('goat-classic');data.league.status='final';
+ const records=[{league_id:LID,name:'SYNTHETIC CLASSIC FINAL',season:'2027',game_key:'goat-classic',certified:true,finish:{place:2}},{league_id:'OTHER',name:'SYNTHETIC NFL FINAL',season:'2027',game_key:'first-and-baa',certified:false,finish:null}];
+ const p=await workspace('goat-classic',data,{query:q=>q.op==='member_history'?records:undefined});
+ try{await p.login();const history=[...p.$('member-actions').querySelectorAll('button')].find(b=>b.textContent==='My competition history');assert.ok(history);history.click();await until(()=>p.$('annual-panel').textContent.includes('SYNTHETIC CLASSIC FINAL'));
+  const panel=p.$('annual-panel'),filter=panel.querySelector('select');assert.match(panel.textContent,/Awaiting certification/);assert.match(panel.textContent,/The GOAT Classic/);filter.value='goat-classic';filter.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));assert.match(panel.textContent,/Certified finishing place: 2/);assert.doesNotMatch(panel.textContent,/SYNTHETIC NFL FINAL/);
+  [...panel.querySelectorAll('button')].find(b=>b.textContent==='Open SYNTHETIC CLASSIC FINAL').click();await until(()=>p.$('league-panel').textContent.includes(data.league.name));assert.equal(p.$('annual-panel').hidden,true);assert.deepEqual(p.calls.find(c=>c.type==='query'&&c.p.op==='member_history').p,{op:'member_history'});
+ }finally{p.dom.window.close();}
+});
+
+test('history errors can be refreshed; delayed private history cannot reappear after sign-out',async()=>{
+ let fail=true,release;const p=await workspace('',undefined,{query:q=>q.op==='member_history'?(fail?Promise.reject(new Error('temporary_error')):new Promise(r=>{release=r;})):undefined});
+ try{await p.login();await p.controller.openHistory();assert.match(p.$('annual-panel').textContent,/History unavailable/);fail=false;[...p.$('annual-panel').querySelectorAll('button')].find(b=>b.textContent==='Refresh history').click();await until(()=>release);p.$('sign-out').click();release([{league_id:LID,name:'PRIVATE LATE HISTORY',season:'2027',game_key:'goat-classic',certified:true,finish:{place:1}}]);await wait();await wait();assert.equal(p.$('annual-panel').childElementCount,0);assert.equal(p.$('annual-panel').hidden,true);assert.doesNotMatch(p.dom.window.document.body.textContent,/PRIVATE LATE HISTORY/);
+ }finally{p.dom.window.close();}
+});
+
+test('annual screen shows all five attachment states and only the signed-in member breakdown under approved conversions',async()=>{
+ const annual={id:'ANNUAL',name:'SYNTHETIC ANNUAL',season:2027,status:'draft',owner_id:OWNER,policy:{approved:true,conversions:{}},competitions:[{game_key:'goat-classic',source_url:'https://fixture.invalid/certified'}]};
+ const p=await workspace('',undefined,{query:q=>q.op==='annuals'?[annual]:q.op==='annual'?annual:q.op==='annual_standings'?[{user_id:ME,rank:1,display_name:'MY FIXTURE',baas:10,competitions:1,breakdown:[{game_key:'goat-classic',place:2,baas:10,source_url:'https://fixture.invalid/my-certified-source'}]},{user_id:OWNER,rank:2,display_name:'OTHER FIXTURE',baas:5,competitions:1,breakdown:[{game_key:'goat-classic',place:3,baas:5,source_url:'https://fixture.invalid/other-certified-source'}]}]:undefined});
+ try{await p.login();await p.controller.openAnnual();[...p.$('annual-panel').querySelectorAll('button')].find(b=>b.textContent.includes('SYNTHETIC ANNUAL')).click();await until(()=>p.$('annual-panel').textContent.includes('My annual performance by game'));
+  const progress=[...p.$('annual-panel').querySelectorAll('details')].find(d=>d.querySelector('summary').textContent==='Five-game championship progress');assert.equal(progress.querySelectorAll('tbody tr').length,5);assert.equal([...progress.querySelectorAll('tbody tr')].filter(r=>r.textContent.includes('Awaiting certified final results')).length,4);
+  const mine=[...p.$('annual-panel').querySelectorAll('details')].find(d=>d.querySelector('summary').textContent==='My annual performance by game');assert.match(mine.textContent,/my-certified-source/);assert.doesNotMatch(mine.textContent,/other-certified-source/);assert.match(mine.textContent,/no live BAAS awards/);
+ }finally{p.dom.window.close();}
+});
+
+test('saved-selection receipts in all five games show the member server records and exclude other participants',async()=>{
+ for(const key of publicCatalog().games.map(g=>g.id)){
+  const data=fixture(key),own='MY SAVED RECORD',other='OTHER PARTICIPANT RECORD';
+  data.games=[{id:'G1',home:own,away:'AWAY',round_id:'R1'},{id:'G2',home:other,away:'AWAY',round_id:'R2'}];data.picks=[{user_id:ME,game_id:'G1',side:'home',weight:7},{user_id:OWNER,game_id:'G2',side:'home',weight:7}];
+  data.bracket_nodes=[{id:'N1',code:'MY GAME',stage:1},{id:'N2',code:'OTHER GAME',stage:1}];data.bracket_picks=[{user_id:ME,node_id:'N1',team:own},{user_id:OWNER,node_id:'N2',team:other}];
+  data.series_picks=[{user_id:ME,event_id:'E1',team:own,submitted_at:past},{user_id:OWNER,event_id:'E2',team:other,submitted_at:past}];
+  data.fantasy_teams=[{id:'T1',user_id:ME,name:own},{id:'T2',user_id:OWNER,name:other},{id:'T3',user_id:'THIRD',name:'SYNTHETIC OPPONENT A'},{id:'T4',user_id:'FOURTH',name:'SYNTHETIC OPPONENT B'}];data.fantasy_matchups=[{id:'M1',week:1,home_id:'T1',away_id:'T3',home_score:10,away_score:1},{id:'M2',week:1,home_id:'T2',away_id:'T4',home_score:10,away_score:1}];
+  const p=await workspace(key,data);try{await p.open();const receipt=[...p.$('league-panel').querySelectorAll('details')].find(d=>d.querySelector('summary')?.textContent==='My saved selections and records');assert.ok(receipt,key);assert.match(receipt.textContent,/MY SAVED RECORD/,key);assert.doesNotMatch(receipt.textContent,/OTHER PARTICIPANT RECORD/,key);assert.match(receipt.textContent,/Unsaved edits in this tab do not change these records/);}finally{p.dom.window.close();}
+ }
 });

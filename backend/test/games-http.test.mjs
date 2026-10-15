@@ -16,7 +16,7 @@ before(async()=>{
 });
 after(async()=>{if(app)await app.close();});
 test('all five game screens use backend restrictive headers and the public homepage remains outside this server',async()=>{
- for(const path of ['/games',...publicCatalog().games.map(g=>'/games/'+g.id),'/games/boot.mjs','/games/ui.mjs','/games/imports.mjs','/games/drafts.mjs','/games/deadlines.mjs','/games/overview.mjs','/portal/bracket.mjs','/portal/forms.mjs','/rules/goat-games.mjs']){
+ for(const path of ['/games',...publicCatalog().games.map(g=>'/games/'+g.id),'/games/boot.mjs','/games/ui.mjs','/games/imports.mjs','/games/drafts.mjs','/games/deadlines.mjs','/games/overview.mjs','/games/history.mjs','/portal/bracket.mjs','/portal/forms.mjs','/rules/goat-games.mjs']){
   const r=await fetch(base+path);assert.equal(r.status,200,path);assert.equal(r.headers.get('cache-control'),'no-store');assert.match(r.headers.get('content-security-policy'),/script-src 'self'/);assert.match(r.headers.get('content-security-policy'),/frame-ancestors 'none'/);
  }
  assert.equal((await fetch(base+'/')).status,404);assert.equal((await fetch(base+'/games/bullpen')).status,404);
