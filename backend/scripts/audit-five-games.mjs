@@ -14,7 +14,11 @@ async function main() {
   let input;
   try { input=JSON.parse(await readFile(filename,'utf8')); }
   catch { throw new Error('snapshot_json_invalid'); }
-  const report=auditFiveGameCandidate(input);
+  // A reviewed annual season mapping can be supplied explicitly without
+  // assuming that calendar-year and sports-season labels coincide.
+  const snapshots=Array.isArray(input)?input:input?.snapshots;
+  const seasonByGame=Array.isArray(input)?undefined:input?.season_by_game;
+  const report=auditFiveGameCandidate(snapshots,{seasonByGame});
   process.stdout.write(JSON.stringify(report,null,2)+'\n');
   // Manual approval can never be achieved by this local file check:
   // code 2 = prepared for external review; code 1 = blocked.
