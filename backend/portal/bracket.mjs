@@ -40,7 +40,8 @@ export async function renderBracket(data,context) {
    form(review,'Open entries after schedule validation',[field('reason','Approval reason','text','',required)],'Open bracket league',p=>command({op:'league_open',league_id:id,...p}));
    const schedule=details(panel,'Import official tournament schedule');
    schedule.append(node('p','Import a JSON array of games in source order. Use code, stage (0–6), source_url, starts_at, and either home_team/away_team or home_from_code/away_from_code. Main stages must contain 32, 16, 8, 4, 2, 1 games. No tournament field or qualifying-game count is assumed. Schedule imports are atomic and require an empty draft.'));
-   form(schedule,'',[field('nodes','Sourced schedule JSON','textarea','',{required:''})],'Import bracket schedule',p=>command({op:'bracket_schedule_import',league_id:id,nodes:JSON.parse(p.nodes)}));
+   if(context.importer)context.importer(schedule,{kind:'bracket_schedule',title:'Review sourced bracket schedule import',data});
+   else form(schedule,'',[field('nodes','Sourced schedule JSON','textarea','',{required:''})],'Import bracket schedule',p=>command({op:'bracket_schedule_import',league_id:id,nodes:JSON.parse(p.nodes)}));
   }
   const entries=details(panel,'Commissioner: entry approvals');
   for(const e of data.entries){entries.append(node('p',`${e.display_name}: ${e.status}`));if(data.league.status==='open'&&Date.parse(cfg.main_lock_at)>now)entries.append(button('Approve '+e.display_name,()=>command({op:'entry_decide',league_id:id,user_id:e.user_id,approved:true})),button('Reject '+e.display_name,()=>command({op:'entry_decide',league_id:id,user_id:e.user_id,approved:false})));}
@@ -50,7 +51,7 @@ export async function renderBracket(data,context) {
  for(const n of nodes.filter(n=>n.stage===0)){
   const prior=data.bracket_picks.find(p=>p.user_id===me&&p.node_id===n.id);
   qualifying.append(node('p',`${n.code}: ${n.home_team} vs ${n.away_team} · ${new Date(n.starts_at).toLocaleString()} · ${n.winner?'Winner: '+n.winner:'Awaiting sourced result'}`));
-  if(entered&&data.league.status==='open'&&Date.parse(n.starts_at)>now)form(qualifying,'',[select('team','Choose qualifying winner',[['','Choose'],[n.home_team,n.home_team],[n.away_team,n.away_team]],prior?.team||'')],'Save qualifying pick',p=>command({op:'bracket_qualifying_pick',node_id:n.id,...p}));
+  if(entered&&data.league.status==='open'&&Date.parse(n.starts_at)>now){const qualifyingForm=form(qualifying,'',[select('team','Choose qualifying winner',[['','Choose'],[n.home_team,n.home_team],[n.away_team,n.away_team]],prior?.team||'')],'Save qualifying pick',p=>command({op:'bracket_qualifying_pick',node_id:n.id,...p}));context.trackDeadline?.(qualifyingForm,n.starts_at);}
   else qualifying.append(node('p',prior?'Your saved pick: '+prior.team:'No saved qualifying pick.'));
  }
  if(!nodes.some(n=>n.stage===0))qualifying.append(node('p','No qualifying games imported. The commissioner supplies the official schedule.'));
@@ -64,6 +65,7 @@ export async function renderBracket(data,context) {
   }
   fields.push(field('championship_total','Predicted combined points in the National Championship','number',data.bracket_submissions.find(s=>s.user_id===me)?.championship_total??'',{required:'',min:0,max:10000,step:1}));
   const f=form(panel,'Your complete main bracket',fields,'Save complete bracket',p=>command(bracketCommand(id,nodes,p)));
+  context.trackDeadline?.(f,cfg.main_lock_at);
   // The entire 63-game submission is still atomic. Group its controls by
   // round so a phone user does not face an unbroken wall of 63 selectors.
   // Moving labels (rather than cloning inputs) preserves their form ownership.
@@ -117,7 +119,8 @@ export async function renderBracket(data,context) {
  if(owner&&data.league.status==='open'){
   const results=details(panel,'Commissioner: official results and corrections');
   results.append(node('p','A changed earlier result invalidates every dependent result, retaining historical snapshots and evidence. Re-enter affected results after review.'));
-  form(results,'Atomic sourced result import',[field('results','Result JSON array: node_id, home_score, away_score, source_url','textarea','',{required:''})],'Import sourced results',p=>command({op:'bracket_results_import',league_id:id,results:JSON.parse(p.results)}));
+  if(context.importer)context.importer(results,{kind:'bracket_results',title:'Review sourced bracket result import',data});
+  else form(results,'Atomic sourced result import',[field('results','Result JSON array: node_id, home_score, away_score, source_url','textarea','',{required:''})],'Import sourced results',p=>command({op:'bracket_results_import',league_id:id,results:JSON.parse(p.results)}));
   for(const n of nodes){
    const d=details(results,STAGES[n.stage]+' · '+n.code+(n.winner?' · Winner: '+n.winner:''));
    if(n.winner)form(d,'',[field('reason','Documented correction reason','text','',required)],'Reopen game and dependent results',p=>command({op:'bracket_correct',node_id:n.id,...p}));
