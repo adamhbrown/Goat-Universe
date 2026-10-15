@@ -89,10 +89,32 @@ footer{padding:38px 0 65px;border-top:1px solid #655c4b;color:#c9c5b8;font-size:
 #arena-baseball:before{background:radial-gradient(ellipse at 85% 5%,#b9975e40,transparent 46%),linear-gradient(135deg,transparent 45%,#d4c3a613 46%,transparent 48%),linear-gradient(45deg,transparent 45%,#d4c3a612 46%,transparent 48%)}
 #arena-cross .chip{border-color:#91b5c7;color:#cae4f1}
 #arena-fantasy .chip{border-color:#9bc6a4;color:#cde4ce}
-</style></head><body>
+
+/* Championship studio finish: precise kinetic transitions and oversized index typography. */
+.hero{position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;top:-190px;right:-90px;width:min(42vw,490px);aspect-ratio:1;border-radius:50%;border:1px solid #cba25f33;box-shadow:0 0 0 34px #cba25f0a,0 0 0 84px #cba25f07,0 0 120px #b68b3c13;pointer-events:none}
+.hero .shell{position:relative;z-index:1}
+.arena[hidden]{display:none}
+.arena:not([hidden]){animation:gv-arena-enter .38s cubic-bezier(.18,.65,.3,1) both}
+@keyframes gv-arena-enter{from{opacity:.65;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.arena{isolation:isolate}
+.arena:after{content:attr(data-number);position:absolute;right:12px;top:38px;pointer-events:none;font:900 clamp(8rem,19vw,17rem)/.9 Manrope,sans-serif;letter-spacing:-.11em;color:#e9bd7430;opacity:.20;z-index:0}
+.arena>*{position:relative;z-index:1}
+.arena .choice{transition:border-color .16s ease,background .16s ease,box-shadow .16s ease}
+.arena .choice[aria-pressed=true]{box-shadow:inset 3px 0 0 #f4d89b,0 0 22px #aa7c3d28}
+.arena .result.good{box-shadow:inset 0 1px 0 #b7dcc246}
+.arena .btn{transition:transform .14s ease,filter .14s ease}
+.arena .btn:hover:not(:disabled){transform:translateY(-1px)}
+.lab-pathways{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:25px}
+.lab-pathways a{border:1px solid #a18c64;border-radius:5px;padding:12px 16px;color:#f2d394;font-size:.76rem;font-weight:850;letter-spacing:.08em;min-height:46px;display:inline-flex;align-items:center;background:#171d1f;text-decoration:none}
+.lab-pathways a:hover{border-color:#f1cd80;color:#ffe5a8}
+.lab-pathways a:focus-visible{outline:3px solid #fce6b8;outline-offset:3px}
+@media(max-width:600px){.arena:after{right:12px;top:80px;font-size:8rem;opacity:.13}.lab-pathways a{flex:1;justify-content:center;font-size:.69rem;padding:12px 10px}}
+@media(prefers-reduced-motion:reduce){.arena:not([hidden]){animation:none}.arena .choice,.arena .btn{transition:none}.arena .btn:hover:not(:disabled){transform:none}}
+</style><link rel="stylesheet" href="experience/universe-shell.css"></head><body>
 <a class="skip" href="#play">Skip to challenges</a>
 <header><div class="shell nav"><a class="brand" href="index.html">GOAT <b>UNIVERSE</b></a><a class="return" href="goatville.html">← RETURN TO GOATVILLE</a></div></header>
-<section class="hero"><div class="shell"><div class="eyebrow">GOAT UNIVERSE / IMMERSIVE SPORTS PLAY LAB</div><h1>FIVE SPORTS.<br><em>ONE UNIVERSE.</em></h1><p class="lead">The entrance creates adrenaline. The game earns your attention. Five distinct sports decisions, five challenges, and one reason to keep coming back.</p><p class="disclosure"><strong>FREE PLAY LAB:</strong> All teams, players, results and scenarios below are explicitly fictional demonstrations. No official GOAT Games entries, actual betting lines, live data, prizes, payments or tournament standings are involved.</p></div></section>
+<section class="hero"><div class="shell"><div class="eyebrow">GOAT UNIVERSE / IMMERSIVE SPORTS PLAY LAB</div><h1>FIVE SPORTS.<br><em>ONE UNIVERSE.</em></h1><p class="lead">The entrance creates adrenaline. The game earns your attention. Five distinct sports decisions, five challenges, and one reason to keep coming back.</p><p class="disclosure"><strong>FREE PLAY LAB:</strong> All teams, players, results and scenarios below are explicitly fictional demonstrations. No official GOAT Games entries, actual betting lines, live data, prizes, payments or tournament standings are involved.</p><div class="lab-pathways"><a href="goatville-city.html">← ENTER GOATVILLE CITY</a><a href="goatville-cinema.html">WATCH THE CINEMATIC STUDIO ↗</a></div></div></section>
 <main id="play"><div class="shell">
 <div class="arena-nav" role="tablist" aria-label="Choose a GOAT Games challenge">
 <button class="sport" id="tab-football" data-sport="football" role="tab" aria-controls="arena-football" aria-selected="true" tabindex="0"><small>01 / FOOTBALL</small><b>1st &amp; BAA</b><span>THE WAR ROOM ↗</span></button>
@@ -101,7 +123,7 @@ footer{padding:38px 0 65px;border-top:1px solid #655c4b;color:#c9c5b8;font-size:
 <button class="sport" id="tab-fantasy" data-sport="fantasy" role="tab" aria-controls="arena-fantasy" aria-selected="false" tabindex="-1"><small>04 / FANTASY</small><b>LEAGUE OF GREATNESS</b><span>THE CLUBHOUSE ↗</span></button>
 <button class="sport" id="tab-baseball" data-sport="baseball" role="tab" aria-controls="arena-baseball" aria-selected="false" tabindex="-1"><small>05 / BASEBALL</small><b>THE GOAT CLASSIC</b><span>OCTOBER DIAMOND ↗</span></button>
 </div>
-<section class="arena" id="arena-football" role="tabpanel" aria-labelledby="tab-football">
+<section class="arena" id="arena-football" data-number="01" role="tabpanel" aria-labelledby="tab-football">
 <div class="arena-heading"><div class="arena-kicker">01 / THE GRIDIRON WAR ROOM</div><div class="chip">ATS + CONFIDENCE</div></div>
 <h2>1st &amp; BAA.</h2><p class="desc">Goats of the Gridiron Playoff League. Study a fictional spread, rank your confidence and reveal a simulated final score to see whether your practice pick covers.</p>
 <div class="challenge">Harbor Hawks -3.5 vs. Canyon Wolves +3.5. Who covers?</div>
@@ -110,7 +132,7 @@ footer{padding:38px 0 65px;border-top:1px solid #655c4b;color:#c9c5b8;font-size:
 <div class="btn-row"><button class="btn" id="football-play">LOCK &amp; REVEAL →</button><button class="btn ghost" id="football-reset">NEW ROUND</button></div><div class="result" id="football-result" role="status" aria-live="polite">Pick a side and lock your practice call.</div>
 <div class="fine">Demonstration only. This uses an invented matchup and randomized simulated scores, not a real spread or the official league scoring engine.</div>
 </section>
-<section class="arena" id="arena-hoops" role="tabpanel" aria-labelledby="tab-hoops" hidden>
+<section class="arena" id="arena-hoops" data-number="02" role="tabpanel" aria-labelledby="tab-hoops" hidden>
 <div class="arena-heading"><div class="arena-kicker">02 / THE BRACKET COLISEUM</div><div class="chip">FOUR-TEAM BRACKET</div></div>
 <h2>HORNS &amp; HOOPS.</h2><p class="desc">Downtown's BAAsketball Showcase XXXV. Build a mini-bracket through two semifinals, then crown your own champion. Every team is fictional.</p>
 <div class="timeline"><span>METRO METEORS</span><b>vs.</b><span>SUMMIT STORM</span><span>RIVER ROYALS</span><b>vs.</b><span>COAST COMETS</span></div>
@@ -118,7 +140,7 @@ footer{padding:38px 0 65px;border-top:1px solid #655c4b;color:#c9c5b8;font-size:
 <div class="btn-row"><button class="btn" id="hoops-advance" disabled>ADVANCE WINNER →</button><button class="btn ghost" id="hoops-reset">RESET BRACKET</button></div><div class="result" id="hoops-result" role="status" aria-live="polite">Pick your first semifinal winner.</div>
 <div class="fine">This four-team fictional bracket is not a substitute for the official March Madness XXXV contest or scoring rules.</div>
 </section>
-<section class="arena" id="arena-cross" role="tabpanel" aria-labelledby="tab-cross" hidden>
+<section class="arena" id="arena-cross" data-number="03" role="tabpanel" aria-labelledby="tab-cross" hidden>
 <div class="arena-heading"><div class="arena-kicker">03 / THE DUAL-SPORT ARENA</div><div class="chip">BASKETBALL + HOCKEY</div></div>
 <h2>GOAT CROSSOVER.</h2><p class="desc">Two Sports, 1 Competition. Pick winners and series lengths for one fictional basketball series and one fictional hockey series, then reveal both simulations on a single card.</p>
 <div class="challenge">Basketball series: Kings vs. Comets</div><div class="options" id="cross-basket"><button type="button" class="choice" aria-pressed="false" data-value="Kings">KINGS</button><button type="button" class="choice" aria-pressed="false" data-value="Comets">COMETS</button></div>
@@ -128,14 +150,14 @@ footer{padding:38px 0 65px;border-top:1px solid #655c4b;color:#c9c5b8;font-size:
 <div class="btn-row"><button class="btn" id="cross-play">REVEAL BOTH SERIES →</button><button class="btn ghost" id="cross-reset">NEW CARD</button></div><div class="result" id="cross-result" role="status" aria-live="polite">Choose a winner in both sports to build your card.</div>
 <div class="fine">Series outcomes are randomly simulated fictional data. Official competition rules and results remain separate.</div>
 </section>
-<section class="arena" id="arena-fantasy" role="tabpanel" aria-labelledby="tab-fantasy" hidden>
+<section class="arena" id="arena-fantasy" data-number="04" role="tabpanel" aria-labelledby="tab-fantasy" hidden>
 <div class="arena-heading"><div class="arena-kicker">04 / THE FRANCHISE CLUBHOUSE</div><div class="chip">START / SIT</div></div>
 <h2>LEAGUE OF GREATNESS.</h2><p class="desc">Fantasy Football Championships. Choose the FLEX starter for a fictional team, then reveal a randomized practice scoring outcome for two different risk profiles.</p>
 <div class="challenge">One FLEX spot. Who gets the start?</div><div class="options" id="fantasy-options"><button type="button" class="choice" aria-pressed="false" data-value="WR archetype">FLEX OPTION A — WR<small>Illustrative projection: 12.8 points · stable floor</small></button><button type="button" class="choice" aria-pressed="false" data-value="RB archetype">FLEX OPTION B — RB<small>Illustrative projection: 11.1 points · volatile upside</small></button></div>
 <div class="btn-row"><button class="btn" id="fantasy-play">SET LINEUP &amp; SIMULATE →</button><button class="btn ghost" id="fantasy-reset">NEW WEEK</button></div><div class="result" id="fantasy-result" role="status" aria-live="polite">Make your roster decision.</div>
 <div class="fine">Illustrative roster archetypes and sample projections only. No ESPN roster updates, actual athlete data or real fantasy results are involved.</div>
 </section>
-<section class="arena" id="arena-baseball" role="tabpanel" aria-labelledby="tab-baseball" hidden>
+<section class="arena" id="arena-baseball" data-number="05" role="tabpanel" aria-labelledby="tab-baseball" hidden>
 <div class="arena-heading"><div class="arena-kicker">05 / THE OCTOBER DIAMOND</div><div class="chip">WINNER + GAMES</div></div>
 <h2>THE GOAT CLASSIC.</h2><p class="desc">Take Your Swing at History. Pick the winner and number of games for a fictional championship series. Then reveal a simulated series to see how close you came.</p>
 <div class="challenge">Atlantic Admirals vs. Pacific Pioneers</div><div class="options" id="baseball-options"><button type="button" class="choice" aria-pressed="false" data-value="Admirals">ATLANTIC ADMIRALS</button><button type="button" class="choice" aria-pressed="false" data-value="Pioneers">PACIFIC PIONEERS</button></div><div class="field"><label for="baseball-length">Series length</label><select id="baseball-length"><option value="4">4 games</option><option value="5">5 games</option><option value="6">6 games</option><option value="7">7 games</option></select></div>
@@ -181,4 +203,4 @@ $('baseball-reset').addEventListener('click',baseballReset);
 $('reset-session').addEventListener('click',()=>{footballReset();hoopsReset();crossReset();fantasyReset();baseballReset();show('football',false);});
 updateSession();
 })();
-</script></body></html>
+</script><script defer src="experience/universe-shell.js"></script></body></html>
