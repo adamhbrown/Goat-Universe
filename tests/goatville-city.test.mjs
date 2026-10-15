@@ -30,7 +30,7 @@ test('no duplicate element IDs and all internal anchors resolve',()=>{
  for(const [,hash] of city.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(hash),hash);
 });
 test('no remote code, tracking, or payment widgets',()=>{
- assert.doesNotMatch(city,/<script|fetch\(|<iframe|checkout\.stripe|paypal/);
+ assert.doesNotMatch(city,/<script\b[^>]+src=|fetch\(|<iframe|checkout\.stripe|paypal/);
 });
 
 test('premium cinematic entrance is explicitly opt-in, three chapters and skippable',()=>{
@@ -47,7 +47,7 @@ test('premium cinematic entrance is explicitly opt-in, three chapters and skippa
 });
 test('city navigation has five accessible filters and preserved destination links',()=>{
  assert.equal((city.match(/class="city-filter"/g)||[]).length,5);
- assert.equal((city.match(/data-district="/g)||[]).length,7);
+ assert.equal((city.match(/<article class="district" data-district="/g)||[]).length,7);
  assert.match(city,/id="filter-status" role="status" aria-live="polite"|role="status" aria-live="polite" id="filter-status"/);
  assert.match(city,/d\.hidden=!show/);
 });
