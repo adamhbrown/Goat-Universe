@@ -77,25 +77,57 @@ test('corrupt and unavailable storage fail to empty memory without network or au
   assert.equal(blocked.record(stamp()).persisted,false); assert.equal(blocked.clear(),false);
 });
 
-test('host creates a restrictive iframe and rejects remote entries, then removes event capabilities', () => {
-  const dom = new JSDOM('<main></main>',{url:'https://guest.example/goatville/'}), w=dom.window;
+const reviewedGame = {id:'integration-test', version:1, title:'Guest challenge test', achievements:['first-test']};
+
+test('host rejects every unreviewed same-origin page and unauthorized game metadata', () => {
+  const dom = new JSDOM('<main></main>',{url:'https://guest.example/goatville/demo.html'}), w=dom.window;
   const container=w.document.querySelector('main');
-  for (const entryURL of ['https://evil.test/game.html','javascript:alert(1)','/game.html?token=secret','/game.html#secret','/script.js'])
-    assert.throws(() => mountGuestGame({container,attraction,entryURL,windowImpl:w}), /invalid_game_entry/);
+  const attempt = (attraction, entryURL) => mountGuestGame({container, attraction, entryURL, windowImpl:w});
+  for (const entryURL of [
+    'https://evil.test/challenge.html', 'javascript:alert(1)', './challenge.html?token=secret',
+    './challenge.html#fragment', './script.js', './private.html',
+    '/challenge.html', '/backend/goatville/challenge.html', './nested/challenge.html'
+  ]) assert.throws(() => attempt(reviewedGame, entryURL), /invalid_game_entry/);
+  for (const altered of [
+    {id:'test-game'}, {version:2}, {title:'Visitor-controlled title'},
+    {achievements:['unexpected']}, {achievements:['first-test','extra']}
+  ]) assert.throws(() => attempt({...reviewedGame,...altered}, './challenge.html'), /unreviewed_game/);
+  assert.equal(container.children.length, 0);
+  dom.window.close();
+});
+
+test('reviewed fixture mounts in a strict sandbox, accepts only valid guest stamps and revokes on teardown', () => {
+  const dom = new JSDOM('<main></main>',{url:'https://guest.example/goatville/demo.html'}), w=dom.window;
+  const container=w.document.querySelector('main');
   const received=[];
-  const host=mountGuestGame({container,attraction,entryURL:'/game.html',windowImpl:w,onAchievement:s => received.push(s)});
+  const host=mountGuestGame({container,attraction:reviewedGame,entryURL:'./challenge.html',
+    windowImpl:w,onAchievement:s => received.push(s)});
   assert.equal(host.frame.getAttribute('sandbox'),'allow-scripts');
-  assert.equal(host.frame.title,'Guest test');
+  assert.equal(host.frame.title,'Guest challenge test');
   assert.equal(host.frame.getAttribute('referrerpolicy'),'no-referrer');
+  assert.equal(host.frame.src,'https://guest.example/goatville/challenge.html');
   let init;
   host.frame.contentWindow.postMessage = m => { init=m; };
   host.frame.dispatchEvent(new w.Event('load'));
   assert.equal(init.type,'init'); assert.equal(init.reducedMotion,false);
-  const data={...message(),session:init.session};
+  const data={channel:CHANNEL,session:init.session,attraction:'integration-test',
+    version:1,sequence:1,type:'achievement',achievement:'first-test'};
   w.dispatchEvent(new w.MessageEvent('message',{source:host.frame.contentWindow,origin:'null',data}));
   assert.equal(received.length,1);
+  assert.equal(received[0].verification,'local-unverified');
   host.destroy(); host.destroy();
   assert.equal(container.children.length,0);
   w.dispatchEvent(new w.MessageEvent('message',{source:host.frame.contentWindow,origin:'null',data}));
   assert.equal(received.length,1); dom.window.close();
+});
+
+test('catalog entry resolution honors a hosted app path prefix but not lookalike HTML', () => {
+  const dom = new JSDOM('<main></main>',{url:'https://guest.example/Goat-Universe/backend/goatville/demo.html'});
+  const w=dom.window, container=w.document.querySelector('main');
+  const game=mountGuestGame({container,attraction:reviewedGame,entryURL:'./challenge.html',windowImpl:w});
+  assert.equal(game.frame.src,'https://guest.example/Goat-Universe/backend/goatville/challenge.html');
+  game.destroy();
+  assert.throws(() => mountGuestGame({container,attraction:reviewedGame,
+    entryURL:'../../other/challenge.html',windowImpl:w}),/invalid_game_entry/);
+  dom.window.close();
 });
