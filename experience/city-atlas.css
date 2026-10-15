@@ -30,6 +30,11 @@
 .gv-map-panel p{font-size:.92rem;line-height:1.65;color:#e3d8c5;margin:20px 0}
 .gv-panel-foot{border-top:1px solid #867452;padding-top:23px;display:flex;flex-direction:column;gap:12px}
 .gv-map-route{display:inline-flex;align-items:center;justify-content:center;min-height:51px;border:1px solid #f1c979;background:linear-gradient(120deg,#f7d894,#eab866);color:#151108;font:900 .78rem Inter,Arial,sans-serif;border-radius:6px;text-decoration:none;padding:12px 16px;letter-spacing:.04em}
+/* Live links are available only for functioning destinations. */
+.gv-map-direct{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border:1px solid #aa956f;border-radius:6px;background:#1b2626;color:#f0d5a0;padding:11px 14px;text-decoration:none;font:850 .76rem Inter,Arial,sans-serif;letter-spacing:.04em}
+.gv-map-direct:hover{border-color:#f1c979;background:#27332d}
+.gv-map-direct[hidden]{display:none!important}
+.gv-map-direct:focus-visible{outline:3px solid #fff0ad;outline-offset:3px}
 .gv-map-route:hover{filter:brightness(1.11)}
 .gv-map-route:focus-visible{outline:3px solid #fff1b1;outline-offset:4px}
 .gv-map-footnote{font-size:.71rem;color:#c3b69e;line-height:1.5}
