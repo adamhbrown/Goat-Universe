@@ -1,7 +1,18 @@
-# GOAT Universe backend development
+# GOAT Universe — Operation One Universe
 
-The existing public `index.html` is preserved. Backend work is isolated on
-`codex/backend-foundations`; this branch does not deploy the public Pages site.
+This integration branch combines the visitor world, attractions, media, accounts,
+five-game workspace and private Bullpen into one local application. The existing
+public deployment and source branches remain unchanged. It is not launch-ready.
+
+Start the integrated application with `npm ci --ignore-scripts`, then
+`npm run universe`. Open `http://127.0.0.1:8787/` on that computer. The delivered
+application ZIP includes dependencies, so `node backend/scripts/start-universe.mjs`
+works without npm installation. See `OPEN_GOAT_UNIVERSE.txt` for the short tour,
+data-directory boundary and remaining hosted/mobile acceptance requirements.
+
+The normal backend-only `npm run dev` remains available; public serving defaults
+off unless `PUBLIC_SITE_ENABLED=true` is explicitly configured. No hosted database,
+accounts, migrations, payments, email or production deployment are changed here.
 
 ```sh
 npm ci --ignore-scripts
@@ -35,6 +46,12 @@ business migrations. Local authentication is blocked in production.
 
 See [backend operations](docs/BACKEND.md), [checkpoint](docs/CHECKPOINT.md), and
 [source and rules register](docs/SOURCES_AND_RULES.md).
+
+Launch-readiness work adds shared player/workspace session handling, player
+recovery controls, Safari cache cleanup and a non-root hosting image. See the
+[launch gates](docs/LAUNCH_READINESS.md) and
+[hosted development runbook](docs/HOSTED_DEVELOPMENT.md). These changes are
+proposed on a separate branch; they do not deploy or modify the public homepage.
 
 This is a tested development foundation. Hosted Supabase authentication, email
 delivery, and production deployment still require environment configuration and

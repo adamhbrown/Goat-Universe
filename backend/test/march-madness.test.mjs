@@ -2,6 +2,7 @@ import test,{before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {application} from '../server.mjs';
 import {configuration} from '../config.mjs';
+import {prepareImport} from '../games/imports.mjs';
 
 let app,base,owner,a,b,outsider,league,nodes,picks;
 const future=hours=>new Date(Date.now()+hours*3600000).toISOString();
@@ -141,7 +142,7 @@ test('atomic schedule import rejects malformed feeders and leaves no partial sch
  await assert.rejects(db({op:'bracket_schedule_import',league_id:draft.id,nodes:broken}),/invalid_bracket_feeder/);
  assert.equal((await app.db.db.query('select count(*) n from public.goat_bracket_nodes where league_id=$1',[draft.id])).rows[0].n,0);
  assert.equal((await app.db.db.query("select count(*) n from public.goat_audit where action='bracket_node_create' and detail->>'league_id'=$1",[draft.id])).rows[0].n,0);
- await db({op:'bracket_schedule_import',league_id:draft.id,nodes:specs});
+ await db(prepareImport('bracket_schedule',JSON.stringify(specs),{league:draft}).payload);
  assert.equal((await db({op:'league',league_id:draft.id},owner,true)).bracket_nodes.length,65);
  await assert.rejects(db({op:'bracket_schedule_import',league_id:draft.id,nodes:specs}),/empty_draft_schedule_required/);
 });

@@ -36,3 +36,24 @@ Only place a replacement Supabase management token in appropriately protected Gi
 > Our project opvoemihfyxidzbdyory in us-east-1 is stuck in COMING_UP. PostgreSQL accepts read-only queries, but the platform is not reaching healthy status. On October 14, 2026 at approximately 09:12 UTC, Realtime logs reported MigrationsFailedToRun, a 15-second DBConnection queue timeout, and missing realtime.subscription. Storage health requests were aborted. storage.objects was also not present during a read-only check. Please inspect managed-service startup/provisioning and advise the safest repair. We have not reset the project or modified managed schemas.
 
 No hosted database mutation, payment, outreach, or production deployment was performed during this investigation.
+
+## Launch-readiness read-only recheck — 2026-10-14 12:01 UTC
+
+The project still reports COMING_UP. PostgreSQL startup is still 09:04:44 UTC.
+Both auth.users and auth.sessions are present; storage.objects and
+realtime.subscription are absent, and the public schema has zero tables.
+The 09:00–12:05 UTC log query returned repeated managed Storage migration failures
+through 11:21:33 UTC and Realtime migration queue timeouts through 11:11:43 UTC.
+No GOAT schema changes have been made. The exact platform root cause remains
+unconfirmed; working read-only SQL does not establish healthy managed services.
+
+The support draft above may be updated with those timestamps if Adam authorizes
+sending it. No outside party was contacted. This track's separate PR includes
+`HOSTED_DEVELOPMENT.md` and `LAUNCH_READINESS.md`; neither authorizes modifying
+this existing project or purchasing a replacement resource.
+
+The CEO's seven-day-expiry lead is documented separately in
+`SUPABASE_TOKEN_DIAGNOSIS.md`. GitHub's 2026-10-14 01:13 UTC status job returned
+401; its 2026-09-24 dry-run only checked token presence before an IPv6 failure.
+Expiry is a plausible explanation for 401, not proven secret metadata, and
+would not by itself repair the managed-service provisioning issue.

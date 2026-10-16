@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090b0e"><meta name="description" content="Private local preview of GOAT Universe music and cinematic video. Files stay on your device.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; font-src 'self'; media-src blob: 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>GOAT Universe — Cinematic Screening Room</title><link rel="stylesheet" href="cinema/studio.css"><link rel="stylesheet" href="experience/universe-shell.css"></head>
+<body><a href="#screening" class="skip">Skip to cinema controls</a>
+<header><div class="shell top"><a class="brand" href="index.html">GOAT <span>UNIVERSE</span></a><a href="goatville-city.html" class="back">← THE CITY</a></div></header>
+<main><section class="hero"><div class="shell"><div class="eyebrow">GOAT UNIVERSE PRESENTS / THE CINEMATIC SCREENING ROOM</div><h1>FEEL THE<br><span>ENTRANCE.</span></h1>
+<p>Before the first whistle, the atmosphere changes. Film. Music. Anticipation. This is a private rehearsal stage for original GOAT Universe media—not a public streaming service.</p>
+<div class="notice"><strong>PRIVACY FIRST:</strong> Choose video and music files from your own device. Your browser plays them locally. Nothing is uploaded, saved, transmitted, or published. Commercial use still requires a rights review.</div>
+</div></section>
+<section class="shell screening" id="screening"><div class="stage"><div class="stage-label"><span>GOATVILLE ORIGINALS / ENTRANCE REHEARSAL</span><span id="timecode">00:00</span></div>
+<div class="stage-media">
+<video id="screen-video" playsinline preload="none" muted aria-label="Your selected GOAT Universe cinematic video"></video>
+<div class="stage-empty" id="empty"><span class="emblem" aria-hidden="true">G</span><strong>WELCOME TO<br>THE GOAT UNIVERSE.</strong><small>WHERE THE GOATS PLAY.</small></div>
+</div>
+<div class="stage-progress"><div id="progress" role="progressbar" aria-label="Video progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div></div>
+<div class="stage-actions"><button id="play" class="primary" type="button" disabled>PLAY CINEMATIC →</button><button id="pause" type="button" disabled>PAUSE</button><button id="restart" type="button" disabled>RESTART</button><button id="sound" type="button" disabled aria-pressed="false">SOUND OFF</button><a href="goatville-city.html" class="exit">SKIP → ENTER GOATVILLE</a></div>
+<p role="status" aria-live="polite" id="feedback">Select a video below to start your private cinematic preview.</p>
+</div>
+<div class="inputs"><div class="eyebrow">THE DIRECTOR'S CONSOLE</div><h2>BUILD THE MOMENT.</h2>
+<label for="video-file">Cinematic video <small>MP4, MOV, WebM or other browser-supported video</small></label>
+<input id="video-file" type="file" accept="video/*">
+<label for="audio-file">Optional anthem or soundtrack <small>MP3, WAV, AAC or other browser-supported audio</small></label>
+<input id="audio-file" type="file" accept="audio/*">
+<audio id="music" preload="none"></audio>
+<p class="small">Sound is off by default. The film and soundtrack start only after you press Play and explicitly enable sound. If you supply separate music, the video audio is muted to avoid doubling.</p>
+<button type="button" id="clear" class="secondary">REMOVE LOCAL MEDIA</button>
+<p class="small">This rehearsal never requires an account or Supabase. The final production player should load reviewed and licensed media from a controlled origin—not arbitrary public URLs.</p></div></section></main>
+<footer><div class="shell">GOAT UNIVERSE · WHERE THE GOATS PLAY · CAN'T STOP THE BAA. Development media rehearsal. No hosting or licensing rights are implied.</div></footer>
+<script src="cinema/studio.js"></script><script defer src="experience/universe-shell.js"></script></body></html>

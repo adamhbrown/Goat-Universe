@@ -34,3 +34,20 @@ footer{border-top:1px solid var(--line);text-align:center;padding:1.5rem;font-si
 .hero-freedom{display:inline-block;color:var(--white);margin-left:.4em;text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:.25em}
 
 .hero-origin{color:#e6bd62;font-weight:900;letter-spacing:.18em;font-size:.95rem;margin:.4rem 0 1rem}
+
+/* iPhone: retain zoom, keep controls tappable, and contain wide commissioner data. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+main,section,.card,.cards,.grid,form,details{min-width:0}
+p,h1,h2,h3,h4,td,th,summary,label,a{overflow-wrap:anywhere}
+input,select,textarea{min-width:0;max-width:100%;font-size:1rem}
+button,summary{min-height:44px;touch-action:manipulation}
+summary{padding:.65rem 0}
+input[type=checkbox]{min-height:24px;min-width:24px}
+a{color:var(--gold)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.table-wrap{max-width:100%;overscroll-behavior-x:contain}
+.skip-link{position:absolute;left:1rem;top:-8rem;z-index:10;background:#171717;padding:1rem}
+.skip-link:focus{top:1rem}
+header{padding-top:max(1rem,env(safe-area-inset-top));padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(safe-area-inset-right))}
+footer{padding-bottom:max(1.5rem,env(safe-area-inset-bottom))}
+@media(max-width:500px){.actions>button{flex:1 1 10rem}.table-wrap{font-size:.95rem}}

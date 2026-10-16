@@ -1,0 +1,45 @@
+name: Pope five-game candidate tests
+
+on:
+  push:
+    branches:
+      - work/pope-five-game-release-gates-20261015
+  pull_request:
+    branches:
+      - work/qa-security
+    paths:
+      - 'backend/games/**'
+      - 'backend/test/**'
+      - 'backend/scripts/audit-five-games.mjs'
+      - '.github/workflows/pope-five-game-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-offline-five-games:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout isolated review branch
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Set up pinned Node major version
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install locked dependencies without scripts
+        run: npm ci --ignore-scripts
+      - name: Check JavaScript syntax
+        run: |
+          npm run check
+          node --check backend/games/release-gates.mjs
+          node --check backend/scripts/audit-five-games.mjs
+          node --check backend/test/five-game-release-gates.test.mjs
+      - name: Run isolated five-game release audit regressions
+        run: node --test backend/test/five-game-release-gates.test.mjs
+      - name: Run complete backend regressions
+        run: npm test

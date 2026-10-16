@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "default_experience": "Original 8-second GOATVILLE motion study; optional founder-supplied official GOATUNIVERSE theme",
+  "runtime_media_requests_before_user_action": 0,
+  "founder_assets": [
+    {
+      "title": "Can\u2019t Stop The Baa",
+      "source": null,
+      "rights_status": "unverified",
+      "enabled": false
+    },
+    {
+      "title": "Magic Movie 5",
+      "source": null,
+      "rights_status": "unverified",
+      "enabled": false
+    },
+    {
+      "title": "Goat Country",
+      "source": null,
+      "rights_status": "unverified",
+      "enabled": false
+    }
+  ],
+  "official_theme": {
+    "title": "GOATUNIVERSE",
+    "designation": "Official Theme of GOAT Universe \u2014 supplied by founder",
+    "source": "assets/goatville/official-theme.mp4",
+    "duration_seconds": 338.36,
+    "development_preview_enabled": true,
+    "commercial_clearance": "not independently documented",
+    "autoplay": false,
+    "preload": "none",
+    "web_derivative": "96 kbps AAC-LC in fast-start MP4; audio only, embedded cover and metadata removed"
+  }
+}
