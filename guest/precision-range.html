@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>GOAT TEE — Precision Range</title><link rel="stylesheet" href="precision-range.css"></head>
+<body><main><div class="overline">GOATVILLE / GOAT TEE / PRECISION RANGE</div>
+<div class="meta"><strong>THREE-HOLE CHALLENGE</strong><strong id="round">HOLE 1 / 3</strong></div>
+<h1 id="headline" tabindex="-1">THINK. AIM. SWING.</h1><p id="prompt">The range is getting ready. Control your angle and swing strength. Compensate for the breeze to land near the target.</p>
+<div class="layout"><div>
+<div class="green" role="img" aria-label="Illustrated green with target rings and a golf ball"><div class="outer-ring"></div><div class="inner-ring"></div><span class="flag" aria-hidden="true">⚑</span><span class="ball" id="ball" aria-hidden="true"></span></div>
+<div class="stats"><span id="breeze">BREEZE: +4°</span><span id="distance">DISTANCE: 64</span></div></div>
+<div class="controls"><label for="aim">Aim <strong id="aim-output">0°</strong></label><input id="aim" type="range" min="-30" max="30" value="0" step="1">
+<label for="strength">Swing strength <strong id="strength-output">60%</strong></label><input id="strength" type="range" min="0" max="100" value="60" step="1">
+<p class="feedback" id="feedback" role="status" aria-live="polite">Three holes. No stopwatch. Take your shot.</p>
+<button id="swing" type="button" disabled>TAKE THE SHOT →</button>
+<button id="advance" type="button" hidden disabled>NEXT HOLE →</button>
+</div></div>
+<p class="fine">An original recreational precision challenge. Scores stay within this session and never affect official GOAT Games rankings, BAAS or GPI.</p>
+</main><script src="precision-range.js"></script></body></html>

@@ -7,11 +7,14 @@ import { configuration } from './config.mjs';
 import { checkout, paymentRecord, verifiedStripeEvent } from './billing.mjs';
 import { publicCatalog } from './rules/goat-games.mjs';
 import { bullpenAsset } from './bullpen/routes.mjs';
+import { competitionAsset } from './games/routes.mjs';
+import { publicSiteAsset } from './public-site.mjs';
+import { createRequestLimiter } from './security/request-limiter.mjs';
 
 export async function application(config = configuration()) {
   const db = config.mode === 'local' ? await new LocalDatabase(config.localPath).init() : new SupabaseDatabase(config);
   const auth = config.mode === 'local' ? new LocalAuth(db) : new SupabaseAuth(config);
-  const limits = new Map();
+  const limiter = createRequestLimiter();
   const server = createServer(async (req, res) => {
     const headers = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store',
       'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer',
@@ -21,8 +24,13 @@ export async function application(config = configuration()) {
     try {
       if (req.headers.origin && req.headers.origin !== config.appOrigin) return respond(403, { error: 'origin_denied' });
       const url = new URL(req.url, 'http://localhost');
+      if (config.publicSiteEnabled === true && await publicSiteAsset(req, res, headers)) return;
       if (await bullpenAsset(req, res, url.pathname, headers)) return;
       if (req.method === 'GET' && url.pathname === '/goat-games') return respond(200, publicCatalog());
+      if (req.method === 'GET' && (url.pathname.startsWith('/games') || ['/portal/bracket.mjs','/portal/forms.mjs','/rules/goat-games.mjs'].includes(url.pathname))) {
+        const asset = await competitionAsset(url.pathname);
+        if (asset) { headers['Content-Type'] = asset.type; res.writeHead(200, headers); return res.end(asset.content); }
+      }
       if (req.method === 'GET' && url.pathname === '/health') {
         try { return respond(200, { status: 'ok', environment: config.appEnv, database: config.mode, ...(await db.health()), payments_enabled: config.paymentsEnabled, auth_email_enabled: config.authEmailEnabled }); }
         catch { return respond(503, { status: 'unavailable', environment: config.appEnv }); }
@@ -45,13 +53,10 @@ export async function application(config = configuration()) {
         res.writeHead(200, headers); return res.end(content);
       }
       if (req.method !== 'POST') return respond(404, { error: 'route_not_found' });
+      // Limit by the real socket peer. Do not trust visitor-supplied forwarding
+      // headers to create unlimited identities. Bounded memory with periodic sweep.
       const key = req.socket.remoteAddress;
-      const now = Date.now();
-      for (const [k, value] of limits) if (value.until <= now) limits.delete(k);
-      if (!limits.has(key) && limits.size >= 10000) return respond(429, { error: 'rate_limit' });
-      const rate = limits.get(key) || { count: 0, until: now + 60000 };
-      limits.set(key, rate);
-      if (++rate.count > 120) return respond(429, { error: 'rate_limit' });
+      if (!limiter.allow(key, 'post')) return respond(429, { error: 'rate_limit' });
       let size = 0; const chunks = [];
       const max = url.pathname === '/billing/webhook' ? 262144 : 32768;
       for await (const chunk of req) { size += chunk.length; if (size > max) throw new Error('request_too_large'); chunks.push(chunk); }
@@ -65,9 +70,7 @@ export async function application(config = configuration()) {
       const p = JSON.parse(raw.toString('utf8'));
       if (p === null || Array.isArray(p) || typeof p !== 'object') throw new Error('invalid_request');
       if (['/auth/signup','/auth/login','/auth/refresh','/auth/recover','/auth/confirm','/auth/reset','/auth/password'].includes(url.pathname)) {
-        const authKey = `auth:${key}`;
-        const authRate = limits.get(authKey) || { count: 0, until: now + 60000 }; limits.set(authKey, authRate);
-        if (++authRate.count > 10) return respond(429, { error: 'rate_limit' });
+        if (!limiter.allow(key, 'auth')) return respond(429, { error: 'rate_limit' });
         if(url.pathname!=='/auth/password')return respond(url.pathname.endsWith('signup') ? 201 : 200, await auth[url.pathname.split('/').at(-1)](p));
       }
       const token = req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.slice(7) : null;

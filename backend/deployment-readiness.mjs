@@ -7,11 +7,13 @@ import {SupabaseAuth} from './auth.mjs';
 export async function deploymentReadiness(env=process.env,fetchImpl=fetch) {
  const report={status:'blocked',checks:[],pending:[]};
  const check=(name,status,detail)=>report.checks.push({name,status,...(detail?{detail}:{})});
- const missing=['SUPABASE_URL','SUPABASE_PUBLISHABLE_KEY'].filter(k=>!env[k]);
+ const missing=['SUPABASE_URL','SUPABASE_PUBLISHABLE_KEY','APP_ORIGIN'].filter(k=>!env[k]);
  if(missing.length){check('configuration','blocked','Missing '+missing.join(', '));return report;}
  let cfg;
  try{
-  if(env.APP_ENV==='production'||env.NODE_ENV==='production')throw new Error('development_verification_only');
+  // NODE_ENV controls runtime optimization; APP_ENV controls release safety.
+  // Require an explicit staging target when running the production Node image.
+  if(env.APP_ENV==='production'||env.NODE_ENV==='production'&&env.APP_ENV!=='staging')throw new Error('development_verification_only');
   if(env.PAYMENTS_ENABLED==='true')throw new Error('payments_must_remain_disabled');
   cfg=configuration({...env,BACKEND_MODE:'supabase',APP_ENV:env.APP_ENV||'staging'});
  }catch(error){check('configuration','blocked',error.message);return report;}
@@ -29,10 +31,12 @@ export async function deploymentReadiness(env=process.env,fetchImpl=fetch) {
  }catch{check('application_schema','failed','Schema v4 health endpoint unavailable or incorrect');}
  try{check('anonymous_rpc_denied',await deniedRPC('me')?'passed':'failed');}
  catch{check('anonymous_rpc_denied','failed','Transport unavailable');}
+ let firstUser;
  if(env.GOAT_ACCEPTANCE_ACCESS_TOKEN){
   try{
    const user=await auth.user(env.GOAT_ACCEPTANCE_ACCESS_TOKEN),me=await db.rpc('goat_query',{op:'me'},user.databaseIdentity);
    if(me.profile?.user_id!==user.id||!Array.isArray(me.roles)||me.roles.length)throw new Error('ordinary_acceptance_account_required');
+   firstUser=user;
    check('confirmed_member_rpc','passed');
    const r=await fetchImpl(cfg.url+'/rest/v1/goat_profiles?select=user_id&limit=2',{method:'GET',headers:{apikey:cfg.publishableKey,Authorization:`Bearer ${user.databaseIdentity}`},signal:AbortSignal.timeout(15000)});
    const rows=await r.json();
@@ -41,6 +45,24 @@ export async function deploymentReadiness(env=process.env,fetchImpl=fetch) {
    check('member_executive_rpc_denied',await deniedRPC('executive_report',user.databaseIdentity)?'passed':'failed');
   }catch{check('member_auth_and_rls','failed','Provide a confirmed ordinary member session on the dedicated development project');}
  }else report.pending.push('Confirmed ordinary-member acceptance access token for hosted Auth/RLS checks');
+ if(firstUser && env.GOAT_SECOND_ACCEPTANCE_ACCESS_TOKEN){
+  try {
+   const second=await auth.user(env.GOAT_SECOND_ACCEPTANCE_ACCESS_TOKEN);
+   const me=await db.rpc('goat_query',{op:'me'},second.databaseIdentity);
+   if(second.id===firstUser.id || me.profile?.user_id!==second.id || !Array.isArray(me.roles) || me.roles.length)throw new Error('distinct_ordinary_accounts_required');
+   // An attacker supplies the other account's ID through both API paths.
+   // These probes are read-only and cannot alter profiles or create accounts.
+   for(const [owner,other] of [[firstUser,second],[second,firstUser]]){
+    if(!/^[0-9a-f-]{36}$/i.test(other.id))throw new Error('invalid_account_id');
+    const own=await db.rpc('goat_query',{op:'me',user_id:other.id},owner.databaseIdentity);
+    if(own.profile?.user_id!==owner.id)throw new Error('caller_identity_override');
+    const r=await fetchImpl(cfg.url+'/rest/v1/goat_profiles?select=user_id&user_id=eq.'+encodeURIComponent(other.id),{method:'GET',headers:{apikey:cfg.publishableKey,Authorization:`Bearer ${owner.databaseIdentity}`},signal:AbortSignal.timeout(15000)});
+    const rows=await r.json();
+    if(!r.ok||!Array.isArray(rows)||rows.length)throw new Error('cross_account_profile_exposure');
+   }
+   check('two_member_account_isolation','passed');
+  }catch{check('two_member_account_isolation','failed','Distinct ordinary members must deny cross-account profile reads and identity overrides');}
+ }else report.pending.push('Second distinct ordinary-member acceptance access token for bidirectional cross-account checks');
  report.pending.push('Hosted email signup/confirmation/recovery acceptance and revoked-session tests','Mobile/desktop visual browser acceptance','Backups, monitoring, HTTPS gateway and production launch review');
  report.status=report.checks.some(c=>c.status==='failed')?'failed':report.pending.length?'incomplete':'passed';
  return report;

@@ -1,0 +1,232 @@
+{
+  "operation": "One Universe",
+  "captured_at": "2026-10-16T00:19:04.328924+00:00",
+  "base_main": "3667f347f99415a61ec365ee0ad5ce9a2b3e08e5",
+  "branches": [
+    {
+      "branch": "codex/backend-foundations",
+      "sha": "705009d75306c8352f7ccdfee9affe5f28d6ffe2",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": true,
+      "disposition": "Included via main and all backend descendants."
+    },
+    {
+      "branch": "main",
+      "sha": "3667f347f99415a61ec365ee0ad5ce9a2b3e08e5",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": true,
+      "disposition": "Preserved as base. No push, merge or production change."
+    },
+    {
+      "branch": "work/commercial-crm",
+      "sha": "aa61f90a06e1d58aa433030df4769197fe5f4206",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": true,
+      "disposition": "Included via main."
+    },
+    {
+      "branch": "work/controlled-remediation-pr35-20261015",
+      "sha": "41a0a08c707ea748d5c0ad45ac33e051ffb864ad",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Integration base; migration hold/payment review safeguards retained."
+    },
+    {
+      "branch": "work/goat-universe-bullpen-20261014",
+      "sha": "c8b120dfc0f81bcc480408d6eee914893bd6ad84",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": true,
+      "disposition": "Included via main; private routes and no implicit founder promotion."
+    },
+    {
+      "branch": "work/goatville-browser-acceptance-20261015",
+      "sha": "4ec4bd5decbbd2f54a4037cc815dad8fa05ab52e",
+      "in_integration_ancestry": false,
+      "in_main_ancestry": false,
+      "disposition": "All three changed harness/server/test files ported exactly; original branch unchanged."
+    },
+    {
+      "branch": "work/goatville-playground-20261015",
+      "sha": "fcb6019358ff13eb2426368186eef040cd49d9ba",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Superseded by Tiffany unified descendant; all unique attraction pages retained."
+    },
+    {
+      "branch": "work/kodak-luxury-typography-20261015",
+      "sha": "6cc82a4f9b5a0c7b81c968c9e04fa763177b1448",
+      "in_integration_ancestry": false,
+      "in_main_ancestry": false,
+      "disposition": "Same visitor content as merged operation branch; integration uses operation snapshot."
+    },
+    {
+      "branch": "work/kodak-operation-goatville-20261015",
+      "sha": "cc32fabaa4436aacd4cc029b1c0587cb315dd02a",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Selected cinematic root, sports rooms, resort, engines, media and guest keepsakes."
+    },
+    {
+      "branch": "work/launch-readiness",
+      "sha": "c56ea9b28fab72a598a115475a60e7a1fa271ad3",
+      "in_integration_ancestry": false,
+      "in_main_ancestry": false,
+      "disposition": "Superseded by account/security/staging descendants."
+    },
+    {
+      "branch": "work/member-navigation-race-20261014",
+      "sha": "6011f964aa6c5cfde758bedfbd5b031c2039ee6a",
+      "in_integration_ancestry": false,
+      "in_main_ancestry": false,
+      "disposition": "Navigation regression fix retained through reviewed member-navigation implementation."
+    },
+    {
+      "branch": "work/operation-goatville-20261015",
+      "sha": "8a5654e9449a4109ba27368056824b156175bac2",
+      "in_integration_ancestry": false,
+      "in_main_ancestry": false,
+      "disposition": "Separate older reaction-drill experiment; not substituted for later strategy/sports experiences. Original branch retained."
+    },
+    {
+      "branch": "work/pope-account-security-20261014",
+      "sha": "586c1ebfc6b2e31e53d3fa7c0791632c0fd572e8",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Included via staging; shared session/client and account guards."
+    },
+    {
+      "branch": "work/pope-bounded-api-abuse-protection-20261015",
+      "sha": "c8cc7458be138f1a95fb0e13b8c5999e05c3d553",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Included; request limits and five-game gate."
+    },
+    {
+      "branch": "work/pope-bullpen-readiness-20261015",
+      "sha": "5c19947fb94d40af3c49624cec544c9725c56f57",
+      "in_integration_ancestry": false,
+      "in_main_ancestry": false,
+      "disposition": "Unique content included via main/Bullpen gate; merge-only ancestry differs."
+    },
+    {
+      "branch": "work/pope-field-vision-sandbox-review-20261015",
+      "sha": "86544c979d13e8b370e6aecc8b6991d99f67fab6",
+      "in_integration_ancestry": false,
+      "in_main_ancestry": false,
+      "disposition": "Exact-path catalog present in newer Tiffany design; strict loaded-resource parent-origin check ported and extended to Spotlight. Original branch retained."
+    },
+    {
+      "branch": "work/pope-five-game-release-gates-20261015",
+      "sha": "f9a50e6af95bb882128ddf5c33bb8347e00b619a",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Included via bounded API branch."
+    },
+    {
+      "branch": "work/pope-independent-preview-20261015",
+      "sha": "1ed4612e09343ce112bc072889f722fecdd53210",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Included via static-release branch; old four-page recipe is tooling, not this combined app."
+    },
+    {
+      "branch": "work/pope-isolated-staging-20261014",
+      "sha": "0fc2c9e67bb2b2e6b216c3e4c1c741525de7c9ce",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Included with remediation hold/protected-project guards preserved."
+    },
+    {
+      "branch": "work/pope-member-navigation-integration-20261014",
+      "sha": "f74146196a72082819a00c6244a679b15e4a6da3",
+      "in_integration_ancestry": false,
+      "in_main_ancestry": false,
+      "disposition": "Selected participant implementation; preserves shared client and generation guards. Remediation session regressions adapted test-only."
+    },
+    {
+      "branch": "work/pope-operation-goatville-20261015",
+      "sha": "007ecfc60561644f006238c69f9d61616d6725cc",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Included via static-release branch."
+    },
+    {
+      "branch": "work/pope-reviewed-attraction-catalog-20261015",
+      "sha": "1971c86d0b09e75b185ad7776d5337a81f49f556",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Included via static-release branch."
+    },
+    {
+      "branch": "work/pope-static-release-manifest-20261015",
+      "sha": "4595ef2b2abbb8e3058df1a626fd9ec1c70f8f8b",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Included export, checksum and recovery tooling."
+    },
+    {
+      "branch": "work/qa-security",
+      "sha": "fc8b02cae0124f11e81bea1295f3ac57a23b3ee7",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Selected five-game backend; unchanged reviewed migration sources imported locally."
+    },
+    {
+      "branch": "work/session-safety-hardening-20261014",
+      "sha": "b743f1eb5b7724814b32e541f31efa24d722ddf7",
+      "in_integration_ancestry": false,
+      "in_main_ancestry": false,
+      "disposition": "Superseded by reviewed account/staging/member-navigation implementations."
+    },
+    {
+      "branch": "work/tiffany-bullpen-integration-gate-20261015",
+      "sha": "d8ef2209f113394380da52c2b02964b1bcdc7cd7",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": true,
+      "disposition": "Included via main, with controlled-remediation updates retained."
+    },
+    {
+      "branch": "work/tiffany-city-wayfinding-20261015",
+      "sha": "0b5e9c4a834ca000be9482795598a5219464fa07",
+      "in_integration_ancestry": false,
+      "in_main_ancestry": false,
+      "disposition": "Superseded by Tiffany unified city/district implementation."
+    },
+    {
+      "branch": "work/tiffany-goat-games-homepage-20261014",
+      "sha": "b794a151c32587d9fa2a245543131f5758fe351f",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Retained through named stadium entrance; Kodak chosen as canonical arrival."
+    },
+    {
+      "branch": "work/tiffany-guest-arcade-media-20261015",
+      "sha": "912e957b2ab46ffc64cf2392c28c12a28943392c",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Included via unified experience; local-file cinema remains available."
+    },
+    {
+      "branch": "work/tiffany-stadium-entrance-20261015",
+      "sha": "9716d042267b2d98e656c2938a784d6be0950717",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Included via unified experience, original home preserved at goatville-stadium.html."
+    },
+    {
+      "branch": "work/tiffany-unified-experience-20261015",
+      "sha": "b0184729c39a75802097e2fe49c8541efb7aef06",
+      "in_integration_ancestry": true,
+      "in_main_ancestry": false,
+      "disposition": "Selected city, stadium, cinema, Field Vision, Spotlight, parent shells and shared navigation."
+    },
+    {
+      "branch": "work/website-readiness-audit",
+      "sha": "baedc91cea34162f721633a19acd7e05d23a7331",
+      "in_integration_ancestry": false,
+      "in_main_ancestry": false,
+      "disposition": "Earlier source audit; superseded in candidate by integrated HTTP/hash/navigation and combined regression checks. Original branch retained."
+    }
+  ],
+  "note": "Branch heads are source candidates; working claims apply only to the combined tested candidate. No source branch was overwritten. No original hosted data was migrated."
+}

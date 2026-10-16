@@ -11,8 +11,13 @@
     "test": "node --test backend/test/*.test.mjs",
     "test:bullpen": "node --test backend/test/bullpen*.test.mjs",
     "check:bullpen": "node --check backend/bullpen/ui.mjs && node --check backend/bullpen/routes.mjs && node --check backend/bullpen/client.mjs && node --check backend/scripts/bullpen-client.mjs && node --check backend/scripts/bullpen-bind-local.mjs",
-    "check": "node --check backend/server.mjs && node --check backend/database.mjs && node --check backend/auth.mjs && node --check backend/console/play.mjs && node --check backend/portal/manage.mjs && node --check backend/portal/forms.mjs && node --check backend/console/crm.mjs && node --check backend/portal/bracket.mjs && node --check backend/portal/callback.mjs && node --check backend/deployment-readiness.mjs && node --check backend/deployment-target.mjs",
-    "check:deployment": "node backend/scripts/check-deployment.mjs"
+    "check": "node --check backend/server.mjs && node --check backend/database.mjs && node --check backend/auth.mjs && node --check backend/console/play.mjs && node --check backend/portal/manage.mjs && node --check backend/portal/forms.mjs && node --check backend/console/crm.mjs && node --check backend/portal/bracket.mjs && node --check backend/portal/callback.mjs && node --check backend/deployment-readiness.mjs && node --check backend/deployment-target.mjs && node --check backend/scripts/container-health.mjs && node --check backend/management-status.mjs && node --check backend/staging-infrastructure.mjs",
+    "check:deployment": "node backend/scripts/check-deployment.mjs",
+    "check:management": "node backend/scripts/check-management-status.mjs",
+    "check:staging-infrastructure": "node backend/scripts/check-staging-infrastructure.mjs",
+    "universe": "node backend/scripts/start-universe.mjs",
+    "test:visitor": "node --test tests/*.test.mjs tests/*.test.cjs",
+    "test:universe": "node --test --test-concurrency=2 backend/test/*.test.mjs tests/*.test.mjs tests/*.test.cjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.9"

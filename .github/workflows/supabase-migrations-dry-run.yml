@@ -16,6 +16,13 @@ jobs:
         with:
           persist-credentials: false
 
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Enforce controlled-remediation migration hold
+        run: node backend/scripts/validate-migration-hold.mjs
+
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
@@ -31,10 +38,13 @@ jobs:
             echo "::error::Configure the development environment token, project reference, and database password."
             exit 1
           fi
-          if [ "$SUPABASE_DEV_PROJECT_REF" = "opvoemihfyxidzbdyory" ]; then
-            echo "::error::The existing production project cannot be used for development."
-            exit 1
-          fi
+          node --input-type=module <<'JS'
+          import {isProtectedProject} from './backend/protected-projects.mjs';
+          if (!/^[a-z]{20}$/.test(process.env.SUPABASE_DEV_PROJECT_REF) || isProtectedProject(process.env.SUPABASE_DEV_PROJECT_REF)) {
+            console.error('Protected or invalid development project target.');
+            process.exitCode=1;
+          }
+          JS
 
       - name: Link through the IPv4-capable session pooler
         env:

@@ -1,0 +1,28 @@
+name: Competition workspace regression suite
+on:
+  push:
+    branches: ['work/qa-security']
+  pull_request:
+    branches: ['codex/backend-foundations']
+    paths: ['backend/**', 'supabase/migrations/**', 'package*.json', '.github/workflows/competition-workspace-ci.yml']
+permissions:
+  contents: read
+jobs:
+  competition-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run check
+      - name: Check every competition UI module
+        run: |
+          for module in backend/games/*.mjs; do node --check "$module"; done
+      - name: Run complete automated suite
+        run: npm test
