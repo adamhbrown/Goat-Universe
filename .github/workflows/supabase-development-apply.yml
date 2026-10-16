@@ -38,6 +38,8 @@ jobs:
           cache: npm
       - name: Validate branch, exact project confirmation and isolated credentials
         run: node backend/scripts/validate-dev-deployment.mjs
+      - name: Enforce controlled-remediation migration hold
+        run: node backend/scripts/validate-migration-hold.mjs
       - run: npm ci --ignore-scripts
       - run: npm run check
       - run: npm test

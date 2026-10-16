@@ -1,6 +1,6 @@
 // Non-destructive hosted evidence checks. No registration, polling, snapshot,
 // messages, founder binding, commands, credentials changes or provider writes.
-const protectedProjects=new Set(['opvoemihfyxidzbdyory','xcvptuqqtcebxorqlnsv','lbzdmniuskyytwoaeyjn','tyuhnlmrczwekqjnjdcw']);
+import {isProtectedProject} from '../protected-projects.mjs';
 const agentSeats=['codex','pope','tiffany'];
 async function body(response,maxBytes=131072) {
   const chunks=[];let size=0;
@@ -20,7 +20,7 @@ export async function bullpenReadiness(env=process.env,fetchImpl=fetch) {
     if (parsed.protocol!=='https:' || parsed.origin!==env.APP_ORIGIN || parsed.username || parsed.password ||
         ['localhost','127.0.0.1','[::1]'].includes(parsed.hostname)) throw new Error();
     if (env.APP_ENV!=='staging' || env.BACKEND_MODE!=='supabase' || env.AUTH_EMAIL_ENABLED!=='false' || env.PAYMENTS_ENABLED!=='false') throw new Error();
-    if (!/^[a-z]{20}$/.test(env.BULLPEN_STAGING_PROJECT_REF || '') || protectedProjects.has(env.BULLPEN_STAGING_PROJECT_REF)) throw new Error();
+    if (!/^[a-z]{20}$/.test(env.BULLPEN_STAGING_PROJECT_REF || '') || isProtectedProject(env.BULLPEN_STAGING_PROJECT_REF)) throw new Error();
     const token=env.BULLPEN_ACCEPTANCE_ACCESS_TOKEN;
     if (token!==undefined && (typeof token!=='string' || !token || /\s/.test(token) || /^(?:sb_secret_|sb_publishable_|sbp_|sk-|ghp_|github_pat_)/.test(token))) throw new Error();
     if (token?.startsWith('eyJ')) {
