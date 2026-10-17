@@ -8,12 +8,22 @@ import {application} from '../server.mjs';
 const digest=b=>createHash('sha256').update(b).digest('hex');
 const root=new URL('../../',import.meta.url);
 const files=JSON.parse(await readFile(new URL('../public-files.json',import.meta.url),'utf8'));
-async function start(localPath) {
- const app=await application({mode:'local',appEnv:'development',localPath,appOrigin:'http://fixture.invalid',paymentsEnabled:false,authEmailEnabled:false,publicSiteEnabled:true,tiers:{}});
+async function start(localPath,publicSiteEnabled=true) {
+ const app=await application({mode:'local',appEnv:'development',localPath,appOrigin:'http://fixture.invalid',paymentsEnabled:false,authEmailEnabled:false,publicSiteEnabled,tiers:{}});
  await new Promise(resolve=>app.server.listen(0,'127.0.0.1',resolve));
  const base=`http://127.0.0.1:${app.server.address().port}`;
  return {app,base,async stop(){app.server.closeAllConnections();await app.close();}};
 }
+test('private workspaces retain GST assets while visitor publishing is off',async t=>{
+ const h=await start(undefined,false);t.after(()=>h.stop());
+ assert.equal((await fetch(h.base+'/')).status,404);
+ for(const [file,type] of [['gst-clock.js','text/javascript'],['gst-clock.css','text/css']]) {
+  const response=await fetch(h.base+'/experience/'+file);assert.equal(response.status,200);
+  assert.ok(response.headers.get('content-type').startsWith(type));
+  assert.equal((await fetch(h.base+'/experience/'+file,{method:'HEAD'})).status,200);
+ }
+ for(const file of ['universe-shell.js','../backend/server.mjs','%67st-clock.js'])assert.equal((await fetch(h.base+'/experience/'+file)).status,404,file);
+});
 test('one entry point serves every explicitly public payload, preserves media bytes/ranges and denies repository files',async t=>{
  const h=await start();t.after(()=>h.stop());
  for(const file of files) {

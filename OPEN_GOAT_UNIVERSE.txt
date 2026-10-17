@@ -45,3 +45,8 @@ Do not expose this development password-authentication server to real users.
 Code integration and local tests do not substitute for real browser/iPhone,
 accessibility, hosted security or backup-restore acceptance. The original website,
 Publications and provider resources were not deployed or modified by this work.
+
+LATE-NIGHT FOUNDER REVIEW (October 17, 2026)
+See docs/LATE_NIGHT_FOUNDER_WALKTHROUGH_20261017.md for exactly what to click,
+and docs/LATE_NIGHT_REVIEW_20261017.md for fresh evidence and release gates.
+Public world naming is Goatville, as approved by Adam; GST follows New York DST.

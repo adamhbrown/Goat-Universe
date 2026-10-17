@@ -1,3 +1,4 @@
+import {formatGST} from '../../experience/gst-time.js';
 import {leagueOfGreatnessSemifinalMatchups} from '../rules/goat-games.mjs';
 
 export async function renderFantasy(data,standings,ctx){
@@ -41,7 +42,7 @@ export async function renderFantasy(data,standings,ctx){
  if(owner&&l.status==='open')ctx.importer(schedule,{kind:'fantasy_results',title:'Review verified ESPN score import',data});
  for(const week of [...new Set(matchups.map(m=>m.week))].sort((a,b)=>a-b)){
   const section=details(schedule,'Week '+week+(week>14?' · Playoffs':''));const rows=matchups.filter(m=>m.week===week);
-  table(section,['Home','Away','Official start','Home score','Away score'],rows.map(m=>[name(m.home_id),name(m.away_id),new Date(m.starts_at).toLocaleString(),m.home_score,m.away_score]));
+  table(section,['Home','Away','Official start','Home score','Away score'],rows.map(m=>[name(m.home_id),name(m.away_id),formatGST(m.starts_at),m.home_score,m.away_score]));
   if(owner&&l.status==='open')for(const m of rows){
    const result=details(section,name(m.home_id)+' vs '+name(m.away_id));
    if(m.home_score===null&&Date.parse(m.starts_at)<=Date.parse(data.server_time))form(result,'Sourced ESPN score import',[field('home_score','Home source score','number','',{required:'',min:0,step:'any'}),field('away_score','Away source score','number','',{required:'',min:0,step:'any'}),field('source_includes_home_bonus','Home score already includes the official two-point advantage.','checkbox',true),field('source_url','Official score source','url','',{required:''}),field('verified','I verified these final scores against the source.','checkbox',false,{required:''})],'Save verified scores',p=>command({op:'fantasy_result',matchup_id:m.id,...p}));

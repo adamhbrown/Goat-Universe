@@ -1,0 +1,45 @@
+{
+  "scope": "Local only; no hosted or physical device acceptance",
+  "node": "v24.19.0",
+  "installation": "npm ci --ignore-scripts --cache /tmp/goatverse-npm-cache",
+  "tests": {
+    "command": "npm run test:universe",
+    "passed": 370,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "duration_ms": 64480.363282
+  },
+  "syntax": "pass",
+  "whitespace": "pass",
+  "integration_browser": {
+    "result": "passed",
+    "layouts": 52
+  },
+  "arrival_sports_browser": {
+    "result": "passed",
+    "layouts": 72,
+    "interaction_groups": 27
+  },
+  "resort_browser": {
+    "result": "passed",
+    "layouts": 120,
+    "interaction_groups": 19
+  },
+  "migration_hold": {
+    "exit_code": 1,
+    "result": "expected protective refusal"
+  },
+  "offline_gate": {
+    "exit_code": 2,
+    "result": "blocked_pending_approval_and_hosted_acceptance"
+  },
+  "pages": {
+    "build_type": "legacy",
+    "source": {
+      "branch": "main",
+      "path": "/"
+    },
+    "https_enforced": true
+  }
+}

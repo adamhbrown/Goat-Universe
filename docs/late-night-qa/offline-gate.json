@@ -1,0 +1,46 @@
+{
+  "status": "blocked_pending_approval_and_hosted_acceptance",
+  "scope": "offline_source_only",
+  "checks": [
+    {
+      "name": "bullpen_required_artifacts",
+      "state": "present"
+    },
+    {
+      "name": "staging_required_artifacts",
+      "state": "present"
+    },
+    {
+      "name": "host_required_artifacts",
+      "state": "present"
+    },
+    {
+      "name": "prototype_migration_hashes",
+      "state": "match"
+    },
+    {
+      "name": "extra_migrations",
+      "state": "review_required",
+      "detail": "20261014153807_series_competitions.sql, 20261014160000_fantasy_records.sql, 20261014163651_championships_and_deadlines.sql"
+    },
+    {
+      "name": "combined_package_scripts",
+      "state": "present"
+    },
+    {
+      "name": "reviewed_combined_commit",
+      "state": "not_frozen"
+    }
+  ],
+  "pending": [
+    "Kodak combine application and reviewed PR #8 prerequisites, resolve package/workflow/shared-file conflicts, run full CI",
+    "Verify exact combined Git commit, migration hashes and container artifact",
+    "Confirm new isolated staging project quota and cost without touching preserved projects",
+    "Approve a named HTTPS Node host, cost, identity/secret plan and rollback",
+    "Complete hosted Auth, RLS, seat provisioning, revocation, backups and desktop/iPhone Safari checks",
+    "Verify supported AI workstreams individually; historical receipt is not proof of connection",
+    "Separate explicit CEO authorization required for migration, provider changes, merge and deployment"
+  ],
+  "connections_verified": 0,
+  "mutations_performed": 0
+}

@@ -1,3 +1,4 @@
+import {formatGST} from '../../experience/gst-time.js';
 export function serverClock(serverTime,elapsedNow){
  const base=Date.parse(serverTime),started=elapsedNow();let elapsed=0;
  return ()=>{elapsed=Math.max(elapsed,elapsedNow()-started,0);return base+elapsed;};
@@ -21,7 +22,7 @@ export function deadlineGuard({document,form,deadline,items,now,current,schedule
   }left=upcoming.length?Math.min(...upcoming):0;}
   locked=locked||!Number.isFinite(left)||left<=0;
   if(locked){submit.disabled=true;status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.textContent=Number.isFinite(left)?'Selections locked. Unsaved edits were not submitted.':'Deadline unavailable. Refresh the competition before submitting.';if(timer)cancel(timer);}
-  else status.textContent=(items?'Next series closes in ':'Closes in ')+remainingText(Math.ceil(left/1000))+(items?' · '+closedItems.size+' locked':' · '+new Date(cutoff).toLocaleString());
+  else status.textContent=(items?'Next series closes in ':'Closes in ')+remainingText(Math.ceil(left/1000))+(items?' · '+closedItems.size+' locked':' · '+formatGST(cutoff));
   return locked;
  }
  function tick(){if(!update()&&!stopped)timer=schedule(tick,1000);}

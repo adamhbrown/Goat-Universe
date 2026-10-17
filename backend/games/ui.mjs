@@ -1,3 +1,4 @@
+import {formatGST} from '../../experience/gst-time.js';
 import {renderBracket} from '../portal/bracket.mjs';
 import {renderNfl} from './nfl.mjs';
 import {renderSeries} from './series.mjs';
@@ -119,7 +120,7 @@ export async function mountGames({document,location,history,createClient,fetchPu
    else if(key==='first-and-baa')await renderNfl(data,standings,ctx);
    else if(key==='league-of-greatness')await renderFantasy(data,standings,ctx);
    else await renderSeries(data,standings,ctx);
-   if(key!=='horns-and-hoops'){const archive=ctx.details(panel,'Competition history');for(const h of historyRows){const snap=ctx.details(archive,h.reason+' · '+new Date(h.recorded_at).toLocaleString());ctx.table(snap,['Rank','Competitor','Points / points for'],h.snapshot.map(r=>[r.rank,r.display_name||r.name,r.points??r.points_for]));}}
+   if(key!=='horns-and-hoops'){const archive=ctx.details(panel,'Competition history');for(const h of historyRows){const snap=ctx.details(archive,h.reason+' · '+formatGST(h.recorded_at));ctx.table(snap,['Rank','Competitor','Points / points for'],h.snapshot.map(r=>[r.rank,r.display_name||r.name,r.points??r.points_for]));}}
    if(data.finish_certification)panel.append(node('p','Finishing positions certified from '+data.finish_certification.source_reference+'.'));
    if(data.league.status==='final'&&data.league.owner_id===account.profile.user_id&&!data.finish_certification){
     const cert=ctx.details(panel,'Certify official finishing positions for the annual championship');cert.append(node('p','Known engine places cannot be changed. Unresolved fantasy places require a sourced official order. No BAAS conversion is assumed.'));

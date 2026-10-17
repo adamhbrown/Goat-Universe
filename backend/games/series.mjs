@@ -1,3 +1,4 @@
+import {formatGST} from '../../experience/gst-time.js';
 import {candidates} from '../portal/bracket.mjs';
 
 export async function renderSeries(data,standings,ctx){
@@ -27,7 +28,7 @@ export async function renderSeries(data,standings,ctx){
  }
  for(const sport of sports){
   const group=details(panel,sport+' series');group.open=true;const rows=events.filter(e=>e.sport===sport);
-  table(group,['Series','Round','Entrants / feeders','Pick lock','Winner'],rows.map(e=>[e.code,e.round,(e.home_team||events.find(n=>n.id===e.home_from)?.code||'Feeder')+' vs '+(e.away_team||events.find(n=>n.id===e.away_from)?.code||'Feeder'),new Date(e.lock_at).toLocaleString(),e.winner||'Awaiting sourced result']));
+  table(group,['Series','Round','Entrants / feeders','Pick lock','Winner'],rows.map(e=>[e.code,e.round,(e.home_team||events.find(n=>n.id===e.home_from)?.code||'Feeder')+' vs '+(e.away_team||events.find(n=>n.id===e.away_from)?.code||'Feeder'),formatGST(e.lock_at),e.winner||'Awaiting sourced result']));
   if(entered&&l.status==='open'){
    const unlocked=rows.filter(e=>Date.parse(e.lock_at)>now);
    if(unlocked.length)form(group,'Your '+sport+' selections',unlocked.map(e=>select('team_'+e.id,e.code+' · '+e.round,[['','Keep unchanged / no selection'],...candidates(events,e.id).map(t=>[t,t])],data.series_picks?.find(k=>k.user_id===account.profile.user_id&&k.event_id===e.id)?.team||'',{})),'Save '+sport+' picks',p=>{const picks=unlocked.flatMap(e=>p['team_'+e.id]&&Date.parse(e.lock_at)>ctx.serverNow()?[{event_id:e.id,team:p['team_'+e.id]}]:[]);if(!picks.length)throw new Error('Choose at least one series winner before its deadline.');return command({op:'series_submit',league_id:l.id,picks});},{deadlines:Object.fromEntries(unlocked.map(e=>['team_'+e.id,e.lock_at]))});

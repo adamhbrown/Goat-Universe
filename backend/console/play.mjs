@@ -106,7 +106,7 @@ async function loadLeagues() {
 function addCell(row, value) { row.append(node('td', value)); }
 function formatDeadline(value) {
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? 'TBD' : date.toLocaleString();
+  return Number.isNaN(date.getTime()) ? 'TBD' : date.toLocaleString('en-US', {timeZone:'America/New_York'}) + ' GST';
 }
 async function openLeague(id) {
   const requestedView = ++leagueViewGeneration;

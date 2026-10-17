@@ -4,18 +4,18 @@
   'use strict';
   if(document.getElementById('gv-portal-dialog'))return;
   const pages=Object.freeze([
-    {path:'index.html',index:'00',title:'GOATVILLE ARRIVAL',desc:'The cinematic entrance, official theme and interactive world.',kind:'ENTER'},
-    {path:'play.html',index:'01',title:'SPORTS ROOMS',desc:'Five deeper fictional sports practice experiences.',kind:'PLAY'},
-    {path:'resort.html',index:'02',title:'THE RESORT',desc:'The resort circuit, Sports IQ and guest keepsakes.',kind:'EXPLORE'},
-    {path:'goatville-stadium.html',index:'03',title:'THE STADIUM',desc:'The preserved GOAT Games stadium entrance.',kind:'EXPLORE'},
-    {path:'/games',index:'04',title:'LEAGUE WORKSPACE',desc:'Authenticated entries, commissioner setup and competition records. Local development only.',kind:'COMPETE'},
-    {path:'/manage',index:'05',title:'MEMBER ACCOUNT',desc:'Register and manage your account on this development backend. No paid membership checkout.',kind:'ACCOUNT'},
-    {path:'goatville-city.html',index:'01',title:'GOATVILLE CITY',desc:'Enter the city. Explore seven connected districts.',kind:'EXPLORE'},
-    {path:'goat-games-play-lab.html',index:'02',title:'THE FIVE GOAT GAMES',desc:'Five sports. Five different interactive practice experiences.',kind:'PLAY'},
-    {path:'goatville.html',index:'03',title:'GOATVILLE PLAYGROUND',desc:'Meet the city, try arcade challenges and discover the passport.',kind:'PLAY'},
-    {path:'goatville-spotlight.html',index:'04',title:'SPOTLIGHT CIRCUIT',desc:'Five sports. Five strategy decisions. One guest challenge.',kind:'PLAY'},
-    {path:'goatville-field-vision.html',index:'05',title:'FIELD VISION',desc:'Take control of the fictional football decision room.',kind:'PLAY'},
-    {path:'goatville-cinema.html',index:'06',title:'THE CINEMATIC STUDIO',desc:'Rehearse GOATVILLE video and music with private local files.',kind:'WATCH'},
+    {path:'index.html',index:'00',title:'GOAT UNIVERSE ARRIVAL',desc:'The cinematic entrance and optional founder theme.',kind:'ENTER'},
+    {path:'goatville-city.html',index:'01',title:'GOATVILLE CITY',desc:'Corporate headquarters and seven connected districts.',kind:'EXPLORE'},
+    {path:'/games',index:'02',title:'GOAT GAMES · LEAGUE WORKSPACE',desc:'Five distinct competitions. Local registration, saved drafts and commissioner tools; official launch pending.',kind:'COMPETE'},
+    {path:'/manage',index:'03',title:'MEMBER ACCOUNT',desc:'Register and manage your local account. Paid membership and email remain off.',kind:'ACCOUNT'},
+    {path:'goatville-stadium.html',index:'04',title:'THE STADIUM',desc:'Discover the five competition identities and Downtown Sports Nation.',kind:'DISCOVER'},
+    {path:'play.html',index:'05',title:'SPORTS PRACTICE ROOMS',desc:'Five fictional sports practice experiences. Scores stay separate from league results.',kind:'PRACTICE'},
+    {path:'goat-games-play-lab.html',index:'06',title:'FIVE-SPORT PRACTICE LAB',desc:'Try the mechanics with fictional scenarios. Open the League Workspace for competitions.',kind:'PRACTICE'},
+    {path:'resort.html',index:'07',title:'THE RESORT',desc:'The resort circuit, Sports IQ, golf and guest keepsakes.',kind:'EXPLORE'},
+    {path:'goatville.html',index:'08',title:'GOATVILLE PLAYGROUND',desc:'Meet the city, try arcade challenges and discover the passport.',kind:'PLAY'},
+    {path:'goatville-spotlight.html',index:'09',title:'SPOTLIGHT CIRCUIT',desc:'Five sports. Five strategy decisions. One guest challenge.',kind:'PLAY'},
+    {path:'goatville-field-vision.html',index:'10',title:'FIELD VISION',desc:'Take control of the fictional football decision room.',kind:'PLAY'},
+    {path:'goatville-cinema.html',index:'11',title:'THE CINEMATIC STUDIO',desc:'Rehearse Goatville video and music with private local files.',kind:'WATCH'},
   ]);
   const current=location.pathname.split('/').pop()||'index.html';
   const make=(tag,classes,text)=>{
@@ -69,7 +69,7 @@
   banner.append(make('strong','','THE WORLD IS IN DEVELOPMENT'),make('span','','One connected local application: guest attractions and authenticated development league tools. No public contest, payments, verified guest awards or production launch is activated.'));
   shell.append(banner);
   const foot=make('div','gv-menu-bottom');
-  foot.append(make('span','','YOU DON’T JUST WATCH THE STORY. YOU ENTER IT.'),make('b','','CAN’T STOP THE BAA.'));
+  foot.append(make('span','','GOATVERSE HOLDINGS INC. · GOAT Universe · Goatville'),make('b','','CAN’T STOP THE BAA.'));
   shell.append(foot);
   dialog.append(shell);
 

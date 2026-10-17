@@ -1,6 +1,7 @@
 // Exact management UI interactions against deterministic local transports.
 // This verifies lifecycle behavior, not actual Safari rendering or hosted Auth.
 import test from 'node:test';
+import {formatGST} from '../../experience/gst-time.js';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {JSDOM} from 'jsdom';
@@ -20,7 +21,7 @@ async function workspace(transport){
   return reply(200,{});
  };
  const source=(await readFile(new URL('../portal/manage.mjs',import.meta.url),'utf8')).replace(/^import .*;\n/gm,'');
- new Function('document','window','fetch','FormData','client','pickCommand',source)(dom.window.document,dom.window,fetch,dom.window.FormData,client,pickCommand);
+ new Function('document','window','fetch','FormData','client','pickCommand','formatGST',source)(dom.window.document,dom.window,fetch,dom.window.FormData,client,pickCommand,formatGST);
  const $=s=>dom.window.document.querySelector(s);
  const submit=f=>f.dispatchEvent(new dom.window.SubmitEvent('submit',{bubbles:true,cancelable:true,submitter:f.querySelector('button[value=login]')||f.querySelector('button')}));
  const login=async()=>{const f=$('#account');f.elements.email.value='fixture@fixture.invalid';f.elements.password.value='Fixture-Password-1234';submit(f);await until(()=>f.getAttribute('aria-busy')==='false'&&!$('#dashboard').hidden);};

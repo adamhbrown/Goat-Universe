@@ -1,3 +1,4 @@
+import {formatGST} from '../../experience/gst-time.js';
 import {pickCommand} from '../portal/forms.mjs';
 
 export async function renderNfl(data,standings,ctx){
@@ -22,9 +23,9 @@ export async function renderNfl(data,standings,ctx){
   if(l.status==='open'&&!data.entries.some(e=>e.user_id===me))panel.append(button('Request a competitor entry',()=>command({op:'enroll',league_id:l.id})));
  }
  for(const round of rounds){
-  const section=details(panel,round.name+' · '+round.status+' · Lock '+new Date(round.lock_at).toLocaleString());section.open=round.status==='open';
+  const section=details(panel,round.name+' · '+round.status+' · Lock '+formatGST(round.lock_at));section.open=round.status==='open';
   const matchups=games.filter(g=>g.round_id===round.id);
-  table(section,['Home','Away','Home spread','Kickoff','Result'],matchups.map(g=>[g.home,g.away,g.home_spread,new Date(g.starts_at).toLocaleString(),g.home_score===null?'Awaiting official result':g.home_score+' – '+g.away_score]));
+  table(section,['Home','Away','Home spread','Kickoff','Result'],matchups.map(g=>[g.home,g.away,g.home_spread,formatGST(g.starts_at),g.home_score===null?'Awaiting official result':g.home_score+' – '+g.away_score]));
   section.append(node('p','Allowed confidence allocations: '+round.weight_options.map(a=>a.join(' / ')).join(' or ')+(round.mvp_bonus?' · MVP bonus: '+round.mvp_bonus:'')));
   if(entered&&l.status==='open'&&round.status==='open'&&Date.parse(round.lock_at)>now){
    const fields=matchups.flatMap((g,i)=>{const saved=data.picks.find(p=>p.user_id===me&&p.game_id===g.id);return [select('side_'+i,g.home+' vs '+g.away,[['','Choose ATS selection'],['home',g.home],['away',g.away]],saved?.side||''),field('weight_'+i,'Confidence for '+g.home+' vs '+g.away,'number',saved?.weight??'',{required:'',min:1,step:1})];});

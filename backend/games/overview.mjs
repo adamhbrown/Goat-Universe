@@ -1,3 +1,4 @@
+import {formatGST} from '../../experience/gst-time.js';
 // Setup observations are not approvals or launch-readiness decisions.
 export function setupProgress(data){
  const l=data.league,rules=l.rules||{},checks=[],add=(label,complete,detail)=>checks.push({label,complete:Boolean(complete),detail});
@@ -32,19 +33,19 @@ export function renderOverview(data,ctx){
   box.append(node('p','Entries: '+data.entries.filter(e=>e.status==='approved').length+' approved · '+data.entries.filter(e=>e.status==='pending').length+' awaiting review.'));
  }
  const receipts=details(panel,'My saved selections and records');
- receipts.append(node('p','Read from the server snapshot at '+new Date(data.server_time).toLocaleString()+'. Unsaved edits in this tab do not change these records. Refresh to confirm the latest saved state.'));
+ receipts.append(node('p','Read from the server snapshot at '+formatGST(data.server_time)+'. Unsaved edits in this tab do not change these records. Refresh to confirm the latest saved state.'));
  if(l.game_key==='first-and-baa'){
   table(receipts,['Round','Matchup','ATS selection','Confidence'],(data.picks||[]).filter(p=>p.user_id===me).map(p=>{const g=data.games.find(g=>g.id===p.game_id),r=data.rounds.find(r=>r.id===g?.round_id);return [r?.name,g?g.home+' vs '+g.away:p.game_id,g?.[p.side]||p.side,p.weight];}));
-  table(receipts,['Saved round','MVP prediction','Saved at'],(data.submissions||[]).filter(s=>s.user_id===me).map(s=>[data.rounds.find(r=>r.id===s.round_id)?.name,s.mvp_pick||'Not applicable',new Date(s.submitted_at).toLocaleString()]));
+  table(receipts,['Saved round','MVP prediction','Saved at'],(data.submissions||[]).filter(s=>s.user_id===me).map(s=>[data.rounds.find(r=>r.id===s.round_id)?.name,s.mvp_pick||'Not applicable',formatGST(s.submitted_at)]));
  }else if(l.game_key==='horns-and-hoops'){
   const nodes=data.bracket_nodes||[];
   table(receipts,['Game','Winner prediction'],(data.bracket_picks||[]).filter(p=>p.user_id===me).map(p=>[nodes.find(n=>n.id===p.node_id)?.code||p.node_id,p.team]));
-  for(const s of (data.bracket_submissions||[]).filter(s=>s.user_id===me))receipts.append(node('p','Championship-total prediction: '+s.championship_total+' · Saved '+new Date(s.submitted_at).toLocaleString()));
+  for(const s of (data.bracket_submissions||[]).filter(s=>s.user_id===me))receipts.append(node('p','Championship-total prediction: '+s.championship_total+' · Saved '+formatGST(s.submitted_at)));
  }else if(l.game_key==='league-of-greatness'){
   const teams=data.fantasy_teams||[],mine=teams.filter(t=>t.user_id===me).map(t=>t.id),name=id=>teams.find(t=>t.id===id)?.name||id;
   table(receipts,['Week','Home','Away','Home final','Away final','Home bonus added'],(data.fantasy_matchups||[]).filter(m=>mine.includes(m.home_id)||mine.includes(m.away_id)).map(m=>[m.week,name(m.home_id),name(m.away_id),m.home_score,m.away_score,m.home_bonus_applied]));
  }else{
   const events=data.series_events||[];
-  table(receipts,['Sport','Series','Winner prediction','Saved at'],(data.series_picks||[]).filter(p=>p.user_id===me).map(p=>{const e=events.find(e=>e.id===p.event_id);return [e?.sport,e?.code||p.event_id,p.team,new Date(p.submitted_at).toLocaleString()];}));
+  table(receipts,['Sport','Series','Winner prediction','Saved at'],(data.series_picks||[]).filter(p=>p.user_id===me).map(p=>{const e=events.find(e=>e.id===p.event_id);return [e?.sport,e?.code||p.event_id,p.team,formatGST(p.submitted_at)];}));
  }
 }

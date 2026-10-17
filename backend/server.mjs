@@ -24,7 +24,10 @@ export async function application(config = configuration()) {
     try {
       if (req.headers.origin && req.headers.origin !== config.appOrigin) return respond(403, { error: 'origin_denied' });
       const url = new URL(req.url, 'http://localhost');
-      if (config.publicSiteEnabled === true && await publicSiteAsset(req, res, headers)) return;
+      // Clock assets retain the same exact-path, MIME and symlink protections
+      // even when the rest of the visitor site is disabled.
+      const sharedClock = ['/experience/gst-clock.js','/experience/gst-clock.css','/experience/gst-time.js'].includes(req.url.split('?')[0]);
+      if ((config.publicSiteEnabled === true || sharedClock) && await publicSiteAsset(req, res, headers)) return;
       if (await bullpenAsset(req, res, url.pathname, headers)) return;
       if (req.method === 'GET' && url.pathname === '/goat-games') return respond(200, publicCatalog());
       if (req.method === 'GET' && (url.pathname.startsWith('/games') || ['/portal/bracket.mjs','/portal/forms.mjs','/rules/goat-games.mjs'].includes(url.pathname))) {

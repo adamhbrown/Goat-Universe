@@ -4,16 +4,21 @@ No external host or backend. Requires Python Playwright and installed Chromium.
 import argparse,functools,http.server,json,shutil,tempfile,threading,xml.etree.ElementTree as ET
 from pathlib import Path
 from playwright.sync_api import sync_playwright,expect
-parser=argparse.ArgumentParser();parser.add_argument('--output-dir',default='/tmp/goatville-resort-qa');parser.add_argument('--chromium',default='/usr/bin/chromium');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--base-url',default=None);parser.add_argument('--output-dir',default='/tmp/goatville-resort-qa');parser.add_argument('--chromium',default='/usr/bin/chromium');args=parser.parse_args()
 checkout=Path(__file__).resolve().parent.parent
 out=Path(args.output_dir);out.mkdir(parents=True,exist_ok=True)
-public=tempfile.TemporaryDirectory(prefix='goatville-resort-public-')
-for name in ('index.html','play.html','resort.html'):shutil.copy2(checkout/name,Path(public.name)/name)
-shutil.copytree(checkout/'assets',Path(public.name)/'assets')
-class QuietHandler(http.server.SimpleHTTPRequestHandler):
- def log_message(self,*args):pass
-server=http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(QuietHandler,directory=public.name))
-threading.Thread(target=server.serve_forever,daemon=True).start();base='http://127.0.0.1:'+str(server.server_port)
+server=None;public=None
+if args.base_url:
+ base=args.base_url.rstrip('/')
+else:
+ public=tempfile.TemporaryDirectory(prefix='goatville-resort-public-')
+ for name in ('index.html','play.html','resort.html'):shutil.copy2(checkout/name,Path(public.name)/name)
+ shutil.copytree(checkout/'assets',Path(public.name)/'assets')
+ shutil.copytree(checkout/'experience',Path(public.name)/'experience')
+ class QuietHandler(http.server.SimpleHTTPRequestHandler):
+  def log_message(self,*args):pass
+ server=http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(QuietHandler,directory=public.name))
+ threading.Thread(target=server.serve_forever,daemon=True).start();base='http://127.0.0.1:'+str(server.server_port)
 report={'layouts':[],'checks':[],'page_errors':[],'screenshots':[],'downloads':[]}
 districts=['town-square','championship-district','tee-district','club-goat','goat-island','mountain-lodge']
 def check(name):report['checks'].append(name)
@@ -105,4 +110,6 @@ with sync_playwright() as p:
   assert not report['page_errors'],report['page_errors'];report['result']='passed'
  except Exception as error:report['result']='failed';report['failure']=str(error);raise
  finally:
-  (out/'resort-browser-report.json').write_text(json.dumps(report,indent=2));print(json.dumps({'result':report.get('result'),'layouts':len(report['layouts']),'interaction_groups':len(report['checks']),'errors':report['page_errors'],'report':str(out/'resort-browser-report.json')}));browser.close();server.shutdown();server.server_close();public.cleanup()
+  (out/'resort-browser-report.json').write_text(json.dumps(report,indent=2));print(json.dumps({'result':report.get('result'),'layouts':len(report['layouts']),'interaction_groups':len(report['checks']),'errors':report['page_errors'],'report':str(out/'resort-browser-report.json')}));browser.close()
+  if server:server.shutdown();server.server_close()
+  if public:public.cleanup()

@@ -1,3 +1,4 @@
+import {formatGST} from '../../experience/gst-time.js';
 import { client, pickCommand } from './forms.mjs';
 import {renderBracket} from './bracket.mjs';
 // The original /play participant portal is preserved. This workspace extends
@@ -196,9 +197,9 @@ async function loadLeague(id) {
   }
   for(const round of data.rounds.sort((a,b)=>Date.parse(a.lock_at)-Date.parse(b.lock_at))) {
     const card=node('div',undefined,{class:'card'});panel.append(card);
-    card.append(node('h3',round.name),node('p',`${round.status} · Deadline: ${new Date(round.lock_at).toLocaleString()} · Rankings: ${round.weight_options.map(x=>x.join(', ')).join(' OR ')}`));
+    card.append(node('h3',round.name),node('p',`${round.status} · Deadline: ${formatGST(round.lock_at)} · Rankings: ${round.weight_options.map(x=>x.join(', ')).join(' OR ')}`));
     const games=data.games.filter(g=>g.round_id===round.id);
-    table(card,['Away','Home','Home spread','Event starts','Result'],games.map(g=>[g.away,g.home,g.home_spread,new Date(g.starts_at).toLocaleString(),g.home_score===null?'Awaiting sourced result':`${g.away_score} – ${g.home_score}`]));
+    table(card,['Away','Home','Home spread','Event starts','Result'],games.map(g=>[g.away,g.home,g.home_spread,formatGST(g.starts_at),g.home_score===null?'Awaiting sourced result':`${g.away_score} – ${g.home_score}`]));
     const canPick=round.status==='open' && Date.parse(round.lock_at)>Date.parse(data.server_time) && data.entries.some(e=>e.user_id===account.profile.user_id && e.status==='approved');
     if(canPick) {
       const fields=[];
@@ -209,7 +210,7 @@ async function loadLeague(id) {
       if(round.mvp_bonus) fields.push(field('mvp','Super Bowl MVP selection (use commissioner-provided player identifier)','text',data.submissions.find(s=>s.round_id===round.id && s.user_id===account.profile.user_id)?.mvp_pick || '',required));
       form(card,'Your selections',fields,'Submit all selections',p=>command(pickCommand(round,data.games,games.map(g=>({game_id:g.id,side:p['side_'+g.id],weight:p['weight_'+g.id]})),p.mvp)));
       const prior=data.submissions.find(s=>s.round_id===round.id && s.user_id===account.profile.user_id);
-      if(prior) card.append(node('p','Saved at '+new Date(prior.submitted_at).toLocaleString()+'. Changes require resubmitting every pick before the server deadline.'));
+      if(prior) card.append(node('p','Saved at '+formatGST(prior.submitted_at)+'. Changes require resubmitting every pick before the server deadline.'));
     } else card.append(node('p','Selections are unavailable until entry approval and round opening, or are now locked. The server enforces the deadline.'));
     if(owner && data.league.status!=='final') commissionerRound(card,round,games);
     if(Date.parse(round.lock_at)<=Date.parse(data.server_time)) {
@@ -222,7 +223,7 @@ async function loadLeague(id) {
   table(panel,['Rank','Competitor','Points','ATS wins','ATS losses'],standings.map(x=>[x.rank,x.display_name,x.points,x.wins,x.losses]));
   const history=details(panel,'Historical snapshots');
   for(const snapshot of await api.query({op:'history',league_id:id})) {
-    history.append(node('h3',`${snapshot.reason} · ${new Date(snapshot.recorded_at).toLocaleString()}`));
+    history.append(node('h3',`${snapshot.reason} · ${formatGST(snapshot.recorded_at)}`));
     table(history,['Rank','Competitor','Points'],snapshot.snapshot.map(x=>[x.rank,x.display_name,x.points]));
   }
   if(owner && data.league.status==='open') panel.append(button('Finalize championship after all rounds',()=>command({op:'league_finalize',league_id:id})));
@@ -245,7 +246,7 @@ function commissionerRound(parent,round,games) {
 function renderReport(parent,report) {
   table(parent,['Commercial metric','Count'],[['Prospects',report.prospects],['Documented interested prospects',report.interested],['Drafts awaiting approval',report.awaiting_approval]]);
   table(parent,['Currency','Contracted revenue (not cash collected)','Weighted pipeline (not revenue)'],report.pipeline_by_currency.map(x=>[x.currency,x.contracted_revenue || 0,x.weighted_pipeline || 0]));
-  table(parent,['Follow-up','Due'],report.follow_ups.map(x=>[x.organization,new Date(x.due).toLocaleString()]));
+  table(parent,['Follow-up','Due'],report.follow_ups.map(x=>[x.organization,formatGST(x.due)]));
 }
 async function commercial() {
   const records=await api.query({op:'crm_records'}),report=await api.query({op:'crm_report'});

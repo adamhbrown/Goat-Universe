@@ -1,3 +1,4 @@
+import {formatGST} from '../../experience/gst-time.js';
 export const STAGES=['Qualifying','Round of 64','Round of 32','Sweet 16','Elite Eight','Final Four','National Championship'];
 export const POINTS=[1,2,3,5,7,9,11];
 export function candidates(nodes,id) {
@@ -30,7 +31,7 @@ export async function renderBracket(data,context) {
   if(owner)form(panel,'Configure official bracket schedule',[datetime('main_lock_at','First Round of 64 tip'),field('schedule_source','Official schedule URL','url','',{required:''})],'Configure bracket schedule',p=>command({op:'bracket_configure',league_id:id,...p}));
   return;
  }
- panel.append(node('p','Main lock: '+new Date(cfg.main_lock_at).toLocaleString()));
+ panel.append(node('p','Main lock: '+formatGST(cfg.main_lock_at)));
  table(panel,['Stage','Correct winner points'],STAGES.map((name,i)=>[name,POINTS[i]]));
  if(owner){
   panel.append(node('p','Invitation ID: '+id));
@@ -50,7 +51,7 @@ export async function renderBracket(data,context) {
  const qualifying=details(panel,'Qualifying selections');qualifying.open=true;
  for(const n of nodes.filter(n=>n.stage===0)){
   const prior=data.bracket_picks.find(p=>p.user_id===me&&p.node_id===n.id);
-  qualifying.append(node('p',`${n.code}: ${n.home_team} vs ${n.away_team} · ${new Date(n.starts_at).toLocaleString()} · ${n.winner?'Winner: '+n.winner:'Awaiting sourced result'}`));
+  qualifying.append(node('p',`${n.code}: ${n.home_team} vs ${n.away_team} · ${formatGST(n.starts_at)} · ${n.winner?'Winner: '+n.winner:'Awaiting sourced result'}`));
   if(entered&&data.league.status==='open'&&Date.parse(n.starts_at)>now){const qualifyingForm=form(qualifying,'',[select('team','Choose qualifying winner',[['','Choose'],[n.home_team,n.home_team],[n.away_team,n.away_team]],prior?.team||'')],'Save qualifying pick',p=>command({op:'bracket_qualifying_pick',node_id:n.id,...p}));context.trackDeadline?.(qualifyingForm,n.starts_at);}
   else qualifying.append(node('p',prior?'Your saved pick: '+prior.team:'No saved qualifying pick.'));
  }
@@ -111,7 +112,7 @@ export async function renderBracket(data,context) {
   updateProgress();
  }
  const submission=data.bracket_submissions.find(s=>s.user_id===me);
- if(submission)panel.append(node('p','Your main bracket was saved at '+new Date(submission.submitted_at).toLocaleString()+'. Championship total: '+submission.championship_total+'.'));
+ if(submission)panel.append(node('p','Your main bracket was saved at '+formatGST(submission.submitted_at)+'. Championship total: '+submission.championship_total+'.'));
  if(Date.parse(cfg.main_lock_at)<=now){
   panel.append(node('p','The full main bracket and tiebreaker are locked.'));
   const locked=details(panel,'Locked bracket selections');table(locked,['Member','Game','Winner prediction'],data.bracket_picks.map(p=>[data.entries.find(e=>e.user_id===p.user_id)?.display_name,nodes.find(n=>n.id===p.node_id)?.code,p.team]));
@@ -132,6 +133,6 @@ export async function renderBracket(data,context) {
  table(panel,['Rank','Competitor','Points','Correct','Championship total','Distance from actual total'],standings.map(r=>[r.rank,r.display_name,r.points,r.correct,r.championship_total,r.tiebreak_error]));
  const history=details(panel,'Historical snapshots');
  for(const snap of await api.query({op:'history',league_id:id})){
-  const d=details(history,snap.reason+' · '+new Date(snap.recorded_at).toLocaleString());table(d,['Rank','Competitor','Points','Tiebreak distance'],snap.snapshot.map(r=>[r.rank,r.display_name,r.points,r.tiebreak_error]));
+  const d=details(history,snap.reason+' · '+formatGST(snap.recorded_at));table(d,['Rank','Competitor','Points','Tiebreak distance'],snap.snapshot.map(r=>[r.rank,r.display_name,r.points,r.tiebreak_error]));
  }
 }
