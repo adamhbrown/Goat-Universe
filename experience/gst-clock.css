@@ -1,0 +1,7 @@
+#gv-gst-clock{position:fixed;left:max(12px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));z-index:140;display:grid;gap:3px;padding:10px 14px;border:1px solid #8d774e;border-radius:8px;background:#0a1115f5;color:#f7f0e1;box-shadow:0 8px 30px #0008;font:600 11px/1.3 Arial,sans-serif;pointer-events:none}
+#gv-gst-clock span{color:#f0cb7c;font-size:10px;letter-spacing:.04em}
+#gv-gst-clock time{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+#gv-gst-clock small{font-size:10px;color:#d2c8b6}
+body{padding-bottom:100px}
+@media(max-width:900px){#gv-gst-clock{bottom:calc(78px + env(safe-area-inset-bottom,0px));padding:7px 10px}#gv-gst-clock span{max-width:110px}#gv-portal-launch{bottom:calc(78px + env(safe-area-inset-bottom,0px))}}
+@media print{#gv-gst-clock{position:static}body{padding-bottom:0}}

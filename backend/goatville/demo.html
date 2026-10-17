@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GOATVILLE integration harness</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; frame-src 'self' about:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<link rel="stylesheet" href="demo.css"></head>
+<body><main><h1>GOATVILLE integration harness</h1>
+<p>Engineering proof of concept. A guest stamp is an unverified souvenir and has no competition value.</p>
+<label><input id="persist" type="checkbox"> Remember guest stamps on this device</label>
+<p><button id="start" type="button">Start test challenge</button> <button id="stop" type="button">Stop challenge</button> <button id="clear" type="button">Clear guest stamps</button></p>
+<div id="game"></div><p id="status" role="status" aria-live="polite">Ready. No account required.</p>
+<ul id="stamps" aria-label="Unverified guest stamps"></ul>
+</main><script type="module" src="demo.mjs"></script></body></html>

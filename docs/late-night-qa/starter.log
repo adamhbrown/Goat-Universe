@@ -1,0 +1,4 @@
+GOAT Universe: http://127.0.0.1:8787/
+Integrated local development application. Data persists in its separate .local/one-universe directory.
+Accounts: /manage | Five leagues: /games | Private room: /bullpen (seat binding required).
+No hosted provider, live payments, email or official contest launch is enabled.

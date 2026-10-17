@@ -1,8 +1,15 @@
 // GOAT Games participant portal. No tokens in localStorage or analytics by default.
-let accessToken = '';
-let refreshToken = '';
+import {client} from '/manage/forms.mjs';
+const api = client(fetch, {onSessionEnd(reason) {
+  showSignedOut();
+  if(reason !== 'signed_out') notice('Your session ended. Sign in again to continue.', 'error');
+}});
+if(typeof window !== 'undefined')window.addEventListener('pagehide',()=>api.forget());
 let myUserId = '';
 let activeLeagueId = '';
+// Network replies from a previously visited competition must not restore its UI.
+// Invalidate pending views whenever a new league is selected or the user leaves.
+let leagueViewGeneration = 0;
 const el = id => document.getElementById(id);
 const node = (tag, text, className) => {
   const item = document.createElement(tag);
@@ -14,29 +21,8 @@ function notice(message, type = '') {
   el('notice').textContent = message;
   el('notice').className = 'notice ' + type;
 }
-async function send(path, payload, authenticated = true, allowRefresh = true) {
-  const response = await fetch('/' + path, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(authenticated && accessToken ? { Authorization: 'Bearer ' + accessToken } : {})
-    },
-    body: JSON.stringify(payload)
-  });
-  if (response.status === 401 && authenticated && allowRefresh && refreshToken) {
-    try {
-      const session = await send('auth/refresh', { refresh_token: refreshToken }, false, false);
-      accessToken = session.access_token;
-      refreshToken = session.refresh_token;
-      return await send(path, payload, true, false);
-    } catch {
-      showSignedOut();
-      throw new Error('session_expired_please_sign_in');
-    }
-  }
-  const result = await response.json();
-  if (!response.ok) throw new Error(result.error || 'request_failed');
-  return result;
+async function send(path, payload, authenticated = true) {
+  return api.request('/' + path, payload, authenticated);
 }
 async function loadGoatGamesCatalog() {
   const list = el('goat-games-catalog');
@@ -64,7 +50,13 @@ async function loadGoatGamesCatalog() {
 async function query(op, extras = {}) { return send('query', { op, ...extras }); }
 async function command(op, extras = {}) { return send('commands', { op, ...extras }); }
 function showSignedOut() {
-  accessToken = ''; refreshToken = ''; myUserId = ''; activeLeagueId = '';
+  leagueViewGeneration++;
+  myUserId = ''; activeLeagueId = '';
+  el('password').value='';el('password').type='password';
+  el('show-password').textContent='Show password';el('show-password').setAttribute('aria-pressed','false');
+  for(const id of ['leagues','rounds','standings','entry-requests','league-details'])el(id).replaceChildren();
+  el('member-name').textContent='GOAT Games';
+  el('league-name').textContent='League';
   el('account-panel').hidden = false;
   el('member-panel').hidden = true;
   el('league-panel').hidden = true;
@@ -114,10 +106,12 @@ async function loadLeagues() {
 function addCell(row, value) { row.append(node('td', value)); }
 function formatDeadline(value) {
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? 'TBD' : date.toLocaleString();
+  return Number.isNaN(date.getTime()) ? 'TBD' : date.toLocaleString('en-US', {timeZone:'America/New_York'}) + ' GST';
 }
 async function openLeague(id) {
+  const requestedView = ++leagueViewGeneration;
   const [details, standings] = await Promise.all([query('league', { league_id: id }), query('standings', { league_id: id })]);
+  if (requestedView !== leagueViewGeneration) return;
   activeLeagueId = id;
   el('league-name').textContent = details.league.name;
   el('league-details').textContent = details.league.sport + ' · ' + details.league.season + ' · ' + details.league.status;
@@ -131,17 +125,26 @@ async function openLeague(id) {
     for (const entry of pending) {
       const card = node('article', null, 'card');
       card.append(node('p', 'Member ID: ' + entry.user_id));
+      const decisionControls = [];
       for (const approved of [true, false]) {
         const control = node('button', approved ? 'Approve entry' : 'Decline entry', approved ? '' : 'secondary');
         control.type = 'button';
         control.addEventListener('click', async () => {
-          control.disabled = true;
+          // Prevent simultaneous approve and decline commands for one entry.
+          if (decisionControls.some(item => item.disabled)) return;
+          decisionControls.forEach(item => { item.disabled = true; });
           try {
+            const currentView = leagueViewGeneration;
             await command('entry_decide', { league_id: id, user_id: entry.user_id, approved });
+            if (currentView !== leagueViewGeneration || activeLeagueId !== id) return;
             await openLeague(id);
-            notice(approved ? 'Entry approved.' : 'Entry declined.', 'success');
-          } catch (error) { control.disabled = false; notice(error.message, 'error'); }
+            if (activeLeagueId === id) notice(approved ? 'Entry approved.' : 'Entry declined.', 'success');
+          } catch (error) {
+            decisionControls.forEach(item => { item.disabled = false; });
+            notice(error.message, 'error');
+          }
         });
+        decisionControls.push(control);
         card.append(control);
       }
       requests.append(card);
@@ -255,16 +258,18 @@ function createPickForm(round, games, ownPicks) {
   button.type = 'submit'; form.append(button);
   form.addEventListener('submit', async event => {
     event.preventDefault();
+    if (button.disabled) return; // Synthetic or keyboard double-submit protection.
     const picks = fields.map(field => ({ game_id: field.game_id, side: field.side.value, weight: Number(field.weight.value) }));
     if (new Set(picks.map(p => p.weight)).size !== picks.length) {
       notice('Use each confidence weight once per round.', 'error'); return;
     }
     button.disabled = true;
+    const submissionView = leagueViewGeneration, submissionLeague = activeLeagueId;
     try {
       await command('picks_submit', { round_id: round.id, picks, ...(mvp ? { mvp_pick: mvp.value.trim() } : {}) });
-      notice('Your picks were saved. You can change them until the deadline.', 'success');
-      await openLeague(activeLeagueId);
-      notice('Your picks were saved. You can change them until the deadline.', 'success');
+      if (submissionView !== leagueViewGeneration || activeLeagueId !== submissionLeague) return;
+      await openLeague(submissionLeague);
+      if (activeLeagueId === submissionLeague) notice('Your picks were saved. You can change them until the deadline.', 'success');
     } catch (error) { notice(error.message, 'error'); }
     finally { button.disabled = false; }
   });
@@ -272,49 +277,72 @@ function createPickForm(round, games, ownPicks) {
 }
 el('account-form').addEventListener('submit', async event => {
   event.preventDefault();
+  const form=el('account-form');
+  if (form.getAttribute('aria-busy') === 'true') return;
+  form.setAttribute('aria-busy','true');
+  const buttons=[...form.querySelectorAll('button[type=submit]')];
+  buttons.forEach(button=>button.disabled=true);
   const action = event.submitter?.value || 'login';
   try {
-    const result = await send('auth/' + action, {
-      email: el('email').value.trim(),
-      password: el('password').value,
-      ...(action === 'signup' ? { display_name: el('display-name').value.trim() || undefined } : {})
-    }, false);
-    el('password').value = '';
-    accessToken = result.access_token || result.session?.access_token || '';
-    refreshToken = result.refresh_token || result.session?.refresh_token || '';
-    if (!accessToken) {
-      notice(result.confirmation_required === false ? 'Account created. Sign in using your new password.' : 'Account created. Check your email for a confirmation link, then sign in.', 'success');
-      return;
+    const values={email:el('email').value.trim(),password:el('password').value,
+      ...(action==='signup'?{display_name:el('display-name').value.trim()||undefined}:{})};
+    if(action==='signup') {
+      const result=await api.signup(values);
+      notice(result.confirmation_required === false ? 'Account created. Sign in using your new password.' : 'Registration submitted. Check your email for a confirmation link before signing in.', 'success');
+    } else {
+      await api.login(values);
+      await showSignedIn();
+      notice('Welcome to GOAT Games!', 'success');
     }
-    await showSignedIn();
-    notice('Welcome to GOAT Games!', 'success');
-  } catch (error) { el('password').value = ''; notice(error.message, 'error'); }
+  } catch (error) { notice(error.message.replaceAll('_',' '), 'error'); }
+  finally {
+    el('password').value='';el('password').type='password';form.setAttribute('aria-busy','false');
+    el('show-password').textContent='Show password';el('show-password').setAttribute('aria-pressed','false');
+    buttons.forEach(button=>button.disabled=false);
+  }
+});
+el('show-password').addEventListener('click',event=>{
+  const input=el('password'),show=input.type==='password';input.type=show?'text':'password';
+  event.currentTarget.textContent=show?'Hide password':'Show password';
+  event.currentTarget.setAttribute('aria-pressed',String(show));
+});
+el('recovery-form').addEventListener('submit',async event=>{
+  event.preventDefault();const button=event.submitter || el('recovery-form').querySelector('button');
+  if(button.disabled)return;button.disabled=true;
+  try {await api.request('/auth/recover',{email:el('recovery-email').value.trim()},false);notice('If an eligible account exists, a recovery email will arrive. Check your inbox.','success');}
+  catch(error){notice(error.message.replaceAll('_',' '),'error');}
+  finally{button.disabled=false;}
 });
 el('join-form').addEventListener('submit', async event => {
   event.preventDefault();
+  const button = el('join-submit');
+  if (button.disabled) return;
   const league_id = el('invite-id').value.trim().toLowerCase();
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(league_id)) {
     notice('Please enter the complete invitation ID.', 'error'); return;
   }
+  button.disabled = true;
   try {
     await command('enroll', { league_id });
     el('invite-id').value = '';
     notice('Join request received. Your commissioner must approve your entry before the league appears here.', 'success');
   } catch (error) { notice(error.message, 'error'); }
+  finally { button.disabled = false; }
 });
 el('reload').addEventListener('click', async () => {
   try { await loadLeagues(); notice('Your leagues are up to date.', 'success'); }
   catch (error) { notice(error.message, 'error'); }
 });
 el('back').addEventListener('click', () => {
+  ++leagueViewGeneration;
   activeLeagueId = '';
   el('league-panel').hidden = true;
   el('member-panel').hidden = false;
 });
 el('signout').addEventListener('click', async () => {
-  try { if (accessToken) await send('auth/logout', {}); }
-  catch { /* Clear the browser session even if the server is unreachable. */ }
-  finally { showSignedOut(); notice('Signed out. See you at the next game.'); }
+  const pending=api.logout(),current=api.checkpoint();
+  try { await pending;current();notice('Signed out. See you at the next game.'); }
+  catch { try {current();notice('Signed out on this page. Server sign-out could not be confirmed. Close this page and retry when connected.', 'error');}catch{} }
 });
 showSignedOut();
 loadGoatGamesCatalog();

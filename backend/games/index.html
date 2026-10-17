@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>GOAT Games — Competition Workspace</title>
+ <link rel="stylesheet" href="/games/style.css">
+<link rel="stylesheet" href="/experience/gst-clock.css"><script type="module" src="/experience/gst-clock.js"></script></head>
+<body><noscript><aside id="gv-gst-clock" aria-label="Goatville Standard Time">Goatville Standard Time · America/New_York<br>Enable JavaScript for the GST clock.</aside></noscript><nav aria-label="Return to GOAT Universe"><a href="/">← GOAT Universe</a> · <a href="/goatville-city.html">Goatville city</a> · <a href="/games">Leagues</a> · <a href="/manage">Account</a></nav>
+ <a class="skip" href="#workspace">Skip to competition</a>
+ <header><a class="brand" href="/games"><span>GOAT</span> UNIVERSE<small>WHERE THE GOATS PLAY</small></a><a href="/play">Player portal</a><a href="/manage">Commissioner workspace</a></header>
+ <nav id="game-nav" aria-label="GOAT Games"></nav>
+ <main id="workspace">
+  <section class="hero"><p class="eyebrow">FIVE COMPETITIONS. ONE UNIVERSE.</p><h1 id="game-title" tabindex="-1">The GOAT Games</h1><p id="game-subtitle">Your competition workspace</p><p id="game-status" class="status">Development preview. Official schedules and results are supplied by your commissioner. Payments remain disabled.</p></section>
+  <p id="notice" role="status" aria-live="polite"></p>
+  <section id="catalog" class="cards" aria-label="Choose a GOAT Game"></section>
+  <section id="account-panel" class="panel"><h2>Sign in to your competitions</h2><p>Use your GOAT account to see private entries, picks and standings.</p>
+   <form id="account-form"><label>Email<input name="email" type="email" autocomplete="username" required maxlength="254"></label><label>Password<input name="password" type="password" autocomplete="current-password" required minlength="12" maxlength="200"></label><label>Display name <small>For new accounts</small><input name="display_name" autocomplete="nickname" maxlength="80"></label><div class="actions"><button name="action" value="login" type="submit">Sign in</button><button name="action" value="signup" type="submit" class="secondary">Create account</button></div></form>
+   <a href="/manage">Account recovery and settings</a>
+  </section>
+  <section id="member-panel" class="panel" hidden><div class="section-heading"><h2 id="member-name">My competitions</h2><button id="sign-out" type="button" class="secondary">Sign out</button></div><div id="league-list" class="cards"></div><div id="member-actions"></div></section>
+  <section id="league-panel" class="panel" hidden></section>
+  <section id="annual-panel" class="panel" hidden></section>
+ </main>
+ <footer>GOAT Universe · Competition development workspace · No sample scores or invented BAAS allocations.</footer>
+ <script type="module" src="/games/boot.mjs"></script>
+</body>
+</html>

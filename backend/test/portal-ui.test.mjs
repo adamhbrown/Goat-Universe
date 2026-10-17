@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
+import {client} from '../portal/forms.mjs';
 import { GOAT_GAMES } from '../rules/goat-games.mjs';
 
 class FakeElement {
@@ -13,6 +14,7 @@ class FakeElement {
     this.textContent = '';
     this.hidden = false;
     this.disabled = false;
+    this.attrs = {};
   }
   append(...items) {
     for (const item of items) {
@@ -25,6 +27,9 @@ class FakeElement {
     if (this.tagName === 'SELECT') this.value = '';
     this.append(...items);
   }
+  getAttribute(name) { return this.attrs[name]; }
+  setAttribute(name,value) { this.attrs[name] = value; }
+  querySelectorAll() { return []; }
   addEventListener(type, listener) {
     const existing = this.listeners.get(type) || [];
     existing.push(listener);
@@ -45,7 +50,7 @@ function find(node, tag) {
 }
 
 test('member portal handles login, view, ranked picks, join requests, and entry approvals with no external transport', async () => {
-  const script = await readFile(new URL('../console/play.mjs', import.meta.url), 'utf8');
+  const script = (await readFile(new URL('../console/play.mjs', import.meta.url), 'utf8')).replace("import {client} from '/manage/forms.mjs';",'');
   // Match unsafe operations, not explanatory comments mentioning storage.
   assert.doesNotMatch(script, /\b(?:localStorage|sessionStorage)\s*(?:\.|\[)|\.innerHTML\s*=|\beval\s*\(/);
   const ids = {};
@@ -88,7 +93,7 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
     else throw new Error('Unexpected mock request: ' + url);
     return { ok: true, status: 200, json: async () => result };
   };
-  runInNewContext(script, { document, fetch, console });
+  runInNewContext(script, { document, fetch, console, client });
   document.getElementById('email').value = 'fixture@example.invalid';
   document.getElementById('password').value = 'Fixture-Password-1234';
   await ids['account-form'].fire('submit', { submitter: { value: 'login' } });

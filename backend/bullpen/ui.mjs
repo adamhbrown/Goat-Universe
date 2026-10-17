@@ -1,3 +1,4 @@
+import {formatGST} from '../../experience/gst-time.js';
 export const CEO_PROMPT = 'Team, give me the status of our five GOAT Games and the October 21 engineering deadline.';
 const states = {
   unbound: ['Not connected', 'No authenticated account or integration is bound to this seat.'],
@@ -8,7 +9,7 @@ const states = {
   stale: ['API client offline', 'No authenticated API poll in the last 90 seconds.']
 };
 const human = value => String(value || '').replaceAll('_', ' ');
-const time = value => value ? new Date(value).toLocaleString() : 'Not set';
+const time = value => value ? formatGST(value) : 'Not set';
 
 export function mountBullpen(document, { fetchImpl = globalThis.fetch, schedule = globalThis.setTimeout, cancel = globalThis.clearTimeout } = {}) {
   const $ = id => document.getElementById(id);

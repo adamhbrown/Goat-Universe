@@ -78,12 +78,18 @@ test('hosted password changes reauthenticate the session owner before update and
  assert.equal(calls[0].headers.Authorization,'Bearer CURRENT_ACCESS_FIXTURE');assert.deepEqual(calls[1].body,{email:'user@fixture.invalid',password:OLD});assert.equal(calls[2].headers.Authorization,'Bearer REAUTH_ACCESS_FIXTURE');assert.ok(calls[3].url.endsWith('logout?scope=global'));
 });
 
-async function callbackDOM({type='recovery',token='FIXTURE_HASH_ONLY_0123456789',implicit=false}={}){
+test('ordinary hosted logout revokes only the current session',async()=>{
+ const {auth,calls}=mockAuth();await auth.logout('CURRENT_ACCESS_FIXTURE');
+ assert.equal(calls.length,1);assert.ok(calls[0].url.endsWith('logout?scope=local'));
+ assert.equal(calls[0].headers.Authorization,'Bearer CURRENT_ACCESS_FIXTURE');
+});
+
+async function callbackDOM({type='recovery',token='FIXTURE_HASH_ONLY_0123456789',implicit=false,transport}={}){
  const dom=new JSDOM(await readFile(new URL('../portal/callback.html',import.meta.url),'utf8'),{url:'https://development.fixture.invalid/auth/callback#'+new URLSearchParams(implicit?{access_token:token,refresh_token:token,type}:{token_hash:token,type})});
- const calls=[];dom.window.fetch=async(path,p)=>{assert.ok(path.startsWith('/auth/'));calls.push({path,body:JSON.parse(p.body)});return {ok:true,json:async()=>({password_updated:true,email_confirmed:true})};};
+ const calls=[];dom.window.fetch=async(path,p)=>{assert.ok(path.startsWith('/auth/'));calls.push({path,body:JSON.parse(p.body)});return transport?transport(path,p):{ok:true,json:async()=>({password_updated:true,email_confirmed:true})};};
  const script=await readFile(new URL('../portal/callback.mjs',import.meta.url),'utf8');dom.window.eval=undefined;
  // Run the exact callback code with window bindings, without a network/browser.
- const execute=new Function('document','location','history','URLSearchParams','fetch',script);execute(dom.window.document,dom.window.location,dom.window.history,dom.window.URLSearchParams,dom.window.fetch);
+ const execute=new Function('document','location','history','URLSearchParams','fetch','window',script);execute(dom.window.document,dom.window.location,dom.window.history,dom.window.URLSearchParams,dom.window.fetch,dom.window);
  return {dom,calls};
 }
 test('callback clears link hash, waits for explicit submission, validates repeat password and never stores tokens',async()=>{
@@ -91,6 +97,36 @@ test('callback clears link hash, waits for explicit submission, validates repeat
  f.elements.new_password.value=NEW;f.elements.repeat_password.value='different';f.dispatchEvent(new dom.window.SubmitEvent('submit',{bubbles:true,cancelable:true}));await new Promise(r=>setTimeout(r,0));assert.equal(calls.length,0);assert.match(d.querySelector('#message').textContent,/do not match/);
  f.elements.new_password.value=NEW;f.elements.repeat_password.value=NEW;f.dispatchEvent(new dom.window.SubmitEvent('submit',{bubbles:true,cancelable:true}));await new Promise(r=>setTimeout(r,0));assert.equal(calls.length,1);assert.equal(calls[0].path,'/auth/reset');assert.equal(f.elements.new_password.value,'');assert.equal(f.hidden,true);assert.equal(dom.window.localStorage.length,0);dom.window.close();
  const invalid=await callbackDOM({implicit:true});assert.match(invalid.dom.window.document.querySelector('#message').textContent,/unsupported/);assert.equal(invalid.dom.window.location.hash,'');assert.equal(invalid.calls.length,0);invalid.dom.window.close();
+});
+
+test('email callbacks send one request under double taps and allow retry after failure',async()=>{
+ for(const type of ['signup','recovery']){
+  let finish;const pending=new Promise(r=>{finish=r;});let fail=true;
+  const {dom,calls}=await callbackDOM({type,transport:()=>fail?pending:Promise.resolve({ok:true,json:async()=>({})})});
+  try{
+   const f=dom.window.document.getElementById(type==='signup'?'confirm':'reset');
+   const submit=()=>f.dispatchEvent(new dom.window.SubmitEvent('submit',{bubbles:true,cancelable:true}));
+   if(type==='recovery'){f.elements.new_password.value=NEW;f.elements.repeat_password.value=NEW;}
+   submit();submit();assert.equal(calls.length,1);assert.equal(f.getAttribute('aria-busy'),'true');
+   finish({ok:false,json:async()=>({error:'temporarily_unavailable'})});await new Promise(r=>setTimeout(r,0));
+   assert.equal(f.hidden,false);assert.equal(f.querySelector('button').disabled,false);
+   fail=false;if(type==='recovery'){f.elements.new_password.value=NEW;f.elements.repeat_password.value=NEW;}
+   submit();await new Promise(r=>setTimeout(r,0));assert.equal(calls.length,2);assert.equal(f.hidden,true);
+  }finally{dom.window.close();}
+ }
+});
+
+test('Safari pagehide clears callback secrets and rejects late success',async()=>{
+ let finish;const {dom,calls}=await callbackDOM({transport:()=>new Promise(r=>{finish=r;})});
+ try{
+  const f=dom.window.document.getElementById('reset'),message=dom.window.document.getElementById('message');
+  f.elements.new_password.value=NEW;f.elements.repeat_password.value=NEW;
+  const submit=()=>f.dispatchEvent(new dom.window.SubmitEvent('submit',{bubbles:true,cancelable:true}));
+  submit();dom.window.dispatchEvent(new dom.window.Event('pagehide'));
+  assert.equal(f.elements.new_password.value,'');assert.equal(f.elements.repeat_password.value,'');assert.equal(f.hidden,true);
+  finish({ok:true,json:async()=>({})});await new Promise(r=>setTimeout(r,0));
+  assert.match(message.textContent,/Request a new email link/);submit();assert.equal(calls.length,1);
+ }finally{dom.window.close();}
 });
 
 test('concurrent password changes cannot both succeed, and a racing old-password login cannot survive the change',async()=>{

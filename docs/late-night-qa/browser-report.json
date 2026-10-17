@@ -1,0 +1,772 @@
+{
+  "scope": "Local Chromium; no Safari, physical device, hosted Auth/RLS or production acceptance",
+  "layouts": [
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/goatville-city.html",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/goatville-stadium.html",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/goatville.html",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/play.html",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/resort.html",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/goat-games-play-lab.html",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/goatville-cinema.html",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/goatville-field-vision.html",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/goatville-spotlight.html",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/games",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/manage",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 542.8125,
+        "right": 147.859375,
+        "bottom": 622
+      },
+      "overlap": false,
+      "route": "/bullpen",
+      "width": 320
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/goatville-city.html",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/goatville-stadium.html",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/goatville.html",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/play.html",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/resort.html",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/goat-games-play-lab.html",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/goatville-cinema.html",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/goatville-field-vision.html",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/goatville-spotlight.html",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/games",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/manage",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 686.8125,
+        "right": 147.859375,
+        "bottom": 766
+      },
+      "overlap": false,
+      "route": "/bullpen",
+      "width": 390
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/goatville-city.html",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/goatville-stadium.html",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/goatville.html",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/play.html",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/resort.html",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/goat-games-play-lab.html",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/goatville-cinema.html",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/goatville-field-vision.html",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.09375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/goatville-spotlight.html",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/games",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/manage",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 866.8125,
+        "right": 147.859375,
+        "bottom": 946
+      },
+      "overlap": false,
+      "route": "/bullpen",
+      "width": 768
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/goatville-city.html",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/goatville-stadium.html",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/goatville.html",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/play.html",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/resort.html",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/goat-games-play-lab.html",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/goatville-cinema.html",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/goatville-field-vision.html",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/goatville-spotlight.html",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/games",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/manage",
+      "width": 1440
+    },
+    {
+      "overflow": false,
+      "broken": [],
+      "clock": {
+        "x": 12,
+        "y": 911.8125,
+        "right": 165.5,
+        "bottom": 984
+      },
+      "overlap": false,
+      "route": "/bullpen",
+      "width": 1440
+    }
+  ],
+  "checks": [
+    "All public parent hrefs and same/cross-page fragments resolve over the local application",
+    "Five sports-room and three resort hash routes open the requested view",
+    "390px touch emulation: arrival \u2192 city \u2192 league \u2192 create account \u2192 create draft \u2192 reload/login \u2192 draft retained \u2192 city \u2192 ordinary-user Bullpen denial",
+    "City headquarters links reach workspace with JavaScript disabled"
+  ],
+  "page_errors": [],
+  "http_errors": [],
+  "routes": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/goat-games-play-lab.html",
+      "status": 200
+    },
+    {
+      "path": "/goatville-cinema.html",
+      "status": 200
+    },
+    {
+      "path": "/goatville-city.html",
+      "status": 200
+    },
+    {
+      "path": "/goatville-field-vision.html",
+      "status": 200
+    },
+    {
+      "path": "/goatville-spotlight.html",
+      "status": 200
+    },
+    {
+      "path": "/goatville-stadium.html",
+      "status": 200
+    },
+    {
+      "path": "/goatville.html",
+      "status": 200
+    },
+    {
+      "path": "/index.html",
+      "status": 200
+    },
+    {
+      "path": "/play.html",
+      "status": 200
+    },
+    {
+      "path": "/resort.html",
+      "status": 200
+    },
+    {
+      "path": "/games",
+      "status": 200
+    },
+    {
+      "path": "/manage",
+      "status": 200
+    },
+    {
+      "path": "/play",
+      "status": 200
+    },
+    {
+      "path": "/bullpen",
+      "status": 200
+    },
+    {
+      "path": "/games/first-and-baa",
+      "status": 200
+    },
+    {
+      "path": "/games/horns-and-hoops",
+      "status": 200
+    },
+    {
+      "path": "/games/goat-crossover",
+      "status": 200
+    },
+    {
+      "path": "/games/league-of-greatness",
+      "status": 200
+    },
+    {
+      "path": "/games/goat-classic",
+      "status": 200
+    }
+  ],
+  "result": "passed"
+}

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
 import {auditBullpenCandidate} from '../bullpen/integration-gate.mjs';
 
 const required={
@@ -34,6 +35,7 @@ const sum=bytes=>createHash('sha256').update(bytes).digest('hex');
 function fixture() {
  const files=new Map([...Object.values(required).flat(),...migrationPaths]
    .map(name=>[name,Buffer.from('fixture:'+name)]));
+ for(const path of migrationPaths)files.set(path,readFileSync(new URL('../../'+path,import.meta.url)));
  files.set('package.json',Buffer.from(JSON.stringify({scripts:{'check:bullpen':'check bull','check:staging-infrastructure':'check stage',test:'node --test'}})));
  const manifest={
   source_prototype_commit:'c8b120dfc0f81bcc480408d6eee914893bd6ad84',
@@ -85,6 +87,25 @@ test('migration content change and unreviewed new SQL both require explicit revi
  assert.equal(find(report,'prototype_migration_hashes').state,'changed_review_required');
  assert.equal(find(report,'extra_migrations').state,'review_required');
  assert.match(find(report,'extra_migrations').detail,/unreviewed/);
+});
+
+test('replacing both candidate SQL and its adjacent manifest hash cannot impersonate reviewed SQL',async()=>{
+ const f=fixture(),path=migrationPaths[1];
+ f.files.set(path,Buffer.from('altered candidate SQL; no execution'));
+ f.manifest.prototype_migrations.find(item=>item.file===path).sha256=sum(f.files.get(path));
+ f.refresh();
+ const report=await auditBullpenCandidate(f);
+ assert.equal(find(report,'prototype_migration_hashes').state,'changed_review_required');
+ assert.equal(report.status,'blocked_pending_approval_and_hosted_acceptance');
+});
+
+test('candidate manifest cannot substitute a different five-file SQL set',async()=>{
+ const f=fixture();
+ f.manifest.prototype_migrations[0].file='supabase/migrations/20261015150000_substitute.sql';
+ f.refresh();
+ const report=await auditBullpenCandidate(f);
+ assert.equal(find(report,'prototype_migration_hashes').state,'invalid');
+ assert.ok(!f.attempts.includes(f.manifest.prototype_migrations[0].file));
 });
 
 test('malformed manifest cannot select arbitrary filesystem paths or pass a digest check',async()=>{

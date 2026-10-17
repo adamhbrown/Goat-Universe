@@ -1,0 +1,768 @@
+{
+  "layouts": [
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-320x568"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-375x667"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-390x844"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-430x932"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-667x375"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-844x390"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-932x430"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-768x1024"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-900x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-1024x768"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-1200x900"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "home-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "gridiron-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "hoops-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "crossover-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "greatness-1440x1000"
+    },
+    {
+      "overflow": false,
+      "fonts": [
+        true,
+        true
+      ],
+      "broken": [],
+      "clipped": [],
+      "name": "classic-1440x1000"
+    }
+  ],
+  "checks": [
+    "72 layout checks across 12 portrait, landscape, tablet and desktop sizes; original disclosures and GOAT Mode at every size",
+    "390: football picks, confidence swaps, validation, deterministic result",
+    "390: football bracket stays open during selection",
+    "390: basketball completion and dependent pick invalidation",
+    "390: dual-sport combined prediction",
+    "390: fantasy lineup, matchup result and integration path",
+    "390: baseball picks, series lengths and champion reveal",
+    "390: passport opt-in, memory-only reload, explicit restoration, identity, GPI and clearing",
+    "390: keyboard tabs and browser history",
+    "390: full GOAT TEE round, scorecard and replay",
+    "390: reduced-motion arrival, sound opt-in and instant skip",
+    "1440: football picks, confidence swaps, validation, deterministic result",
+    "1440: football bracket stays open during selection",
+    "1440: basketball completion and dependent pick invalidation",
+    "1440: dual-sport combined prediction",
+    "1440: fantasy lineup, matchup result and integration path",
+    "1440: baseball picks, series lengths and champion reveal",
+    "1440: passport opt-in, memory-only reload, explicit restoration, identity, GPI and clearing",
+    "1440: keyboard tabs and browser history",
+    "1440: full GOAT TEE round, scorecard and replay",
+    "1440: reduced-motion arrival, sound opt-in and instant skip",
+    "official theme loads only after play and supports pause",
+    "normal-motion ball animation and locked input",
+    "normal-motion cinema progression and Escape focus return",
+    "missing optional video falls back to original visual study",
+    "blocked storage uses a working in-memory passport",
+    "no-JavaScript navigation and native disclosures"
+  ],
+  "page_errors": [],
+  "screenshots": [
+    "/workspace/Goat-Universe/docs/late-night-qa/visitor/goatville/home-390.png",
+    "/workspace/Goat-Universe/docs/late-night-qa/visitor/goatville/gridiron-390.png",
+    "/workspace/Goat-Universe/docs/late-night-qa/visitor/goatville/hoops-390.png",
+    "/workspace/Goat-Universe/docs/late-night-qa/visitor/goatville/greatness-390.png",
+    "/workspace/Goat-Universe/docs/late-night-qa/visitor/goatville/classic-390.png",
+    "/workspace/Goat-Universe/docs/late-night-qa/visitor/goatville/home-1440.png",
+    "/workspace/Goat-Universe/docs/late-night-qa/visitor/goatville/gridiron-1440.png",
+    "/workspace/Goat-Universe/docs/late-night-qa/visitor/goatville/hoops-1440.png",
+    "/workspace/Goat-Universe/docs/late-night-qa/visitor/goatville/greatness-1440.png",
+    "/workspace/Goat-Universe/docs/late-night-qa/visitor/goatville/classic-1440.png",
+    "/workspace/Goat-Universe/docs/late-night-qa/visitor/goatville/goat-tee-result-390.png"
+  ],
+  "result": "passed"
+}

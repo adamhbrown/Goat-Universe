@@ -1,11 +1,18 @@
+import {formatGST} from '../../experience/gst-time.js';
 import { client, pickCommand } from './forms.mjs';
 import {renderBracket} from './bracket.mjs';
 // The original /play participant portal is preserved. This workspace extends
 // account, competition administration, research and commercial operations.
-const api = client();
+const api = client(fetch, {onSessionEnd(reason) {
+  clearAccountView();
+  if(reason !== 'signed_out') message('Your session ended. Sign in again to continue.');
+}});
 const $ = selector => document.querySelector(selector);
 let account, activeLeague;
 const signalNames = ['audience_fit','commercial_fit','decision_access','timing','engagement'];
+// Safari may restore a page from its back/forward cache with the old DOM and
+// module memory intact. Clear local secrets and private panels before caching.
+if(typeof window !== 'undefined')window.addEventListener('pagehide',()=>api.forget());
 
 // All remote strings become text nodes, never HTML, including names, evidence,
 // outreach drafts, MVP selections, and commissioner-supplied team names.
@@ -40,6 +47,7 @@ function form(parent, title, fields, label, submit) {
   const b = node('button',label,{type:'submit'}); f.append(b);
   f.addEventListener('submit',event => {
     event.preventDefault();
+    if (b.disabled) return;
     run(async() => {
       const values = Object.fromEntries(new FormData(f));
       for (const spec of fields) {
@@ -54,13 +62,13 @@ function form(parent, title, fields, label, submit) {
 }
 function details(parent,title) { const d = node('details');d.append(node('summary',title));parent.append(d);return d; }
 function table(parent,headers,rows) {
-  const wrap=node('div',undefined,{class:'table-wrap'}),t=node('table'),head=node('tr');
+  const wrap=node('div',undefined,{class:'table-wrap',role:'region',tabindex:0,'aria-label':headers.join(', ')+'. Scroll horizontally for more columns.'}),t=node('table'),head=node('tr');
   headers.forEach(x=>head.append(node('th',x,{scope:'col'})));t.append(append(node('thead'),head));
   const body=node('tbody'); for(const row of rows) body.append(append(node('tr'),...row.map(x=>node('td',x ?? '—'))));
   t.append(body);wrap.append(t);parent.append(wrap);
 }
 const required = {required:'',maxlength:120};
-const datetime = (name,label) => field(name,label,'datetime-local','',{required:''});
+const datetime = (name,label) => field(name,label+' ('+Intl.DateTimeFormat().resolvedOptions().timeZone+')','datetime-local','',{required:''});
 const select = (name,label,options,value='') => ({...field(name,label,'select',value,{required:''}),options});
 const command = async (p, refresh = true) => {
   const result = await api.command(p); message('Saved.');
@@ -70,33 +78,52 @@ const command = async (p, refresh = true) => {
 
 $('#account').addEventListener('submit',event => {
   event.preventDefault();
+  const f=event.currentTarget, control=event.submitter || f.querySelector('button[value=login]');
+  if (f.getAttribute('aria-busy')==='true') return;
+  f.setAttribute('aria-busy','true');
+  for(const button of f.querySelectorAll('button[type=submit]'))button.disabled=true;
   run(async() => {
-    const values=Object.fromEntries(new FormData(event.currentTarget));
+   try {
+    const values=Object.fromEntries(new FormData(f));
     if(!values.display_name) delete values.display_name;
-    if(event.submitter.value==='signup') {
+    if(control.value==='signup') {
       const result=await api.signup(values);
       message(result.confirmation_required === false ? (result.environment==='local-development'?'Development account created. Sign in to continue.':'Account created. Sign in to continue.') : 'Registration submitted. Check your email for confirmation before signing in.');
     } else { await api.login(values);await dashboard();message('Signed in.'); }
-    $('#account').elements.password.value='';
-  },event.submitter);
+   } finally {
+    f.elements.password.value='';
+    f.elements.password.type='password';
+    $('#show-password').textContent='Show password';$('#show-password').setAttribute('aria-pressed','false');
+    f.setAttribute('aria-busy','false');
+    for(const button of f.querySelectorAll('button[type=submit]'))button.disabled=false;
+   }
+  });
+});
+$('#show-password').addEventListener('click',event=>{
+  const input=$('#account').elements.password,show=input.type==='password';
+  input.type=show?'text':'password';event.currentTarget.textContent=show?'Hide password':'Show password';
+  event.currentTarget.setAttribute('aria-pressed',String(show));
 });
 function clearAccountView() {
   account=undefined;activeLeague=undefined;$('#auth').hidden=false;$('#logout').hidden=true;
+  $('#account').elements.password.value='';$('#account').elements.password.type='password';
+  $('#show-password').textContent='Show password';$('#show-password').setAttribute('aria-pressed','false');
   for(const id of ['dashboard','league','commercial']) {$('#'+id).replaceChildren();$('#'+id).hidden=true;}
 }
 $('#recovery').addEventListener('submit',event=>{
   event.preventDefault();const f=event.currentTarget;
-  run(async()=>{await api.request('/auth/recover',{email:f.elements.email.value},false);message('If an eligible account exists, a recovery email will arrive. Check your inbox.');},event.submitter);
+  const b=event.submitter||f.querySelector('button');if(b.disabled)return;
+  run(async()=>{await api.request('/auth/recover',{email:f.elements.email.value},false);message('If an eligible account exists, a recovery email will arrive. Check your inbox.');},b);
 });
 $('#logout').addEventListener('click',() => run(async() => {
-  try { await api.logout(); } finally {
-    clearAccountView();
-    message('Signed out.');
-  }
+  const pending=api.logout(),current=api.checkpoint();
+  try { await pending;current();message('Signed out.'); }
+  catch { try {current();message('Signed out on this page. Server sign-out could not be confirmed. Close this page and retry when connected.');}catch{} }
 }));
 
 async function dashboard() {
-  const data=await api.query({op:'dashboard'});account=data.account;
+  const current=api.checkpoint();
+  const data=await api.query({op:'dashboard'});current();account=data.account;
   $('#auth').hidden=true;$('#logout').hidden=false;
   const panel=$('#dashboard');panel.hidden=false;panel.replaceChildren(node('h1',`Welcome, ${account.profile.display_name}`));
   form(details(panel,'Your profile'),'',[field('display_name','Display name','text',account.profile.display_name,{required:'',maxlength:80})],'Update profile',p=>command({op:'profile_update',...p}));
@@ -124,6 +151,7 @@ async function dashboard() {
     message('NFL LXI draft created. Rules remain unapproved.');
   });
   const catalog=await (await fetch('/goat-games')).json();
+  current();
   const gamesPanel=details(panel,'All five GOAT Games');gamesPanel.open=true;
   for(const game of catalog.games){
     const card=node('div',undefined,{class:'card'});card.append(node('h3',game.name),node('p',game.subtitle),node('p',game.notes));gamesPanel.append(card);
@@ -169,9 +197,9 @@ async function loadLeague(id) {
   }
   for(const round of data.rounds.sort((a,b)=>Date.parse(a.lock_at)-Date.parse(b.lock_at))) {
     const card=node('div',undefined,{class:'card'});panel.append(card);
-    card.append(node('h3',round.name),node('p',`${round.status} · Deadline: ${new Date(round.lock_at).toLocaleString()} · Rankings: ${round.weight_options.map(x=>x.join(', ')).join(' OR ')}`));
+    card.append(node('h3',round.name),node('p',`${round.status} · Deadline: ${formatGST(round.lock_at)} · Rankings: ${round.weight_options.map(x=>x.join(', ')).join(' OR ')}`));
     const games=data.games.filter(g=>g.round_id===round.id);
-    table(card,['Away','Home','Home spread','Event starts','Result'],games.map(g=>[g.away,g.home,g.home_spread,new Date(g.starts_at).toLocaleString(),g.home_score===null?'Awaiting sourced result':`${g.away_score} – ${g.home_score}`]));
+    table(card,['Away','Home','Home spread','Event starts','Result'],games.map(g=>[g.away,g.home,g.home_spread,formatGST(g.starts_at),g.home_score===null?'Awaiting sourced result':`${g.away_score} – ${g.home_score}`]));
     const canPick=round.status==='open' && Date.parse(round.lock_at)>Date.parse(data.server_time) && data.entries.some(e=>e.user_id===account.profile.user_id && e.status==='approved');
     if(canPick) {
       const fields=[];
@@ -182,7 +210,7 @@ async function loadLeague(id) {
       if(round.mvp_bonus) fields.push(field('mvp','Super Bowl MVP selection (use commissioner-provided player identifier)','text',data.submissions.find(s=>s.round_id===round.id && s.user_id===account.profile.user_id)?.mvp_pick || '',required));
       form(card,'Your selections',fields,'Submit all selections',p=>command(pickCommand(round,data.games,games.map(g=>({game_id:g.id,side:p['side_'+g.id],weight:p['weight_'+g.id]})),p.mvp)));
       const prior=data.submissions.find(s=>s.round_id===round.id && s.user_id===account.profile.user_id);
-      if(prior) card.append(node('p','Saved at '+new Date(prior.submitted_at).toLocaleString()+'. Changes require resubmitting every pick before the server deadline.'));
+      if(prior) card.append(node('p','Saved at '+formatGST(prior.submitted_at)+'. Changes require resubmitting every pick before the server deadline.'));
     } else card.append(node('p','Selections are unavailable until entry approval and round opening, or are now locked. The server enforces the deadline.'));
     if(owner && data.league.status!=='final') commissionerRound(card,round,games);
     if(Date.parse(round.lock_at)<=Date.parse(data.server_time)) {
@@ -195,7 +223,7 @@ async function loadLeague(id) {
   table(panel,['Rank','Competitor','Points','ATS wins','ATS losses'],standings.map(x=>[x.rank,x.display_name,x.points,x.wins,x.losses]));
   const history=details(panel,'Historical snapshots');
   for(const snapshot of await api.query({op:'history',league_id:id})) {
-    history.append(node('h3',`${snapshot.reason} · ${new Date(snapshot.recorded_at).toLocaleString()}`));
+    history.append(node('h3',`${snapshot.reason} · ${formatGST(snapshot.recorded_at)}`));
     table(history,['Rank','Competitor','Points'],snapshot.snapshot.map(x=>[x.rank,x.display_name,x.points]));
   }
   if(owner && data.league.status==='open') panel.append(button('Finalize championship after all rounds',()=>command({op:'league_finalize',league_id:id})));
@@ -218,7 +246,7 @@ function commissionerRound(parent,round,games) {
 function renderReport(parent,report) {
   table(parent,['Commercial metric','Count'],[['Prospects',report.prospects],['Documented interested prospects',report.interested],['Drafts awaiting approval',report.awaiting_approval]]);
   table(parent,['Currency','Contracted revenue (not cash collected)','Weighted pipeline (not revenue)'],report.pipeline_by_currency.map(x=>[x.currency,x.contracted_revenue || 0,x.weighted_pipeline || 0]));
-  table(parent,['Follow-up','Due'],report.follow_ups.map(x=>[x.organization,new Date(x.due).toLocaleString()]));
+  table(parent,['Follow-up','Due'],report.follow_ups.map(x=>[x.organization,formatGST(x.due)]));
 }
 async function commercial() {
   const records=await api.query({op:'crm_records'}),report=await api.query({op:'crm_report'});

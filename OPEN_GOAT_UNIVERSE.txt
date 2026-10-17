@@ -1,0 +1,52 @@
+OPERATION ONE UNIVERSE — THE INTEGRATED LOCAL APPLICATION
+
+Requires a desktop computer with Node.js 22 or newer.
+
+In this folder run:
+  node backend/scripts/start-universe.mjs
+
+Then open:
+  http://127.0.0.1:8787/
+
+The delivered application ZIP includes the pinned Node dependencies. No npm
+installation, Supabase token or model API key is needed for that ZIP.
+For a Git checkout instead, first run npm ci --ignore-scripts, then npm run universe.
+
+EXPLORE:
+The cinematic arrival, optional founder theme music and five practice sports
+rooms are connected to the resort, city, stadium, trivia, golf, Field Vision,
+Spotlight and cinema studio through the shared Explore Universe menu.
+The League Workspace link opens /games on the SAME backend.
+The Member Account link opens /manage. Register your own local account; there
+are no preinstalled accounts/passwords. The account and saved league drafts
+persist in .local/one-universe. Each full-page private workspace requires login;
+tokens are kept in memory, not shared across pages or saved in browser storage.
+Paid memberships, payment checkout and email sending are disabled.
+The /bullpen room remains private; account creation does not grant a seat.
+Founder binding requires a separately authorized exact account UUID operation.
+
+This is one connected development application, not a public launch or a claim
+that all features are complete. Fictional practice scores do not become official
+league results. Official contests still require reviewed rules/schedules and
+commissioner approval. Existing music is included; founder films not present in
+the selected source branches are not silently invented or downloaded. The cinema
+studio can play files YOU select locally, without uploading them.
+
+Stop with Ctrl+C. Close the app before copying its database directory. Do not run
+two copies against the same database. Do not delete/replace an existing data
+directory to upgrade. The starter never opens the original .local/postgres or a
+hosted database. It does not import existing hosted users/messages/records.
+
+The address is local to the computer running Node. It is NOT an internet URL
+and cannot be opened from a separate iPhone. A stable shared HTTPS URL requires
+an approved host, hardened hosted Auth/database setup and deployment approval.
+Do not expose this development password-authentication server to real users.
+
+Code integration and local tests do not substitute for real browser/iPhone,
+accessibility, hosted security or backup-restore acceptance. The original website,
+Publications and provider resources were not deployed or modified by this work.
+
+LATE-NIGHT FOUNDER REVIEW (October 17, 2026)
+See docs/LATE_NIGHT_FOUNDER_WALKTHROUGH_20261017.md for exactly what to click,
+and docs/LATE_NIGHT_REVIEW_20261017.md for fresh evidence and release gates.
+Public world naming is Goatville, as approved by Adam; GST follows New York DST.
