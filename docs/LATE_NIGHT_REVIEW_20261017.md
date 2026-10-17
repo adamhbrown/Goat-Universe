@@ -16,6 +16,8 @@ Existing scenes and creative assets remain the foundation. Arrival now leads dir
 
 The city has a named central **GOATVERSE HOLDINGS INC.** headquarters tower/sign and a headquarters directory linking accounts, leagues, DSN, Publications and the private Bullpen boundary. Private workspaces have a direct return to the city. The seven districts remain distinct, with planned areas honestly labeled.
 
+After the code/evidence commit, Adam supplied a cinematic waterfront city panorama in the conversation: central GOATVERSE HOLDINGS tower, GOAT Arena, DSN, Publications, League of Greatness, GOAT Tee Links, the mall and Mountain Goat Ski Lodge. This is the founder's visual reference, not a screenshot of the current candidate. The candidate still uses a simplified illustrated city; the supplied panorama is not embedded or included as a repository asset. Matching that visual target remains an explicit founder/design acceptance gap.
+
 Adam explicitly approved revising public “GOATVILLE USA” wording to **Goatville**. Public text was updated; historical reports and original source branches were not rewritten. The five canonical competition names and their existing approved supporting slogans remain. No new competition rules or licensed founder films were invented.
 
 A fixed **Goatville Standard Time (GST)** clock appears on all ten visitor parent pages and the league, member, player and Bullpen workspaces. It uses `America/New_York`, including automatic DST; `<time datetime>` stays UTC. Timestamp displays in competition/member/Bullpen views use GST. Schedule inputs retain their explicitly labeled browser timezone and convert to UTC; input conversion and scoring/deadline authority are unchanged. The visible clock follows the device clock, as its tooltip states; server UTC still controls deadlines. With JavaScript off, an honest timezone/enable-clock label is shown.
@@ -50,7 +52,7 @@ The only new backend routes are three exact, read-only clock/format assets, avai
 | Category | Evidence and practical limit |
 | --- | --- |
 | Working in this integrated local candidate | See fresh final verification below: source/API tests, local browser layouts and real account/draft click journey. All evidence uses local synthetic test data. |
-| Present, awaiting founder / device acceptance | Existing premium scenes; headquarters/signage; approved naming revision; GST; continuity and competition labels. Automated Chromium emulation does not establish physical iPhone, Safari, VoiceOver or founder taste approval. |
+| Present, awaiting founder / device acceptance | Existing scenes; headquarters/signage; approved naming revision; GST; continuity and competition labels. The simplified city does not yet match Adam's supplied cinematic waterfront panorama. Automated Chromium emulation does not establish physical iPhone, Safari, VoiceOver or founder taste approval. |
 | Blocked pending hosting/security/founder approval | Shared HTTPS host/origin/cost; hosted Auth/RLS/session revocation; hosted restore rehearsal; three extra migrations and frozen release artifact; official rules/scoring identities; cleared founder films; paid/model activation; final merge/deployment. |
 
 ## Security and recovery gates
@@ -70,6 +72,8 @@ The only new backend routes are three exact, read-only clock/format assets, avai
 ## Final verification
 
 The reviewed branch is `work/late-night-goatville-20261017`; its immutable commit is linked from the draft candidate PR. The checks below ran locally on this follow-up source, using Node.js **v24.19.0**, Python Playwright **1.62.0** and installed Chromium.
+
+Code and browser-evidence commit: `37e4526270935cf6443ad8760acaef27dfb3bdae`. A subsequent documentation-only commit records Adam's panorama reference and the remaining visual gap; it does not change the tested application.
 
 | Exact command | Outcome |
 | --- | --- |

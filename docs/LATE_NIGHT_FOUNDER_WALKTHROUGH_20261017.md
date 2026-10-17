@@ -2,6 +2,8 @@
 
 **GO for local founder review. NO-GO for merge, shared hosting, hosted migrations or production.**
 
+**Visual reference:** Adam subsequently supplied the cinematic waterfront panorama with the central GOATVERSE HOLDINGS tower, arena, Publications, League of Greatness, golf links and mountain lodge. The candidate's city page still uses a simplified illustrated skyline; the panorama has not been embedded. Review this as a functional integration candidate, with that visual gap explicitly open.
+
 Candidate: `work/late-night-goatville-20261017`, based on [draft PR #37](https://github.com/adamhbrown/Goat-Universe/pull/37) at `3ff7010ece2d5e3b26f4ae94d67f692f986625ca`. The original PR and its branch are preserved. See [sprint evidence and gates](LATE_NIGHT_REVIEW_20261017.md) for the reviewed commit, screenshots and test results.
 
 On the same desktop that has Node.js 22+, open this checkout and run:
