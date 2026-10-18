@@ -13,16 +13,19 @@ test('cinematic arrival is an accessible choice, never a mandatory blocker',()=>
   assert.match(city,/aria-label="Start your GOATVILLE journey"/);
   assert.doesNotMatch(city,/autoplay|new Audio\(|AudioContext|setTimeout\(/);
 });
-test('GOATVILLE gateway offers exactly three directly navigable premium attractions',()=>{
+test('GOATVILLE gateway offers three direct City, league and media destinations while practice is secondary',()=>{
   assert.equal((city.match(/class="arrival-card"/g)||[]).length,3);
-  for(const path of ['goat-games-play-lab.html','goatville-spotlight.html','goatville-cinema.html']){
-    assert.match(city,new RegExp('class="arrival-card" href="'+path.replace('.','\\.')+'"'));
+  for(const path of ['goatville-stadium.html','/games','goatville-cinema.html']){
+    assert.ok(city.includes('class="arrival-card" href="'+path+'"'),path);
   }
   assert.match(city,/data-spot="stadium"/);
   assert.match(city,/data-spot="arcade"/);
   assert.match(city,/data-spot="cinema"/);
-  assert.match(city,/PLAYABLE DEMO/);
-  assert.match(city,/PRIVATE PREVIEW/);
+  assert.match(city,/FIVE GOAT GAMES/);
+  assert.match(city,/LEAGUE WORKSPACE/);
+  assert.match(city,/MEDIA &amp; MUSIC/);
+  assert.match(city,/<details class="city-optional">/);
+  assert.match(city,/href="goat-games-play-lab\.html"/);
 });
 test('five championship arenas have restrained motion with reduced-motion escape',()=>{
   assert.equal((lab.match(/data-number="\d\d" role="tabpanel"/g)||[]).length,5);
