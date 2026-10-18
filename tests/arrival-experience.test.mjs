@@ -41,6 +41,26 @@ test('cinematic arrival has one clear Enter the Universe action',()=>{
  assert.equal(doc.body.classList.contains('entered'),false);
  dom.window.close();
 });
+test('Goatville opens through one dramatic, accessible city gateway',()=>{
+ const dom=render();
+ const doc=dom.window.document;
+ const gateway=doc.querySelector('.goatville-portal');
+ assert.ok(gateway,'one scenic gateway');
+ assert.equal(doc.querySelectorAll('.goatville-portal').length,1);
+ assert.equal(gateway.getAttribute('aria-labelledby'),'goatville-gate-title');
+ const door=gateway.querySelector('.goatville-portal-link');
+ assert.equal(door.getAttribute('href'),'./goatville-city.html');
+ assert.equal(door.getAttribute('aria-label'),'Enter Goatville City');
+ assert.match(door.textContent,/ENTER GOATVILLE/);
+ assert.equal(gateway.querySelectorAll('.gateway-action').length,1);
+ assert.equal(gateway.querySelectorAll('img').length,1);
+ assert.equal(gateway.querySelector('img').getAttribute('alt'),'');
+ assert.match(gateway.querySelector('img').getAttribute('src'),/founder-arrival-gate\\.jpg/);
+ assert.ok(doc.querySelector('.gateway-nearby a[href="./goatville-stadium.html"]'));
+ assert.ok(doc.querySelector('.gateway-nearby a[href="./gpi.html"]'));
+ assert.match(html,/prefers-reduced-motion:reduce/);
+ dom.window.close();
+});
 test('each GOAT Game sends visitors to a distinct actual competition workspace',()=>{
  const dom=render();
  assert.deepEqual([...dom.window.document.querySelectorAll('.cards a.card')].map(a=>a.getAttribute('href')),[
