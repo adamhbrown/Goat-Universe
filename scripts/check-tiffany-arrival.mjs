@@ -19,8 +19,8 @@ const checks = [
 ];
 let failures=0;
 for (const [name, check] of checks) {
-  try { check(); process.stdout.write('PASS '+name+'\\n'); }
-  catch (error) { failures++; process.stderr.write('FAIL '+name+': '+error.message+'\\n'); }
+  try { check(); process.stdout.write('PASS '+name+'\n'); }
+  catch (error) { failures++; process.stderr.write('FAIL '+name+': '+error.message+'\n'); }
 }
-process.stdout.write((checks.length-failures)+'/'+checks.length+' arrival smoke checks passed\\n');
+process.stdout.write((checks.length-failures)+'/'+checks.length+' arrival smoke checks passed\n');
 if (failures) process.exitCode=1;
