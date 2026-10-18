@@ -11,6 +11,20 @@ function render(hash=''){
  dom.window.eval(script);
  return dom;
 }
+test('GPI is the giant visible flagship brand rather than a tiny eyebrow label',()=>{
+ const dom=render();
+ const {document}=dom.window;
+ const heading=document.querySelector('h1.gpi-wordmark');
+ assert.ok(heading);
+ assert.equal(heading.textContent,'GPI');
+ assert.equal(document.querySelector('.gpi-fullname').textContent,'GOAT POWER INDEX');
+ assert.equal(document.querySelectorAll('h1').length,1);
+ assert.match(html,/font-size:clamp\(7\.1rem,30vw,23rem\)/);
+ assert.match(html,/Same block\./);
+ assert.match(html,/No GPS tracking, background geofencing/);
+ assert.equal(document.querySelectorAll('input').length,0);
+ dom.window.close();
+});
 test('GPI has five geographic tabs and does not invent a score or ranking',()=>{
  const dom=render();
  const {document}=dom.window;
