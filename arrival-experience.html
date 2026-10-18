@@ -127,6 +127,9 @@
 }
 @media(max-width:390px){.goatville-portal .goatville-brand{font-size:clamp(2.8rem,11vw,4.5rem)!important}}
 @media(prefers-reduced-motion:reduce){.goatville-portal-link:focus-visible .goatville-portal-photo{transform:none}}
+
+/* Keep the fixed navigation above the gateway image on desktop: the artwork remains unobstructed. */
+@media(min-width:750px){.world{padding-top:calc(env(safe-area-inset-top) + 180px)}}
 </style></head><body>
 <a class="skip" href="#enter">Skip to entrance</a><header class="top"><a class="brand" href="#arrival" id="home">GOAT <b>UNIVERSE</b></a><div class="top-actions"><span class="top-tag">FOUNDER PREVIEW</span><button id="music-toggle" class="music-toggle" type="button" aria-pressed="false" aria-label="Play GOAT Universe theme">♫ PLAY MUSIC</button></div></header>
 <main><section class="hero" id="arrival"><div><div class="eyebrow">The next era of sports fandom</div><div class="wordmark">GOAT <span>UNIVERSE</span></div><p>I’m making being a sports fan more entertaining.</p><button class="cta" id="enter">Enter the Universe <span aria-hidden="true">→</span></button><div class="note">Five games. One extraordinary world.</div><div class="arrival-scroll" aria-hidden="true"><span></span>THE WORLD AWAITS</div></div></section>
