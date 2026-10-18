@@ -3,19 +3,22 @@
 (()=>{
   'use strict';
   if(document.getElementById('gv-portal-dialog'))return;
+  // Only four primary choices; rankings, legacy entry points and attractions are secondary.
   const pages=Object.freeze([
-    {path:'index.html',index:'00',title:'GOAT UNIVERSE ARRIVAL',desc:'The cinematic entrance and optional founder theme.',kind:'ENTER'},
-    {path:'goatville-city.html',index:'01',title:'GOATVILLE CITY',desc:'Corporate headquarters and seven connected districts.',kind:'EXPLORE'},
-    {path:'/games',index:'02',title:'GOAT GAMES · LEAGUE WORKSPACE',desc:'Five distinct competitions. Local registration, saved drafts and commissioner tools; official launch pending.',kind:'COMPETE'},
-    {path:'/manage',index:'03',title:'MEMBER ACCOUNT',desc:'Register and manage your local account. Paid membership and email remain off.',kind:'ACCOUNT'},
-    {path:'goatville-stadium.html',index:'04',title:'THE STADIUM',desc:'Discover the five competition identities and Downtown Sports Nation.',kind:'DISCOVER'},
-    {path:'play.html',index:'05',title:'SPORTS PRACTICE ROOMS',desc:'Five fictional sports practice experiences. Scores stay separate from league results.',kind:'PRACTICE'},
-    {path:'goat-games-play-lab.html',index:'06',title:'FIVE-SPORT PRACTICE LAB',desc:'Try the mechanics with fictional scenarios. Open the League Workspace for competitions.',kind:'PRACTICE'},
-    {path:'resort.html',index:'07',title:'THE RESORT',desc:'The resort circuit, Sports IQ, golf and guest keepsakes.',kind:'EXPLORE'},
-    {path:'goatville.html',index:'08',title:'GOATVILLE PLAYGROUND',desc:'Meet the city, try arcade challenges and discover the passport.',kind:'PLAY'},
-    {path:'goatville-spotlight.html',index:'09',title:'SPOTLIGHT CIRCUIT',desc:'Five sports. Five strategy decisions. One guest challenge.',kind:'PLAY'},
-    {path:'goatville-field-vision.html',index:'10',title:'FIELD VISION',desc:'Take control of the fictional football decision room.',kind:'PLAY'},
-    {path:'goatville-cinema.html',index:'11',title:'THE CINEMATIC STUDIO',desc:'Rehearse Goatville video and music with private local files.',kind:'WATCH'},
+    {path:'goatville-city.html',index:'01',title:'GOATVILLE',desc:'Enter the city and explore its destinations.',kind:'DISCOVER'},
+    {path:'/games',index:'02',title:'GAMES',desc:'Five official competition workspaces. Development access only.',kind:'COMPETE'},
+    {path:'goatville-cinema.html',index:'03',title:'MEDIA',desc:'Explore the cinema and sports storytelling experience.',kind:'WATCH'},
+    {path:'/manage',index:'04',title:'MY LEAGUE',desc:'Your account and connected competition access.',kind:'ACCOUNT'},
+    {path:'gpi.html',index:'05',title:'GOAT POWER INDEX',desc:'Personal, Block, County, State, Region and Global standings. No invented results.',kind:'RANKINGS'},
+    {path:'goatville-stadium.html',index:'06',title:'THE STADIUM',desc:'Make your way from the city into the arena.',kind:'EXPLORE'},
+    {path:'arrival-experience.html',index:'07',title:'THE ARRIVAL',desc:'Return to the premium GOAT Universe entrance.',kind:'ENTER'},
+    {path:'index.html',index:'08',title:'THE ORIGINAL WORLD',desc:'Explore the preserved GOAT Universe homepage.',kind:'ARCHIVE'},
+    {path:'resort.html',index:'09',title:'THE RESORT',desc:'The resort district and guest experiences.',kind:'EXPLORE'},
+    {path:'goatville.html',index:'10',title:'GOATVILLE ATTRACTIONS',desc:'Explore additional districts and activities.',kind:'EXPLORE'},
+    {path:'play.html',index:'11',title:'SPORTS ROOMS',desc:'Optional practice experiences. Not official results.',kind:'PRACTICE'},
+    {path:'goat-games-play-lab.html',index:'12',title:'PRACTICE ARCADE',desc:'Try optional fictional sports challenges.',kind:'PRACTICE'},
+    {path:'goatville-spotlight.html',index:'13',title:'SPOTLIGHT CIRCUIT',desc:'An optional guest skill challenge.',kind:'PRACTICE'},
+    {path:'goatville-field-vision.html',index:'14',title:'FIELD VISION',desc:'An optional football decision room.',kind:'PRACTICE'},
   ]);
   const current=location.pathname.split('/').pop()||'index.html';
   const make=(tag,classes,text)=>{
@@ -47,16 +50,16 @@
 
   const heading=make('h2','gv-h1');heading.id='gv-portal-title';
   heading.append(document.createTextNode('EVERY GOAT HAS '),make('em','','A PLACE.'));
-  const intro=make('p','gv-subtitle','Enter the city. Choose your arena. Explore original sports, stories, music and entertainment—all under one universe.');
+  const intro=make('p','gv-subtitle','One universe. Four clear destinations. Explore rankings, the stadium and guest attractions when you want more.');
   intro.id='gv-portal-description';
   shell.append(heading,intro);
 
   const grid=make('nav','gv-navigation');
-  grid.setAttribute('aria-label','GOAT Universe destinations');
-  for(const item of pages){
+  grid.setAttribute('aria-label','Four primary GOAT Universe destinations');
+  for(const item of pages.slice(0,4)){
     const card=make('a','gv-destination');
     card.href=item.path;
-    if(item.path===current)card.setAttribute('aria-current','page');
+    if(item.path===current||item.path==='/'+current)card.setAttribute('aria-current','page');
     const topLine=make('div','gv-entry-top');
     topLine.append(make('span','',item.index+' / '+item.kind),make('span','gv-entry-arrow','↗'));
     const bottom=make('div');
@@ -65,11 +68,29 @@
     grid.append(card);
   }
   shell.append(grid);
+  const extras=make('details','gv-secondary');
+  const summary=make('summary','','GPI, Stadium & more destinations');
+  extras.append(summary);
+  const additional=make('nav','gv-navigation gv-additional');
+  additional.setAttribute('aria-label','Rankings, stadium and optional attractions');
+  for(const item of pages.slice(4)){
+    const card=make('a','gv-destination');
+    card.href=item.path;
+    if(item.path===current||item.path==='/'+current)card.setAttribute('aria-current','page');
+    const topLine=make('div','gv-entry-top');
+    topLine.append(make('span','',item.index+' / '+item.kind),make('span','gv-entry-arrow','↗'));
+    const bottom=make('div');
+    bottom.append(make('div','gv-entry-title',item.title),make('p','gv-entry-description',item.desc));
+    card.append(topLine,bottom);
+    additional.append(card);
+  }
+  extras.append(additional);
+  shell.append(extras);
   const banner=make('div','gv-route-highlight');
   banner.append(make('strong','','THE WORLD IS IN DEVELOPMENT'),make('span','','One connected local application: guest attractions and authenticated development league tools. No public contest, payments, verified guest awards or production launch is activated.'));
   shell.append(banner);
   const foot=make('div','gv-menu-bottom');
-  foot.append(make('span','','GOATVERSE HOLDINGS INC. · GOAT Universe · Goatville'),make('b','','CAN’T STOP THE BAA.'));
+  foot.append(make('span','','YOU DON’T JUST WATCH THE STORY. YOU ENTER IT.'),make('b','','CAN’T STOP THE BAA.'));
   shell.append(foot);
   dialog.append(shell);
 
