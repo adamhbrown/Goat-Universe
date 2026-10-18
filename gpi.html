@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090909">
+<meta name="description" content="GOAT Power Index: your place in GOAT Universe from your block to the world. Rankings display verified competition data only.">
+<title>GOAT Power Index | GOAT Universe</title>
+<style>
+@font-face{font-family:Manrope;src:url('./assets/fonts/manrope-latin.woff') format('woff');font-display:swap;font-weight:200 800}
+@font-face{font-family:Inter;src:url('./assets/fonts/inter-latin.woff') format('woff');font-display:swap;font-weight:100 900}
+:root{color-scheme:dark;--ink:#090909;--panel:#171717;--cream:#f6f3e9;--gold:#e7bc69;--muted:#c5beb2;--line:#66543a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--cream);font:16px/1.7 Inter,system-ui,-apple-system,sans-serif}a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
+.skip{position:absolute;left:12px;top:-70px;background:var(--gold);color:#111;padding:9px 13px;z-index:10}.skip:focus{top:12px}
+.wrap{width:min(1120px,calc(100% - 38px));margin:auto}
+header{border-bottom:1px solid #66543a77;background:#0e0e0ef5;position:sticky;top:0;z-index:5;backdrop-filter:blur(18px)}
+.header-inner{min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.logo{font-family:Manrope,sans-serif;font-weight:900;letter-spacing:.04em;white-space:nowrap}.logo strong{color:var(--gold)}
+nav{display:flex;align-items:center;gap:clamp(12px,2vw,29px);font-size:.72rem;font-weight:750;letter-spacing:.07em;text-transform:uppercase}nav a:hover{color:var(--gold)}
+.hero{padding:clamp(76px,10vw,138px) 0 68px;min-height:540px;position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(90deg,#090909 10%,#090909c9 58%,#09090955),url('./assets/goatville/founder-arrival-gate.jpg') center 45%/cover no-repeat}
+.hero:after{content:"";position:absolute;inset:auto 0 0;height:38%;z-index:-1;background:linear-gradient(transparent,#090909)}
+.eyebrow{font-size:.7rem;letter-spacing:.22em;font-weight:800;text-transform:uppercase;color:var(--gold)}
+h1,h2,h3{font-family:Manrope,Inter,system-ui,sans-serif;line-height:1.07;letter-spacing:-.048em}
+h1{font-size:clamp(3.6rem,10.5vw,8rem);max-width:880px;margin:19px 0 24px}h1 span{color:var(--gold)}.hero p{font-size:clamp(1rem,2vw,1.25rem);max-width:620px;color:#eee5d6}
+.status{display:inline-flex;align-items:center;gap:10px;padding:9px 14px;border:1px solid #af945f;background:#111a;color:#f8e5bb;border-radius:30px;font-size:.75rem;font-weight:750;letter-spacing:.03em}
+.status:before{content:"";width:8px;height:8px;border:1px solid var(--gold);border-radius:50%}
+main .content{padding:40px 0 100px}
+.personal{display:grid;grid-template-columns:1fr 1fr;gap:24px;border:1px solid #987c4b;border-radius:19px;background:linear-gradient(135deg,#28231c,#141414 57%);padding:clamp(25px,5vw,54px);margin-top:-62px;position:relative;box-shadow:0 20px 70px #0009}
+.personal h2{font-size:clamp(2.2rem,4vw,3.6rem);margin:12px 0}.personal p{color:#d8cec0;max-width:540px}
+.metric{display:flex;flex-direction:column;justify-content:space-between;background:#0d0d0dc9;border:1px solid #8e7447a0;border-radius:14px;padding:27px;min-height:190px}
+.metric-label{font-size:.68rem;color:var(--gold);font-weight:800;letter-spacing:.15em;text-transform:uppercase}
+.metric strong{display:block;font:850 clamp(1.65rem,3.5vw,2.7rem)/1.12 Manrope,sans-serif;letter-spacing:-.04em}
+.metric small{color:var(--muted);font-size:.83rem}
+.link{color:var(--gold);font-weight:800;text-underline-offset:4px;text-decoration:underline}.link:hover{color:#fff}
+.section-intro{margin:clamp(72px,9vw,116px) 0 26px}.section-intro h2{font-size:clamp(2.5rem,6vw,5rem);margin:14px 0}.section-intro p{max-width:710px;color:var(--muted)}
+.levels{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin:30px 0 0}
+.levels button{min-height:70px;border:1px solid #5c5347;border-radius:10px;color:#dbd4c5;background:#171717;text-align:left;padding:15px;font-weight:850;font-size:.85rem;letter-spacing:.02em}
+.levels button span{display:block;color:#a79b85;font-size:.65rem;font-weight:700;letter-spacing:.1em;margin-bottom:4px}
+.levels button[aria-selected="true"]{color:#18140c;background:var(--gold);border-color:var(--gold)}
+.levels button[aria-selected="true"] span{color:#48341d}
+.level-panel{border:1px solid #66543a;border-top:2px solid var(--gold);padding:clamp(25px,5vw,55px);background:radial-gradient(ellipse at top right,#5e492120,transparent 55%),#141414;border-radius:0 0 16px 16px;min-height:365px}
+.level-panel[hidden]{display:none}.scope-top{display:flex;align-items:start;justify-content:space-between;gap:20px}
+.scope-top h3{font-size:clamp(2.2rem,5vw,3.6rem);margin:8px 0 18px}.scope-top p{max-width:600px;color:var(--muted)}
+.unavailable{margin-top:38px;padding:25px 0;border-top:1px solid #5c5347;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.unavailable strong{display:block;font:850 clamp(1.3rem,2.5vw,1.8rem) Manrope,sans-serif}
+.unavailable p{max-width:420px;color:var(--muted);font-size:.9rem;margin:8px 0}
+.why{border-top:1px solid #4d453a;margin-top:80px;padding-top:35px;display:grid;grid-template-columns:1fr 1fr;gap:50px}.why h2{font-size:clamp(2rem,3.5vw,3rem);margin:0}.why p{color:var(--muted);margin-top:0}
+footer{padding:32px 0 80px;border-top:1px solid #544c3e;color:#aca398;font-size:.8rem;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:720px){.header-inner{flex-direction:column;align-items:start;padding:15px 0 12px;gap:11px}nav{gap:16px;overflow-x:auto;width:100%;white-space:nowrap;padding-bottom:5px}.hero{min-height:485px;padding:70px 0 95px;background-position:60% center}.personal{grid-template-columns:1fr;margin-top:-52px}.levels{gap:5px}.levels button{font-size:.72rem;padding:10px 7px;min-height:66px;text-align:center}.levels button span{font-size:.52rem}.scope-top,.unavailable,.why{display:block}.unavailable>div+div{margin-top:28px}.why>*+*{margin-top:24px}}
+@media(max-width:410px){.levels{grid-template-columns:repeat(3,minmax(0,1fr))}.levels button{min-height:58px}.hero h1{font-size:3.45rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to rankings</a>
+<header><div class="wrap header-inner"><a class="logo" href="./arrival-experience.html#universe" aria-label="GOAT Universe home">GOAT <strong>UNIVERSE</strong></a><nav aria-label="GOAT Universe primary destinations"><a href="./arrival-experience.html#universe">Goatville</a><a href="./arrival-experience.html#games">Games</a><a href="./arrival-experience.html#media">Media</a><a href="/games">My League</a></nav></div></header>
+<section class="hero"><div class="wrap"><div class="eyebrow">GOAT Power Index / GPI</div><h1>How high <span>can you climb?</span></h1><p>From your block to the global stage. One place to discover how you stand among the GOAT Universe competition community.</p><div class="status">Verified rankings only · Founder development preview</div></div></section>
+<main id="content"><div class="wrap content">
+<section class="personal" aria-labelledby="personal-title"><div><div class="eyebrow">01 / Your standing</div><h2 id="personal-title">Your place in the Universe.</h2><p>Your individual GPI, qualifying performances and location-based standing belong here once the member account, approved scoring rules and verified standings are connected.</p><a class="link" href="/games">Go to your competition account ↗</a></div><div class="metric" aria-label="Personal GPI status"><span class="metric-label">My GOAT Power Index</span><strong>Not yet available</strong><small>No score is shown without verified account and competition records.</small></div></section>
+<section aria-labelledby="rankings-title"><div class="section-intro"><div class="eyebrow">02 / Local to global</div><h2 id="rankings-title">Every level. <span style="color:var(--gold)">One ambition.</span></h2><p>Choose a geographic level to explore the rankings structure. The leaderboards will show actual eligible competitors only—never sample names, invented scores or fictional movement.</p></div>
+<div class="levels" role="tablist" aria-label="GPI geographic leaderboard">
+<button type="button" id="tab-block" role="tab" aria-selected="true" aria-controls="panel-block" tabindex="0" data-scope="block"><span>01 / LOCAL</span>Block</button>
+<button type="button" id="tab-county" role="tab" aria-selected="false" aria-controls="panel-county" tabindex="-1" data-scope="county"><span>02 / COUNTY</span>County</button>
+<button type="button" id="tab-state" role="tab" aria-selected="false" aria-controls="panel-state" tabindex="-1" data-scope="state"><span>03 / STATE</span>State</button>
+<button type="button" id="tab-region" role="tab" aria-selected="false" aria-controls="panel-region" tabindex="-1" data-scope="region"><span>04 / REGION</span>Region</button>
+<button type="button" id="tab-global" role="tab" aria-selected="false" aria-controls="panel-global" tabindex="-1" data-scope="global"><span>05 / WORLD</span>Global</button>
+</div>
+<div id="panel-block" class="level-panel" role="tabpanel" aria-labelledby="tab-block" tabindex="0"><div class="scope-top"><div><div class="eyebrow">Block leaderboard</div><h3>Own your block.</h3><p>The smallest stage with the biggest bragging rights. When location verification and rankings are available, see where you stand alongside eligible members on your block.</p></div></div><div class="unavailable"><div><span class="metric-label">Current standings</span><strong>Not published</strong><p>No verified block leaderboard is available yet.</p></div><div><span class="metric-label">Your position</span><strong>Awaiting verified data</strong><p>Your location is never guessed from the browser or a guest visit.</p></div></div></div>
+<div id="panel-county" class="level-panel" role="tabpanel" aria-labelledby="tab-county" tabindex="0" hidden><div class="eyebrow">County leaderboard</div><h3>Make your county proud.</h3><p>Compete for a place among the top performers in your county. County boundaries and eligibility must be established before records appear.</p><div class="unavailable"><div><span class="metric-label">County top 10</span><strong>Not published</strong><p>No verified county top 10 is available yet.</p></div><div><span class="metric-label">Your county standing</span><strong>Awaiting verified data</strong><p>A confirmed member location and eligible GPI records are required.</p></div></div></div>
+<div id="panel-state" class="level-panel" role="tabpanel" aria-labelledby="tab-state" tabindex="0" hidden><div class="eyebrow">State leaderboard</div><h3>Chase the top 100.</h3><p>Measure your performance against eligible competitors statewide, including the ambition to reach the state top 100.</p><div class="unavailable"><div><span class="metric-label">State top 100</span><strong>Not published</strong><p>No verified state top 100 is available yet.</p></div><div><span class="metric-label">Your state standing</span><strong>Awaiting verified data</strong><p>Scores will appear only after competition results are validated.</p></div></div></div>
+<div id="panel-region" class="level-panel" role="tabpanel" aria-labelledby="tab-region" tabindex="0" hidden><div class="eyebrow">Regional leaderboard</div><h3>Represent your region.</h3><p>See how the competition stacks up across your verified region once regional definitions and eligible results are approved.</p><div class="unavailable"><div><span class="metric-label">Regional standings</span><strong>Not published</strong><p>No verified regional leaderboard is available yet.</p></div><div><span class="metric-label">Your region standing</span><strong>Awaiting verified data</strong><p>Regional boundaries are not inferred or fabricated.</p></div></div></div>
+<div id="panel-global" class="level-panel" role="tabpanel" aria-labelledby="tab-global" tabindex="0" hidden><div class="eyebrow">Global leaderboard</div><h3>The world is watching.</h3><p>Your competitive ambition goes beyond one league. This is the destination for verified worldwide GOAT Power Index standings.</p><div class="unavailable"><div><span class="metric-label">Global standings</span><strong>Not published</strong><p>No official global rankings are available yet.</p></div><div><span class="metric-label">Your world ranking</span><strong>Awaiting verified data</strong><p>We will not display placeholder champions or sample positions as if they were real.</p></div></div></div>
+</section>
+<section class="why" aria-labelledby="confidence-title"><h2 id="confidence-title">The number has to <span style="color:var(--gold)">mean something.</span></h2><div><p>GPI is intended to connect an individual fan's eligible GOAT Games performance with their standings from local to global. Published rankings require approved calculation rules, reliable official results, member identity and appropriate location verification.</p><p>This is a navigable founder-review interface, not a live standings service. <a class="link" href="./arrival-experience.html#games">Explore the five GOAT Games →</a></p></div></section>
+</div></main><div class="wrap"><footer><span>© GOATVERSE HOLDINGS INC. · GOAT UNIVERSE</span><span>Development review · No live payments or simulated rankings</span></footer></div>
+<script>
+(()=>{'use strict';const tabs=[...document.querySelectorAll('[role="tab"][data-scope]')];const scopes=tabs.map(t=>t.dataset.scope);function activate(scope,focus=false,updateHash=false){const next=scopes.includes(scope)?scope:'block';for(const tab of tabs){const on=tab.dataset.scope===next;tab.setAttribute('aria-selected',String(on));tab.tabIndex=on?0:-1;document.getElementById('panel-'+tab.dataset.scope).hidden=!on;if(on&&focus)tab.focus()}if(updateHash)history.replaceState(null,'','#'+next)}for(const [index,tab] of tabs){tab.addEventListener('click',()=>activate(tab.dataset.scope,true,true));tab.addEventListener('keydown',event=>{let target;if(event.key==='ArrowRight')target=(index+1)%tabs.length;if(event.key==='ArrowLeft')target=(index-1+tabs.length)%tabs.length;if(event.key==='Home')target=0;if(event.key==='End')target=tabs.length-1;if(target!==undefined){event.preventDefault();activate(tabs[target].dataset.scope,true,true)}})}window.addEventListener('hashchange',()=>activate(location.hash.slice(1)));activate(location.hash.slice(1))})();
+</script>
+</body></html>
