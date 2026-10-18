@@ -14,6 +14,18 @@ function render(url='https://founder.example/arrival-experience.html'){
  dom.window.eval(script);
  return dom;
 }
+test('flagship GOAT Universe intellectual-property brands dominate the arrival',()=>{
+ const dom=render();
+ const doc=dom.window.document;
+ assert.equal(doc.querySelector('.goatville-brand')?.firstChild?.textContent,'GOATVILLE');
+ assert.match(doc.querySelector('.games-wordmark')?.textContent,/GOAT GAMES/);
+ assert.equal(doc.querySelector('#gpi-headline')?.textContent,'GPI');
+ assert.match(doc.querySelector('.media-brand-heading')?.textContent,/GOATVERSE CREATIVE MEDIA/);
+ assert.equal(doc.querySelectorAll('.cards a.card strong').length,5);
+ assert.match(html,/\.card strong\{font:1000/);
+ assert.match(html,/\.gpi-spotlight h2\.gpi-brand-heading\{font:1000/);
+ dom.window.close();
+});
 test('cinematic arrival has one clear Enter the Universe action',()=>{
  const dom=render();
  const doc=dom.window.document;
