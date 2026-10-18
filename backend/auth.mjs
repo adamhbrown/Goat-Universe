@@ -78,12 +78,22 @@ export class LocalAuth {
 export class SupabaseAuth {
   constructor(config, fetchImpl = fetch) { this.config = config; this.fetch = fetchImpl; }
   async call(path, method, body, token) {
-    const response = await this.fetch(`${this.config.url}/auth/v1/${path}`, {
+    let response;
+    try { response = await this.fetch(`${this.config.url}/auth/v1/${path}`, {
       method, headers: { apikey: this.config.publishableKey, 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       ...(body ? { body: JSON.stringify(body) } : {}), signal: AbortSignal.timeout(15000)
-    });
+    }); } catch { throw new Error('auth_provider_unavailable'); }
     const result = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(path === 'user' ? 'authentication_required' : 'authentication_failed');
+    // Preserve the difference between invalid credentials, a stale session,
+    // provider overload and an upstream service failure.
+    if (!response.ok) {
+      if (response.status === 429) throw new Error('auth_rate_limited');
+      if (response.status >= 500) throw new Error('auth_provider_unavailable');
+      if (path === 'user') throw new Error('authentication_required');
+      if (path.startsWith('token?grant_type=password')) throw new Error('invalid_credentials');
+      if (path.startsWith('token?grant_type=refresh_token')) throw new Error('invalid_refresh_token');
+      throw new Error('authentication_failed');
+    }
     return result;
   }
   emailGate() {if(!this.config.authEmailEnabled)throw new Error('auth_email_not_enabled');}
