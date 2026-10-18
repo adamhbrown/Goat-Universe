@@ -98,14 +98,42 @@
 }
 @media(max-width:390px){.goatville-portal .goatville-brand{font-size:clamp(2.8rem,11.8vw,4.4rem)!important}.gateway-eyebrow{letter-spacing:.16em}}
 @media(prefers-reduced-motion:reduce){.goatville-portal-photo,.gateway-action{transition:none!important}.goatville-portal-link:hover .goatville-portal-photo{transform:none!important}.goatville-portal-link:hover .gateway-action{transform:none!important}}
+
+/* Refined composition after reviewing rendered photos: original gateway signage stays unobscured. */
+.goatville-portal{min-height:0}
+.goatville-portal-link{display:flex;flex-direction:column;align-items:stretch;min-height:0}
+.goatville-portal-visual{display:block;position:relative;width:100%;aspect-ratio:16/10;min-height:0;overflow:hidden;background:radial-gradient(ellipse at center,#19212a,#050709 80%)}
+.goatville-portal-photo{inset:0;position:absolute;width:100%;height:100%;object-fit:contain;object-position:center;transform:scale(1);filter:contrast(1.03) saturate(1.03)}
+.goatville-portal-shade{inset:0;position:absolute;pointer-events:none;background:linear-gradient(0deg,#0607092e,transparent 30%)}
+.goatville-portal-inner{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(245px,.48fr);align-items:center;column-gap:30px;row-gap:6px;width:100%;padding:clamp(26px,4vw,52px);background:radial-gradient(ellipse at 100% 50%,#57402122,transparent 50%),linear-gradient(140deg,#15181a,#0a0c0e)}
+.gateway-eyebrow{grid-column:1;grid-row:1;letter-spacing:.18em}
+.goatville-portal .goatville-brand{grid-column:1;grid-row:2;color:#fff;font:1000 clamp(3.5rem,7.7vw,7.4rem)/.89 Manrope,Inter,sans-serif!important;letter-spacing:-.085em!important;margin:15px 0 9px!important;text-shadow:none}
+.goatville-portal .world-subline{font-size:clamp(.82rem,1.5vw,1.2rem);letter-spacing:.16em;margin-top:16px}
+.gateway-description{grid-column:1;grid-row:3;max-width:570px;font-size:clamp(.95rem,1.55vw,1.09rem);color:#cfc8be}
+.gateway-action{grid-column:2;grid-row:1 / span 3;justify-self:stretch;margin-top:0;min-width:0;box-shadow:0 12px 35px #0007}
+.gateway-index{top:22px;bottom:auto;right:24px;padding:6px 12px;border-radius:50px;background:#090b0ed9;color:#f5d694;border:1px solid #d5aa6366;font-size:.78rem}
+.goatville-portal-link:hover .goatville-portal-photo,.goatville-portal-link:focus-visible .goatville-portal-photo{transform:scale(1.015)}
+@media(max-width:700px){
+ .goatville-portal{min-height:0}
+ .goatville-portal-visual{aspect-ratio:16/10}
+ .goatville-portal-photo{object-fit:contain;object-position:center}
+ .goatville-portal-shade{background:linear-gradient(0deg,#0607092e,transparent 30%)}
+ .goatville-portal-inner{display:flex;flex-direction:column;justify-content:start;align-items:flex-start;align-self:stretch;width:100%;padding:25px 22px 29px}
+ .goatville-portal .goatville-brand{font-size:clamp(3rem,12vw,5.3rem)!important;margin:17px 0 17px!important}
+ .goatville-portal .world-subline{font-size:clamp(.78rem,2.65vw,1rem);letter-spacing:.11em}
+ .gateway-description{font-size:.91rem}
+ .gateway-action{align-self:stretch;min-height:58px;margin-top:23px}
+ .gateway-index{top:12px;right:14px;bottom:auto;font-size:.63rem}
+}
+@media(max-width:390px){.goatville-portal .goatville-brand{font-size:clamp(2.8rem,11vw,4.5rem)!important}}
+@media(prefers-reduced-motion:reduce){.goatville-portal-link:focus-visible .goatville-portal-photo{transform:none}}
 </style></head><body>
 <a class="skip" href="#enter">Skip to entrance</a><header class="top"><a class="brand" href="#arrival" id="home">GOAT <b>UNIVERSE</b></a><div class="top-actions"><span class="top-tag">FOUNDER PREVIEW</span><button id="music-toggle" class="music-toggle" type="button" aria-pressed="false" aria-label="Play GOAT Universe theme">♫ PLAY MUSIC</button></div></header>
 <main><section class="hero" id="arrival"><div><div class="eyebrow">The next era of sports fandom</div><div class="wordmark">GOAT <span>UNIVERSE</span></div><p>I’m making being a sports fan more entertaining.</p><button class="cta" id="enter">Enter the Universe <span aria-hidden="true">→</span></button><div class="note">Five games. One extraordinary world.</div><div class="arrival-scroll" aria-hidden="true"><span></span>THE WORLD AWAITS</div></div></section>
 <section class="world" id="universe"><div class="wrap">
 <section class="goatville-portal" aria-labelledby="goatville-gate-title">
 <a class="goatville-portal-link city-link" href="./goatville-city.html" aria-label="Enter Goatville City">
-<img class="goatville-portal-photo" src="./assets/goatville/founder-arrival-gate.jpg" alt="" loading="eager" decoding="async">
-<span class="goatville-portal-shade" aria-hidden="true"></span>
+<span class="goatville-portal-visual"><img class="goatville-portal-photo" src="./assets/goatville/founder-arrival-gate.jpg" alt="" loading="eager" decoding="async"><span class="goatville-portal-shade" aria-hidden="true"></span></span>
 <span class="goatville-portal-inner">
 <span class="gateway-eyebrow">GOAT UNIVERSE <span aria-hidden="true">/</span> YOUR WORLD IS WAITING</span>
 <h1 class="goatville-brand" id="goatville-gate-title">GOATVILLE<span class="world-subline">WELCOME TO YOUR WORLD</span></h1>
