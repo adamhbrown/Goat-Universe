@@ -18,7 +18,7 @@ test('shared experience navigation is included on all seven parent pages',()=>{
 });
 test('navigation links resolve to real checked-in destinations',()=>{
   for(const name of pages)assert.ok(shell.includes("path:'"+name+"'"),name);
-  assert.equal((shell.match(/\{path:'[^']+',index:'/g)||[]).length,12);
+  assert.equal((shell.match(/\{path:'[^']+',index:'/g)||[]).length,14);
   const links=[...shell.matchAll(/\{path:'([^']+)',index:/g)].map(m=>m[1]);
   assert.equal(links.length,new Set(links).size);
   assert.doesNotMatch(shell,/target\s*=\s*['"]_blank/);
@@ -96,7 +96,10 @@ test('open and close preserve focus, accurate route state, and scroll progress',
   const cards=[];
   const traverse=node=>{if(node?.className==='gv-destination')cards.push(node);for(const child of node.children||[])traverse(child);};
   traverse(modal);
-  assert.equal(cards.length,12);
+  assert.equal(cards.length,14);
+  assert.ok(shell.includes('pages.slice(0,4)'),'four primary destinations');
+  assert.ok(shell.includes('pages.slice(4)'),'supporting routes are secondary');
+  assert.equal(cards.slice(0,4).map(n=>n.href).join('|'),'goatville-city.html|/games|goatville-cinema.html|/manage');
   assert.equal(cards.filter(n=>n.attributes['aria-current']==='page').length,1);
   assert.equal(cards.find(n=>n.attributes['aria-current']==='page').href,'goatville-city.html');
   close.click();
