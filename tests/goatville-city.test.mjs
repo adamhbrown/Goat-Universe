@@ -13,9 +13,11 @@ test('home and playground lead to city',()=>{
  assert.match(playground,/href="goatville-city.html"/);
 });
 test('playable sports destination links to working play lab',()=>assert.match(city,/href="goat-games-play-lab.html"/));
-test('original responsive skyline illustration and accessible navigation',()=>{
- assert.match(city,/<svg class="skyline"/);
- assert.match(city,/aria-label="Illustrated nighttime GOATVILLE skyline/);
+test('approved photographic city entrance and accessible navigation',()=>{
+ assert.match(city,/<figure class="city city-photo">/);
+ assert.match(city,/src="assets\/goatville\/founder-arrival-gate\.jpg"/);
+ assert.match(city,/alt="The approved GOAT Universe cinematic golden entrance gate/);
+ assert.doesNotMatch(city,/<svg class="skyline"/);
  assert.match(city,/href="#districts"/);
  assert.match(city,/prefers-reduced-motion:reduce/);
 });
