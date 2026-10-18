@@ -55,7 +55,7 @@ test('Goatville opens through one dramatic, accessible city gateway',()=>{
  assert.equal(gateway.querySelectorAll('.gateway-action').length,1);
  assert.equal(gateway.querySelectorAll('img').length,1);
  assert.equal(gateway.querySelector('img').getAttribute('alt'),'');
- assert.match(gateway.querySelector('img').getAttribute('src'),/founder-arrival-gate\\.jpg/);
+ assert.ok(gateway.querySelector('img').getAttribute('src').endsWith('/founder-arrival-gate.jpg'));
  assert.ok(doc.querySelector('.gateway-nearby a[href="./goatville-stadium.html"]'));
  assert.ok(doc.querySelector('.gateway-nearby a[href="./gpi.html"]'));
  assert.match(html,/prefers-reduced-motion:reduce/);
