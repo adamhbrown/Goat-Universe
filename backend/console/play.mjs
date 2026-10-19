@@ -6,6 +6,43 @@ let activeLeagueId = '';
 let authorizedLeagues = [];
 let selectedCatalogGame = null;
 const el = id => document.getElementById(id);
+const APPROVED_SOUNDTRACK = Object.freeze([
+  // Add only owner-approved, licensed, same-origin music files after upload and review.
+  // { title: 'Approved title', src: '/media/approved-file.mp3' }
+]);
+function initializeSoundtrack() {
+  const track = APPROVED_SOUNDTRACK[0];
+  const player = el('soundtrack-player');
+  if (!track || !/^\/media\/[a-z0-9][a-z0-9._/-]*\.(?:mp3|m4a|ogg)$/i.test(track.src)) return;
+  const audio = el('soundtrack-audio');
+  const toggle = el('soundtrack-toggle');
+  const mute = el('soundtrack-mute');
+  const volume = el('soundtrack-volume');
+  audio.src = track.src;
+  audio.volume = Number(volume.value) / 100;
+  el('soundtrack-title').textContent = track.title;
+  player.hidden = false;
+  const sync = () => {
+    const playing = !audio.paused;
+    toggle.textContent = playing ? 'Pause' : 'Play';
+    toggle.setAttribute('aria-label', playing ? 'Pause soundtrack' : 'Play soundtrack');
+    toggle.setAttribute('aria-pressed', String(playing));
+    mute.textContent = audio.muted ? 'Unmute' : 'Mute';
+    mute.setAttribute('aria-pressed', String(audio.muted));
+  };
+  toggle.addEventListener('click', async () => {
+    try { if (audio.paused) await audio.play(); else audio.pause(); }
+    catch { notice('Soundtrack playback was blocked by your browser. Press Play again.', 'error'); }
+    sync();
+  });
+  mute.addEventListener('click', () => { audio.muted = !audio.muted; sync(); });
+  volume.addEventListener('input', () => { audio.volume = Number(volume.value) / 100; });
+  audio.addEventListener('play', sync);
+  audio.addEventListener('pause', sync);
+  audio.addEventListener('ended', sync);
+  sync();
+}
+
 const node = (tag, text, className) => {
   const item = document.createElement(tag);
   if (text !== undefined && text !== null) item.textContent = String(text);
@@ -414,3 +451,4 @@ showSignedOut();
 renderGstClock();
 if (typeof setInterval === 'function') setInterval(renderGstClock, 1000);
 loadGoatGamesCatalog();
+initializeSoundtrack();

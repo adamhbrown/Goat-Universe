@@ -14,6 +14,17 @@ test('member portal exposes the founder-approved mobile journey without implying
   for (const label of ['Goatville', 'Games', 'Media', 'My League', 'Enter the Universe']) assert.match(html, new RegExp('>' + label + '<', 'i'));
   assert.match(html, /href="#media"/);
   assert.match(html, /id="media"/);
+  assert.match(html, /id="soundtrack-player"[^>]*hidden/);
+  assert.match(html, /id="soundtrack-audio" preload="none" loop/);
+  assert.match(html, /id="soundtrack-toggle"[^>]*aria-pressed="false"/);
+  assert.match(html, /id="soundtrack-mute"[^>]*aria-pressed="false"/);
+  assert.match(html, /id="soundtrack-volume" type="range"/);
+  assert.match(script, /const APPROVED_SOUNDTRACK = Object\.freeze\(\[/);
+  assert.match(script, /if \(!track \|\| !\//);
+  assert.match(script, /initializeSoundtrack\(\);/);
+  assert.match(css, /\.soundtrack-player\[hidden\]\{display:none\}/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)/);
+
   assert.match(html, /href="#gpi">GPI · What's Your Ranking\?/);
   assert.match(html, /id="gpi" class="panel gpi-public journey-anchor"/);
   assert.match(html, /id="gpi-public-heading"/);
