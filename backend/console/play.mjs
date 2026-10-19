@@ -10,6 +10,27 @@ const node = (tag, text, className) => {
   if (className) item.className = className;
   return item;
 };
+const GPI_SCOPES = Object.freeze([
+  ['global', 'Global'], ['block', 'Block'], ['county', 'County'], ['state', 'State'], ['region', 'Region']
+]);
+function renderGpi(gpi) {
+  const list = el('gpi-rankings');
+  const verified = gpi?.verified === true && gpi.ranks && typeof gpi.ranks === 'object' && !Array.isArray(gpi.ranks);
+  list.replaceChildren();
+  for (const [key, label] of GPI_SCOPES) {
+    const record = verified && gpi.ranks[key] && typeof gpi.ranks[key] === 'object' ? gpi.ranks[key] : null;
+    const rank = Number.isSafeInteger(record?.rank) && record.rank > 0 ? record.rank : null;
+    const total = Number.isSafeInteger(record?.total) && record.total >= rank ? record.total : null;
+    const place = typeof record?.label === 'string' && record.label.trim() ? record.label.trim().slice(0, 80) : label + ' standing';
+    const card = node('article', null, 'gpi-card');
+    card.append(node('h4', label), node('strong', rank ? '#' + rank.toLocaleString('en-US') : '—'),
+      node('p', rank && total ? place + ' · of ' + total.toLocaleString('en-US') : rank ? place : 'Not ranked'));
+    list.append(card);
+  }
+  el('gpi-status').textContent = verified
+    ? 'Only authenticated, verified competition results are included.'
+    : 'Ranks appear after verified competition results are available. No estimated or practice ranks are shown.';
+}
 function notice(message, type = '') {
   el('notice').textContent = message;
   el('notice').className = 'notice ' + type;
@@ -65,6 +86,7 @@ async function query(op, extras = {}) { return send('query', { op, ...extras });
 async function command(op, extras = {}) { return send('commands', { op, ...extras }); }
 function showSignedOut() {
   accessToken = ''; refreshToken = ''; myUserId = ''; activeLeagueId = '';
+  renderGpi(null);
   el('account-panel').hidden = false;
   el('member-panel').hidden = true;
   el('league-panel').hidden = true;
@@ -73,6 +95,7 @@ async function showSignedIn() {
   const me = await query('me');
   myUserId = me.profile.user_id;
   el('member-name').textContent = 'Welcome, ' + me.profile.display_name;
+  renderGpi(me.gpi);
   el('account-panel').hidden = true;
   el('member-panel').hidden = false;
   el('league-panel').hidden = true;
