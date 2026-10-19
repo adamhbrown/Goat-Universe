@@ -61,10 +61,97 @@
 @media(min-width:1000px){.cards{grid-template-columns:repeat(6,minmax(0,1fr))}.cards .card:nth-child(-n+2){grid-column:span 3}.cards .card:nth-child(n+3){grid-column:span 2}}
 @media(min-width:750px) and (max-width:999px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.cards .card:last-child{grid-column:span 2}}
 @media(max-width:520px){.cards{grid-template-columns:1fr}.card{min-height:175px;padding:22px}.card strong{font-size:clamp(1.72rem,8vw,2.3rem)!important}.games-wordmark{font-size:clamp(3.6rem,13vw,6rem)!important;margin-top:65px!important}.gpi-spotlight h2.gpi-brand-heading{font-size:clamp(6.6rem,30vw,11rem)!important}}
+
+/* Founder-approved photography is the entrance. No generic skyline or fake architectural illustration. */
+.world{background:radial-gradient(ellipse at 75% 12%,#3d2e19,#0a0a0d 56%);padding-top:calc(env(safe-area-inset-top) + 96px)}
+.goatville-portal{isolation:isolate;position:relative;overflow:hidden;min-height:clamp(530px,74svh,830px);border-radius:22px;border:1px solid #bb925d98;background:#111519;box-shadow:0 45px 90px #000b}
+.goatville-portal-link{position:relative;display:grid;align-items:center;width:100%;height:100%;min-height:inherit;overflow:hidden;color:#fff;text-decoration:none}
+.goatville-portal-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 52%;transform:scale(1.02);filter:contrast(1.08) saturate(.97);transition:transform .9s cubic-bezier(.2,.6,.3,1)}
+.goatville-portal-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,7,10,.89) 0%,rgba(3,7,10,.61) 43%,rgba(3,7,10,.18) 82%),linear-gradient(0deg,rgba(4,7,12,.82),transparent 35%,rgba(3,5,8,.25) 87%);pointer-events:none}
+.goatville-portal-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;width:min(850px,100%);padding:clamp(30px,7vw,90px);text-align:left;gap:0}
+.gateway-eyebrow{display:block;color:#eac884;font-size:clamp(.63rem,1.2vw,.85rem);font-weight:900;letter-spacing:.24em;text-transform:uppercase}
+.goatville-portal .goatville-brand{display:block;color:#fff;font:1000 clamp(3.25rem,12vw,10.5rem)/.83 Manrope,Inter,sans-serif!important;letter-spacing:-.095em!important;margin:30px 0 19px!important;text-transform:uppercase;text-shadow:0 8px 45px #0009;white-space:nowrap}
+.goatville-portal .world-subline{display:block;color:#f2ce8c;font:900 clamp(.96rem,1.9vw,1.5rem)/1.15 Manrope,Inter,sans-serif;letter-spacing:.14em;text-transform:uppercase;margin:23px 0 0}
+.gateway-description{font-size:clamp(1rem,2vw,1.3rem);line-height:1.7;max-width:520px;color:#f0e7d7;font-weight:500}
+.gateway-action{display:inline-flex;align-items:center;justify-content:space-between;gap:28px;padding:19px 22px;margin-top:35px;min-width:min(100%,310px);min-height:64px;border:1px solid #ffe3ae;border-radius:6px;background:linear-gradient(135deg,#ffe3a3,#d29e4d);color:#18130d;font-size:clamp(.79rem,1.7vw,.94rem);letter-spacing:.11em;font-weight:1000;box-shadow:0 16px 45px #0009;transition:transform .25s,box-shadow .25s}
+.gateway-action>span{font-size:1.5rem;line-height:1}
+.gateway-index{position:absolute;bottom:24px;right:28px;color:#f2d69a;font:900 clamp(.9rem,1.5vw,1.15rem) Manrope,Inter,sans-serif;letter-spacing:.12em;z-index:1}
+.gateway-index span{color:#e1d2bc}
+.goatville-portal-link:hover .goatville-portal-photo,.goatville-portal-link:focus-visible .goatville-portal-photo{transform:scale(1.065)}
+.goatville-portal-link:hover .gateway-action,.goatville-portal-link:focus-visible .gateway-action{transform:translateY(-3px);box-shadow:0 20px 52px #000e}
+.goatville-portal-link:focus-visible{outline:4px solid #fce1a5;outline-offset:-7px}
+.gateway-nearby{display:flex;justify-content:flex-start;align-items:center;flex-wrap:wrap;gap:0 30px;margin:0 0 30px;padding:22px 0 5px;border-bottom:1px solid #4e483c}
+.gateway-nearby a{display:inline-flex;gap:12px;align-items:center;padding:8px 0;min-height:44px;color:#eaca88;font:850 clamp(.66rem,1.15vw,.82rem) Manrope,Inter,sans-serif;letter-spacing:.09em}
+.gateway-nearby a:hover{color:white}
+@media(max-width:700px){
+ .world{padding-top:calc(env(safe-area-inset-top) + 92px)}
+ .goatville-portal{min-height:min(700px,76svh);border-radius:15px}
+ .goatville-portal-photo{object-position:57% 48%}
+ .goatville-portal-shade{background:linear-gradient(0deg,rgba(3,6,9,.94) 0%,rgba(3,7,10,.52) 54%,rgba(3,7,10,.12) 100%),linear-gradient(90deg,rgba(4,6,10,.38),transparent 90%)}
+ .goatville-portal-inner{justify-content:end;align-self:end;padding:clamp(25px,7vw,43px) 23px 80px}
+ .goatville-portal .goatville-brand{font-size:clamp(3.18rem,12vw,5.3rem)!important;margin:22px 0 18px!important}
+ .goatville-portal .world-subline{font-size:clamp(.84rem,2.9vw,1.05rem);letter-spacing:.12em;margin-top:18px}
+ .gateway-description{font-size:.92rem;line-height:1.6}
+ .gateway-action{min-height:58px;padding:15px 20px;margin-top:26px}
+ .gateway-index{bottom:17px;right:21px;font-size:.75rem}
+ .gateway-nearby{gap:0 17px;padding-top:16px}
+}
+@media(max-width:390px){.goatville-portal .goatville-brand{font-size:clamp(2.8rem,11.8vw,4.4rem)!important}.gateway-eyebrow{letter-spacing:.16em}}
+@media(prefers-reduced-motion:reduce){.goatville-portal-photo,.gateway-action{transition:none!important}.goatville-portal-link:hover .goatville-portal-photo{transform:none!important}.goatville-portal-link:hover .gateway-action{transform:none!important}}
+
+/* Refined composition after reviewing rendered photos: original gateway signage stays unobscured. */
+.goatville-portal{min-height:0}
+.goatville-portal-link{display:flex;flex-direction:column;align-items:stretch;min-height:0}
+.goatville-portal-visual{display:block;position:relative;width:100%;aspect-ratio:16/10;min-height:0;overflow:hidden;background:radial-gradient(ellipse at center,#19212a,#050709 80%)}
+.goatville-portal-photo{inset:0;position:absolute;width:100%;height:100%;object-fit:contain;object-position:center;transform:scale(1);filter:contrast(1.03) saturate(1.03)}
+.goatville-portal-shade{inset:0;position:absolute;pointer-events:none;background:linear-gradient(0deg,#0607092e,transparent 30%)}
+.goatville-portal-inner{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(245px,.48fr);align-items:center;column-gap:30px;row-gap:6px;width:100%;padding:clamp(26px,4vw,52px);background:radial-gradient(ellipse at 100% 50%,#57402122,transparent 50%),linear-gradient(140deg,#15181a,#0a0c0e)}
+.gateway-eyebrow{grid-column:1;grid-row:1;letter-spacing:.18em}
+.goatville-portal .goatville-brand{grid-column:1;grid-row:2;color:#fff;font:1000 clamp(3.5rem,7.7vw,7.4rem)/.89 Manrope,Inter,sans-serif!important;letter-spacing:-.085em!important;margin:15px 0 9px!important;text-shadow:none}
+.goatville-portal .world-subline{font-size:clamp(.82rem,1.5vw,1.2rem);letter-spacing:.16em;margin-top:16px}
+.gateway-description{grid-column:1;grid-row:3;max-width:570px;font-size:clamp(.95rem,1.55vw,1.09rem);color:#cfc8be}
+.gateway-action{grid-column:2;grid-row:1 / span 3;justify-self:stretch;margin-top:0;min-width:0;box-shadow:0 12px 35px #0007}
+.gateway-index{top:22px;bottom:auto;right:24px;padding:6px 12px;border-radius:50px;background:#090b0ed9;color:#f5d694;border:1px solid #d5aa6366;font-size:.78rem}
+.goatville-portal-link:hover .goatville-portal-photo,.goatville-portal-link:focus-visible .goatville-portal-photo{transform:scale(1.015)}
+@media(max-width:700px){
+ .goatville-portal{min-height:0}
+ .goatville-portal-visual{aspect-ratio:16/10}
+ .goatville-portal-photo{object-fit:contain;object-position:center}
+ .goatville-portal-shade{background:linear-gradient(0deg,#0607092e,transparent 30%)}
+ .goatville-portal-inner{display:flex;flex-direction:column;justify-content:start;align-items:flex-start;align-self:stretch;width:100%;padding:25px 22px 29px}
+ .goatville-portal .goatville-brand{font-size:clamp(3rem,12vw,5.3rem)!important;margin:17px 0 17px!important}
+ .goatville-portal .world-subline{font-size:clamp(.78rem,2.65vw,1rem);letter-spacing:.11em}
+ .gateway-description{font-size:.91rem}
+ .gateway-action{align-self:stretch;min-height:58px;margin-top:23px}
+ .gateway-index{top:12px;right:14px;bottom:auto;font-size:.63rem}
+}
+@media(max-width:390px){.goatville-portal .goatville-brand{font-size:clamp(2.8rem,11vw,4.5rem)!important}}
+@media(prefers-reduced-motion:reduce){.goatville-portal-link:focus-visible .goatville-portal-photo{transform:none}}
+
+/* Keep the fixed navigation above the gateway image on desktop: the artwork remains unobstructed. */
+@media(min-width:750px){.world{padding-top:calc(env(safe-area-inset-top) + 180px)}}
 </style></head><body>
 <a class="skip" href="#enter">Skip to entrance</a><header class="top"><a class="brand" href="#arrival" id="home">GOAT <b>UNIVERSE</b></a><div class="top-actions"><span class="top-tag">FOUNDER PREVIEW</span><button id="music-toggle" class="music-toggle" type="button" aria-pressed="false" aria-label="Play GOAT Universe theme">♫ PLAY MUSIC</button></div></header>
 <main><section class="hero" id="arrival"><div><div class="eyebrow">The next era of sports fandom</div><div class="wordmark">GOAT <span>UNIVERSE</span></div><p>I’m making being a sports fan more entertaining.</p><button class="cta" id="enter">Enter the Universe <span aria-hidden="true">→</span></button><div class="note">Five games. One extraordinary world.</div><div class="arrival-scroll" aria-hidden="true"><span></span>THE WORLD AWAITS</div></div></section>
-<section class="world" id="universe"><div class="wrap"><div class="eyebrow">Welcome to Goatville</div><div class="world-rule" aria-hidden="true"></div><h1 class="goatville-brand">GOATVILLE<span class="world-subline">The world is yours.</span></h1><p class="lead">Choose your destination. Compete, explore, and discover the stories that make every league legendary.</p><a class="skyline city-link" href="./goatville-city.html" aria-label="Explore the interactive Goatville city"><img src="./assets/goatville/founder-arrival-gate.jpg" alt="Cinematic GOAT Universe arrival gateway with gold-lit architecture" loading="lazy"><span class="city-caption"><strong>EXPLORE GOATVILLE</strong><span>Enter the interactive city <span aria-hidden="true">↗</span></span></span></a><div class="destination-row"><a href="./goatville-stadium.html">Enter the Stadium ↗</a><a href="./gpi.html">GOAT Power Index ↗</a><a href="./goatville.html">More around Goatville ↗</a></div><h2 class="section-title games-wordmark" id="games">GOAT <span>GAMES</span></h2><p class="games-brand-subtitle">FIVE SIGNATURE COMPETITIONS · ONE UNIVERSE</p><div class="cards">
+<section class="world" id="universe"><div class="wrap">
+<section class="goatville-portal" aria-labelledby="goatville-gate-title">
+<a class="goatville-portal-link city-link" href="./goatville-city.html" aria-label="Enter Goatville City">
+<span class="goatville-portal-visual"><img class="goatville-portal-photo" src="./assets/goatville/founder-arrival-gate.jpg" alt="" loading="eager" decoding="async"><span class="goatville-portal-shade" aria-hidden="true"></span></span>
+<span class="goatville-portal-inner">
+<span class="gateway-eyebrow">GOAT UNIVERSE <span aria-hidden="true">/</span> YOUR WORLD IS WAITING</span>
+<h1 class="goatville-brand" id="goatville-gate-title">GOATVILLE<span class="world-subline">WELCOME TO YOUR WORLD</span></h1>
+<span class="gateway-description">Championships. Stadium lights. Music. Stories. An extraordinary city built for sports fans.</span>
+<span class="gateway-action">ENTER GOATVILLE <span aria-hidden="true">↗</span></span>
+</span>
+<span class="gateway-index" aria-hidden="true">01 <span> / CITY</span></span>
+</a>
+</section>
+<nav class="gateway-nearby" aria-label="More GOAT Universe destinations">
+<a href="./goatville-stadium.html">THE STADIUM <span aria-hidden="true">↗</span></a>
+<a href="./gpi.html">GPI RANKINGS <span aria-hidden="true">↗</span></a>
+<a href="./goatville.html">DISCOVER MORE <span aria-hidden="true">↗</span></a>
+</nav>
+<h2 class="section-title games-wordmark" id="games">GOAT <span>GAMES</span></h2><p class="games-brand-subtitle">FIVE SIGNATURE COMPETITIONS · ONE UNIVERSE</p><div class="cards">
 <a class="card" href="/games/league-of-greatness"><small>01 / Fantasy football</small><strong>League of Greatness</strong><em>VIEW COMPETITION ↗</em></a>
 <a class="card" href="/games/first-and-baa"><small>02 / NFL playoffs</small><strong>1st &amp; BAA</strong><em>VIEW COMPETITION ↗</em></a>
 <a class="card" href="/games/horns-and-hoops"><small>03 / March Madness</small><strong>Horns &amp; Hoops</strong><em>VIEW COMPETITION ↗</em></a>
