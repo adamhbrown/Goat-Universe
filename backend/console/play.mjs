@@ -7,6 +7,9 @@ const api = client(fetch, {onSessionEnd(reason) {
 if(typeof window !== 'undefined')window.addEventListener('pagehide',()=>api.forget());
 let myUserId = '';
 let activeLeagueId = '';
+let signedIn = false;
+let authorizedLeagues = [];
+let selectedCatalogGame = null;
 // Network replies from a previously visited competition must not restore its UI.
 // Invalidate pending views whenever a new league is selected or the user leaves.
 let leagueViewGeneration = 0;
@@ -20,6 +23,46 @@ const node = (tag, text, className) => {
 function notice(message, type = '') {
   el('notice').textContent = message;
   el('notice').className = 'notice ' + type;
+}
+function renderGameJourneyMemberLeagues() {
+  const holder = el('game-journey-member-leagues');
+  holder.replaceChildren();
+  el('game-journey-member-link').textContent = signedIn ? 'View all my leagues' : 'Sign in or view my leagues';
+  el('game-journey-member-link').href = signedIn ? '#member-panel' : '#account-panel';
+  if (!selectedCatalogGame || !signedIn) return;
+  const matches = authorizedLeagues.filter(league => league.sport === selectedCatalogGame.sport);
+  if (!matches.length) {
+    holder.append(node('p', `No authorized ${selectedCatalogGame.name} leagues on this account yet. Commissioners can issue private invitations.`, 'small'));
+    return;
+  }
+  holder.append(node('h4', `Your ${selectedCatalogGame.name} competitions`));
+  for (const league of matches) {
+    const control = node('button', `Open ${league.name}`, 'secondary');
+    control.type = 'button';
+    control.addEventListener('click', async () => {
+      control.disabled = true;
+      try {
+        await openLeague(league.id);
+        el('league-panel').scrollIntoView?.({behavior:'auto',block:'start'});
+      } catch (error) { notice(error.message.replaceAll('_',' '), 'error'); }
+      finally { control.disabled = false; }
+    });
+    holder.append(control);
+  }
+}
+function openGameJourney(game) {
+  selectedCatalogGame = game;
+  const status = game.local_scoring_status === 'implemented_development'
+    ? 'Development engine available. No live competition or public entries are open.'
+    : game.local_scoring_status === 'verified_structure'
+      ? 'League structure documented. Hosted play and automated scoring are not open.'
+      : 'Rules and scoring are pending approval. Real entries and picks are not open.';
+  el('game-journey-title').textContent = game.name;
+  el('game-journey-mechanics').textContent = game.mechanics;
+  el('game-journey-status').textContent = status;
+  el('game-journey').hidden = false;
+  renderGameJourneyMemberLeagues();
+  el('game-journey').scrollIntoView?.({behavior:'auto',block:'start'});
 }
 async function send(path, payload, authenticated = true) {
   return api.request('/' + path, payload, authenticated);
@@ -41,6 +84,10 @@ async function loadGoatGamesCatalog() {
         node('p', game.local_scoring_status === 'implemented_development'
           ? 'Development engine available · Not live'
           : 'Rulebook and scoring under development', 'small'));
+      const explore = node('button', `Explore ${game.name}`, 'game-explore');
+      explore.type = 'button';
+      explore.addEventListener('click', () => openGameJourney(game));
+      card.append(explore);
       list.append(card);
     }
   } catch {
@@ -51,7 +98,8 @@ async function query(op, extras = {}) { return send('query', { op, ...extras });
 async function command(op, extras = {}) { return send('commands', { op, ...extras }); }
 function showSignedOut() {
   leagueViewGeneration++;
-  myUserId = ''; activeLeagueId = '';
+  myUserId = ''; activeLeagueId = ''; signedIn = false; authorizedLeagues = [];
+  renderGameJourneyMemberLeagues();
   el('password').value='';el('password').type='password';
   el('show-password').textContent='Show password';el('show-password').setAttribute('aria-pressed','false');
   for(const id of ['leagues','rounds','standings','entry-requests','league-details'])el(id).replaceChildren();
@@ -64,6 +112,7 @@ function showSignedOut() {
 async function showSignedIn() {
   const me = await query('me');
   myUserId = me.profile.user_id;
+  signedIn = true;
   el('member-name').textContent = 'Welcome, ' + me.profile.display_name;
   el('account-panel').hidden = true;
   el('member-panel').hidden = false;
@@ -72,6 +121,8 @@ async function showSignedIn() {
 }
 async function loadLeagues() {
   const leagues = await query('leagues');
+  authorizedLeagues = leagues;
+  renderGameJourneyMemberLeagues();
   const list = el('leagues');
   list.replaceChildren();
   if (!leagues.length) {
