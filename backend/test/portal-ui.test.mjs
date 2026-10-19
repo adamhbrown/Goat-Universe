@@ -41,6 +41,9 @@ test('member portal exposes the founder-approved mobile journey without implying
   assert.match(script, /America\/New_York/);
   assert.doesNotMatch(script, /getTimezoneOffset|(?:EST|EDT)\s*[+-]?\d/);
   assert.match(css, /@media\(max-width:600px\)[\s\S]*\.universe-nav/);
+  assert.match(css, /\.universe-nav\{display:grid;grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
+  assert.match(css, /\.universe-nav a\{[^}]*min-height:44px/);
+  assert.doesNotMatch(css, /\.universe-nav\{[^}]*overflow-x:auto/);
   assert.match(css, /\.enter-universe\{[\s\S]*text-transform:uppercase/);
 });
 
