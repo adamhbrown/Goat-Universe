@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080a0c">
+<meta name="description" content="The 2027 GOAT Universe Championship season: five signature GOAT Games, one world, and the road to a verified GPI ranking.">
+<title>2027 Championship Season | GOAT Universe</title>
+<style>
+@font-face{font-family:Manrope;src:url("./assets/fonts/manrope-latin.woff") format("woff");font-display:swap;font-weight:200 800}
+@font-face{font-family:Inter;src:url("./assets/fonts/inter-latin.woff") format("woff");font-display:swap;font-weight:100 900}
+:root{color-scheme:dark;--ink:#080a0c;--panel:#131719;--gold:#e9bc6b;--ivory:#f8f3e9;--quiet:#b9b4aa;--edge:#665538;--max:1210px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--ivory);font:15px/1.65 Inter,system-ui,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
+a:focus-visible,button:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.wrap{width:min(var(--max),calc(100% - 42px));margin-inline:auto}
+.skip{position:absolute;z-index:100;left:12px;top:-90px;background:var(--gold);color:#0c0e10;padding:12px}.skip:focus{top:12px}
+.mast{position:relative;z-index:5;border-bottom:1px solid #9b7b453d;background:#080a0cf5}
+.mast-inner{min-height:80px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{font:900 clamp(.9rem,1.65vw,1.16rem) Manrope,Inter,sans-serif;white-space:nowrap;letter-spacing:.055em}.brand b{color:var(--gold)}
+.nav{display:flex;flex-wrap:wrap;gap:clamp(10px,1.6vw,25px);font-size:.73rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+.nav a:hover,.nav a[aria-current]{color:var(--gold)}
+.hero{isolation:isolate;position:relative;overflow:hidden;border-bottom:1px solid #8d6f3b52;background:radial-gradient(ellipse at 79% 24%,#88602a4b,transparent 38%),radial-gradient(ellipse at 17% 87%,#47391f38,transparent 44%),linear-gradient(160deg,#1a1c1d,#080a0c 76%)}
+.hero:before{content:"2027";position:absolute;top:4%;right:-4%;font:1000 clamp(15rem,40vw,39rem)/.8 Manrope,Inter,sans-serif;letter-spacing:-.1em;color:#e9bc6b0b;z-index:-1;pointer-events:none}
+.hero-inner{padding:clamp(78px,9vw,148px) 0 clamp(85px,10vw,135px)}
+.kicker,.overline{display:block;color:var(--gold);font-size:.7rem;letter-spacing:.23em;font-weight:900;text-transform:uppercase}
+.hero h1{max-width:1050px;font:950 clamp(4.5rem,11vw,10rem)/.88 Manrope,Inter,sans-serif;letter-spacing:-.093em;margin:30px 0 27px;text-transform:uppercase}
+.hero h1 span{display:block;color:var(--gold)}
+.hero .lead{max-width:720px;color:#f0e7d7;font-size:clamp(1.06rem,2.1vw,1.4rem);line-height:1.65}
+.hero .mission{max-width:650px;color:var(--quiet);margin:18px 0 35px}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-top:36px}
+.cta{display:inline-flex;align-items:center;justify-content:center;gap:22px;min-height:54px;padding:15px 22px;border:1px solid #e0b76f;background:linear-gradient(125deg,#ffe2a1,#d5a450);color:#16130d;font:.83rem Manrope,Inter,sans-serif;font-weight:900;letter-spacing:.08em;text-transform:uppercase;border-radius:5px;transition:transform .2s}
+.cta:hover{transform:translateY(-2px)}.cta.secondary{color:var(--ivory);background:transparent}
+.truth{margin-top:38px;border-left:2px solid var(--gold);padding-left:16px;color:#d3ccbe;font-size:.78rem;max-width:665px}
+.truth strong{color:#f4d9a4}
+.section{padding:clamp(64px,7.6vw,108px) 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:32px}
+.section-head h2{font:900 clamp(2.7rem,6vw,5.7rem)/.98 Manrope,Inter,sans-serif;letter-spacing:-.073em;text-transform:uppercase;margin:12px 0 0}
+.section-head h2 em{font-style:normal;color:var(--gold)}
+.section-head p{max-width:450px;color:#d0c9be;margin:0}
+.stamp{white-space:nowrap;font:900 .72rem Manrope,Inter,sans-serif;letter-spacing:.12em;color:#e7c28a;border:1px solid #8d7147;border-radius:30px;padding:9px 14px}
+.controls{display:flex;gap:9px;align-items:center;overflow-x:auto;padding:4px 2px 17px;scrollbar-width:thin}
+.filter{flex:0 0 auto;min-height:44px;padding:10px 18px;border-radius:3px;border:1px solid #65563b;background:#171a1c;color:#e2dbcf;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;font-weight:900}
+.filter[aria-pressed="true"]{background:var(--gold);color:#11100c;border-color:var(--gold)}
+.filter:hover:not([aria-pressed="true"]){border-color:#dab373}
+.filter-state{font-size:.78rem;color:#c3b9a6;margin:3px 0 20px;min-height:21px}
+.events{display:grid;gap:15px}
+.event{display:grid;grid-template-columns:minmax(100px,180px) minmax(0,1fr) minmax(220px,.55fr);align-items:stretch;gap:0;border:1px solid #6c5735;border-radius:11px;background:linear-gradient(115deg,#202322,#101416 72%);overflow:hidden;min-height:245px}
+.event[hidden]{display:none!important}
+.month{display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(155deg,#6e4d2629,#141618 80%);border-right:1px solid #6d583a;padding:20px}
+.month strong{color:var(--gold);font:900 clamp(2.55rem,5.2vw,5.3rem)/.9 Manrope,Inter,sans-serif;letter-spacing:-.08em}
+.month span{color:#ebd1a6;font-size:.75rem;letter-spacing:.2em;margin-top:13px;font-weight:900}
+.event-content{padding:clamp(26px,4vw,43px)}
+.event-content .event-type{display:block;text-transform:uppercase;color:#d6b67c;font-size:.69rem;font-weight:900;letter-spacing:.14em}
+.event h3{font:900 clamp(1.9rem,4vw,3.5rem)/1 Manrope,Inter,sans-serif;letter-spacing:-.065em;margin:17px 0 13px}
+.event p{color:#cfcbc2;max-width:560px;margin:0}
+.event-side{display:flex;flex-direction:column;justify-content:space-between;align-items:start;padding:clamp(25px,3vw,42px);border-left:1px solid #67593f;background:#0b0f1180}
+.event-side .status{display:flex;align-items:center;gap:8px;color:#dfd5c3;font-size:.7rem;text-transform:uppercase;font-weight:800;letter-spacing:.07em}
+.event-side .status:before{content:"";width:7px;height:7px;border:1px solid #e7bd75;border-radius:50%;display:inline-block}
+.event-side a{color:var(--gold);font-size:.82rem;font-weight:900;letter-spacing:.07em;line-height:1.5;text-transform:uppercase}
+.event-side a:hover{text-decoration:underline}
+.fineprint{font-size:.78rem;color:#b6ab99;max-width:750px;margin:23px 0 0}
+.ladder-section{border-top:1px solid #76603d5d;border-bottom:1px solid #76603d5d;background:radial-gradient(ellipse at 85% 20%,#95702a26,transparent 52%),#0c1012}
+.ladder{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:39px}
+.step{position:relative;border:1px solid #7a633d;border-radius:10px;padding:clamp(22px,3vw,37px);background:#121719}
+.step .number{color:#bd9558;font:950 clamp(3rem,5vw,5.4rem)/1 Manrope,Inter,sans-serif;letter-spacing:-.09em}
+.step h3{font:900 clamp(1.35rem,2.1vw,2rem)/1.1 Manrope,Inter,sans-serif;letter-spacing:-.045em;margin:24px 0 12px}
+.step p{font-size:.87rem;color:#ccc6bb;margin:0 0 18px}
+.step a{color:var(--gold);font-size:.79rem;font-weight:900;letter-spacing:.06em}
+.rankmark{font:1000 clamp(5rem,19vw,17rem)/.8 Manrope,Inter,sans-serif;letter-spacing:-.1em;color:var(--gold);margin:24px 0}
+.grand{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,.5fr);gap:30px;align-items:center}
+.grand p{max-width:670px;color:#dbd4c6}
+.gst{border:1px solid #7d653e;border-radius:12px;padding:28px;background:linear-gradient(150deg,#2a2116,#111517)}
+.gst .clock-label{display:block;font-size:.69rem;font-weight:900;letter-spacing:.13em;color:#ddbd81;text-transform:uppercase}
+.gst time{display:block;font:900 clamp(1.7rem,3vw,2.6rem)/1.2 Manrope,Inter,sans-serif;margin:11px 0 4px;letter-spacing:-.05em;white-space:nowrap}
+.gst .clock-foot{font-size:.75rem;color:#c6bdaf}
+.gst hr{border:0;border-top:1px solid #756041;margin:23px 0}
+.footer{padding:34px 0 100px;border-top:1px solid #5e4e35;font-size:.77rem;color:#b9b1a4}
+.footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.bottom-nav{display:none}
+@media(max-width:980px){.event{grid-template-columns:125px minmax(0,1fr)}.event-side{grid-column:2;border-left:0;border-top:1px solid #574e41;display:flex;flex-direction:row;align-items:center;gap:18px;padding:17px 32px}.month{grid-row:span 2}.event-content{padding:30px 32px}.grand{grid-template-columns:1fr}.gst{max-width:450px}}
+@media(max-width:680px){.wrap{width:calc(100% - 32px)}.mast-inner{min-height:66px}.nav{display:none}.hero-inner{padding:75px 0 90px}.hero h1{font-size:clamp(3.65rem,14.3vw,6.5rem)}.section{padding:65px 0}.section-head h2{font-size:clamp(2.5rem,11.8vw,4.4rem)}.event{grid-template-columns:1fr}.month{grid-row:auto;flex-direction:row;justify-content:flex-start;gap:15px;min-height:88px;border-right:0;border-bottom:1px solid #6d583a;padding:15px 24px}.month strong{font-size:3rem}.month span{margin-top:4px}.event-content{padding:25px 24px}.event-side{grid-column:auto;padding:19px 24px}.ladder{grid-template-columns:1fr}.bottom-nav{position:fixed;z-index:20;inset:auto 0 0;display:grid;grid-template-columns:repeat(4,1fr);background:#08090bf7;border-top:1px solid #9a7a45;padding:9px 5px calc(env(safe-area-inset-bottom) + 10px)}.bottom-nav a{text-align:center;padding:8px 3px;color:#efdfc0;font-size:.69rem;font-weight:900;letter-spacing:.02em}.bottom-nav a[aria-current]{color:var(--gold)}}
+@media(max-width:375px){.event-side{align-items:flex-start;flex-direction:column}.hero h1{font-size:3.5rem}.cta{width:100%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cta{transition:none}.cta:hover{transform:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#season">Skip to 2027 season</a>
+<header class="mast"><div class="wrap mast-inner">
+<a class="brand" href="./arrival-experience.html#universe">GOAT <b>UNIVERSE</b></a>
+<nav class="nav" aria-label="Main navigation"><a href="./goatville-city.html">Goatville</a><a href="/games" aria-current="page">GOAT Games</a><a href="./goatville-cinema.html">Media</a><a href="/manage">My League</a><a href="./gpi.html">GPI</a></nav>
+</div></header>
+<main>
+<section class="hero" aria-labelledby="hero-title"><div class="wrap hero-inner">
+<span class="kicker">Goatverse Holdings Inc. / The 2027 Championship Roadmap</span>
+<h1 id="hero-title">The road to <span>greatness.</span></h1>
+<p class="lead">Five signature GOAT Games. One year of rivalries, comebacks and championships. A whole new way to experience being a sports fan.</p>
+<p class="mission">“I’m making being a sports fan more entertaining.” — Adam Brown, Founder &amp; CEO</p>
+<div class="actions"><a class="cta" href="#season">Explore the 2027 season <span aria-hidden="true">↓</span></a><a class="cta secondary" href="./gpi.html">What's your ranking? <span aria-hidden="true">↗</span></a></div>
+<p class="truth"><strong>Founder development roadmap.</strong> Months below describe planned competition windows, not confirmed game dates, entries, schedules or future outcomes. Official launches require separate readiness approval.</p>
+</div></section>
+<section class="section" id="season" aria-labelledby="season-title"><div class="wrap">
+<div class="section-head"><div><span class="overline">GOAT Games / The annual championship season</span><h2 id="season-title">2027. <em>Five games.</em></h2></div><p>From the NFL postseason to the Fall Classic, every competition is part of one GOAT Universe. Find the game you love. See where your story could go.</p></div>
+<div class="controls" role="group" aria-label="Filter competition roadmap by month">
+<button type="button" class="filter" data-month="all" aria-pressed="true">Full season</button>
+<button type="button" class="filter" data-month="jan" aria-pressed="false">Jan</button>
+<button type="button" class="filter" data-month="mar" aria-pressed="false">Mar</button>
+<button type="button" class="filter" data-month="apr" aria-pressed="false">Apr</button>
+<button type="button" class="filter" data-month="sep" aria-pressed="false">Sep</button>
+<button type="button" class="filter" data-month="oct" aria-pressed="false">Oct</button>
+</div>
+<p class="filter-state" id="filter-state" role="status" aria-live="polite">Showing all five GOAT Games in the 2027 roadmap.</p>
+<div class="events" id="events">
+<article class="event" data-event-month="jan"><div class="month"><strong>JAN</strong><span>2027</span></div><div class="event-content"><span class="event-type">NFL Playoffs / Against the spread</span><h3>1st &amp; BAA</h3><p>Every playoff round matters. Make your picks, build your BAAS and chase postseason greatness. Official lines, locks and rules must be approved before entry.</p></div><div class="event-side"><span class="status">Season window only</span><a href="/games/first-and-baa">Explore 1st &amp; BAA ↗</a></div></article>
+<article class="event" data-event-month="mar"><div class="month"><strong>MAR</strong><span>2027</span></div><div class="event-content"><span class="event-type">College basketball tournament / Bracket competition</span><h3>Horns &amp; Hoops</h3><p>One bracket. Big swings. A spring championship built for bold calls and buzzer-beating drama. No brackets or tournament results are loaded here.</p></div><div class="event-side"><span class="status">Season window only</span><a href="/games/horns-and-hoops">Explore Horns &amp; Hoops ↗</a></div></article>
+<article class="event" data-event-month="apr"><div class="month"><strong>APR</strong><span>2027</span></div><div class="event-content"><span class="event-type">NBA + NHL Playoffs / One crossover event</span><h3>GOAT Crossover</h3><p>Two playoff worlds collide in one competition. Basketball and hockey share the stage; approved scoring and entry rules remain a release requirement.</p></div><div class="event-side"><span class="status">Season window only</span><a href="/games/goat-crossover">Explore GOAT Crossover ↗</a></div></article>
+<article class="event" data-event-month="sep"><div class="month"><strong>SEP</strong><span>2027</span></div><div class="event-content"><span class="event-type">Fantasy football / League competition</span><h3>League of Greatness</h3><p>The league where the personalities, rivalries, headlines and weekly stories come alive. GOATverse Creative Media belongs in the competition experience.</p></div><div class="event-side"><span class="status">Season window only</span><a href="/games/league-of-greatness">Explore League of Greatness ↗</a></div></article>
+<article class="event" data-event-month="oct"><div class="month"><strong>OCT</strong><span>2027</span></div><div class="event-content"><span class="event-type">MLB Postseason / Fall championship</span><h3>The GOAT Classic</h3><p>October baseball deserves a universe of its own. Follow the postseason path through an official GOAT Game once rules and source data are approved.</p></div><div class="event-side"><span class="status">Season window only</span><a href="/games/goat-classic">Explore The GOAT Classic ↗</a></div></article>
+</div>
+<p class="fineprint">The five month labels are a strategic 2027 roadmap. They do not imply league registration is open or that specific dates, matches, odds, scores, champion names or official BAAS have been published.</p>
+</div></section>
+<section class="section ladder-section" aria-labelledby="how-title"><div class="wrap">
+<div class="section-head"><div><span class="overline">The GOAT Universe difference</span><h2 id="how-title">Play. <em>Rise.</em> Be remembered.</h2></div></div>
+<div class="ladder">
+<div class="step"><div class="number">01</div><h3>Compete in real GOAT Games</h3><p>Your journey begins with eligible competition entries, approved rules and verified outcomes—not practice arcade results.</p><a href="/games">Explore competitions ↗</a></div>
+<div class="step"><div class="number">02</div><h3>Build your GPI</h3><p>The GOAT Power Index will connect approved BAAS and performance to a personal standing, then eligible Block, County, State, Region and Global leaderboards.</p><a href="./gpi.html">Discover GPI ↗</a></div>
+<div class="step"><div class="number">03</div><h3>Live your league's story</h3><p>GOAT Alerts, BAA Reports, league magazines, rivalries and player features are part of the baseline creative-media experience for every league.</p><a href="./goatville-cinema.html">Discover Creative Media ↗</a></div>
+</div></div></section>
+<section class="section" aria-labelledby="gst-title"><div class="wrap grand">
+<div><span class="overline">Your time. Your universe.</span><div class="rankmark" aria-hidden="true">GST</div><h2 id="gst-title" style="font:900 clamp(2rem,4vw,3.8rem)/1.05 Manrope,Inter,sans-serif;letter-spacing:-.06em;margin:0">GOATVILLE STANDARD TIME</h2><p>One official display standard for this universe. GST follows the New York time zone through Eastern Standard and Daylight Saving Time. Competition deadlines must still come from verified server timestamps.</p><a class="cta secondary" href="./gpi.html">Find your place in the Universe ↗</a></div>
+<div class="gst" aria-label="Synchronized GST and New York local time">
+<span class="clock-label">GOATVILLE / GST</span><time id="gst-clock" datetime="">Time unavailable</time><span class="clock-foot">America/New_York</span>
+<hr>
+<span class="clock-label">NEW YORK / LOCAL</span><time id="nyc-clock" datetime="">Time unavailable</time><span class="clock-foot" id="zone-name">Same time. Same second.</span>
+</div>
+</div></section>
+</main>
+<footer class="footer"><div class="wrap"><span>GOAT Universe · Goatverse Holdings Inc. · 2027 Founder Roadmap</span><span>Source-only founder candidate · No public entries, payments or rankings enabled here</span></div></footer>
+<nav class="bottom-nav" aria-label="Mobile navigation"><a href="./goatville-city.html">Goatville</a><a href="#season" aria-current="page">GOAT Games</a><a href="./goatville-cinema.html">Media</a><a href="/manage">My League</a></nav>
+<script>
+(function(){
+'use strict';
+const monthButtons=Array.from(document.querySelectorAll('.filter[data-month]'));
+const eventCards=Array.from(document.querySelectorAll('.event[data-event-month]'));
+function setMonth(month){
+if(month!=='all'&&!monthButtons.some(button=>button.dataset.month===month))return;
+let shown=0;
+eventCards.forEach(card=>{const visible=month==='all'||card.dataset.eventMonth===month;card.hidden=!visible;if(visible)shown++;});
+monthButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.month===month)));
+document.getElementById('filter-state').textContent=month==='all'?'Showing all five GOAT Games in the 2027 roadmap.':'Showing '+shown+' GOAT Game'+(shown===1?'':'s')+' in '+month.toUpperCase()+' 2027.';
+}
+monthButtons.forEach(button=>button.addEventListener('click',()=>setMonth(button.dataset.month)));
+const selected=location.hash.slice(1).toLowerCase();
+if(['jan','mar','apr','sep','oct'].includes(selected))setMonth(selected);
+const fmt=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true,timeZoneName:'short'});
+function updateClocks(){
+const now=new Date(),formatted=fmt.format(now),iso=now.toISOString();
+['gst-clock','nyc-clock'].forEach(id=>{const el=document.getElementById(id);el.textContent=formatted;el.setAttribute('datetime',iso);});
+}
+updateClocks();
+let clockTimer=setInterval(updateClocks,1000);
+document.addEventListener('visibilitychange',()=>{clearInterval(clockTimer);if(!document.hidden){updateClocks();clockTimer=setInterval(updateClocks,1000);}});
+})();
+</script>
+</body></html>
