@@ -17,10 +17,11 @@ test('Pope City uses reviewed media and keeps its seven working districts and ci
  assert.match(city,/href="\/games"/);
 });
 test('City, Stadium and Creative Media return to one latest founder gateway; City market has a real destination',()=>{
- assert.match(city,/href="arrival-experience\\.html#universe"/);
- assert.match(stadium,/href="arrival-experience\\.html#universe"/);
- assert.match(media,/href="arrival-experience\\.html#media"/);
- assert.match(city,/data-district="market"[\\s\\S]*?href="commerce\\.html#collections"/);
+ assert.ok(city.includes('href="arrival-experience.html#universe"'));
+ assert.ok(stadium.includes('href="arrival-experience.html#universe"'));
+ assert.ok(media.includes('href="arrival-experience.html#media"'));
+ const market=city.split('data-district="market"')[1]?.split('</article>')[0];
+ assert.ok(market?.includes('href="commerce.html#collections"'));
  assert.ok(publicFiles.has('commerce.html'));
  assert.ok(publicFiles.has('commerce/collections.js'));
 });
