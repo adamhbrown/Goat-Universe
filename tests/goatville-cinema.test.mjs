@@ -24,7 +24,7 @@ test('cinema is local-only, excludes network and browser persistence',()=>{
   assert.doesNotMatch(css,/@import|https?:\/\//);
 });
 test('cinema provides skip, pause, restart, silent default and no required upload',()=>{
-  for(const id of ['screen-video','music','video-file','audio-file','play','pause','restart','sound','clear','progress','timecode','feedback']){
+  for(const id of ['screen-video','music','studio-music','video-file','audio-file','play','pause','restart','sound','clear','progress','timecode','feedback']){
     assert.match(html,new RegExp('id="'+id+'"'));
   }
   assert.match(html,/muted aria-label=/);
@@ -75,7 +75,7 @@ test('simulation: no play before local file selection, silent start, opt-in musi
   assert.equal($('screen-video').muted,true);
   await $('play').click();
   assert.equal($('screen-video').paused,false);
-  assert.equal($('music').paused,true);
+  assert.equal($('studio-music').paused,true);
   $('audio-file').files=[{name:'Anthem.mp3',type:'audio/mpeg'}];
   $('audio-file').emit('change');
   assert.equal(urls.created.length,2);
@@ -84,18 +84,18 @@ test('simulation: no play before local file selection, silent start, opt-in musi
   assert.equal($('sound').attrs['aria-pressed'],'true');
   assert.equal($('screen-video').muted,true,'separate track replaces video audio');
   await $('play').click();
-  assert.equal($('music').paused,false);
+  assert.equal($('studio-music').paused,false);
   doc.listeners['goatverse:portal-open']();
-  assert.equal($('music').paused,true,'music stops behind the universe menu');
+  assert.equal($('studio-music').paused,true,'music stops behind the universe menu');
   assert.equal($('screen-video').paused,true,'video stops behind the universe menu');
   await $('play').click();
-  assert.equal($('music').paused,false);
+  assert.equal($('studio-music').paused,false);
   $('screen-video').currentTime=10;
   $('screen-video').emit('timeupdate');
   assert.equal($('progress').attrs['aria-valuenow'],'50');
   assert.equal($('timecode').textContent,'00:10');
   $('pause').click();
-  assert.equal($('music').paused,true);
+  assert.equal($('studio-music').paused,true);
   assert.equal($('screen-video').paused,true);
   $('restart').click();
   assert.equal($('screen-video').currentTime,0);
