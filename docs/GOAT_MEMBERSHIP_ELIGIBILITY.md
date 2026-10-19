@@ -57,3 +57,26 @@ commissioner-operated leagues for the same GOAT Game/season, and if yes, how
 are **official championships** and **GPI/BAAS** calculated without double
 counting? A decision should specify scope (local/private leagues vs official
 event), effective season, certification and source. Do not invent an answer.
+
+
+## Offline release-review input
+
+`node backend/scripts/audit-five-games.mjs private-snapshots.json` accepts
+the original bare snapshot array or a wrapper with `snapshots`,
+`season_by_game` and optional `eligibility_policy`:
+
+```json
+{
+  "snapshots": [],
+  "eligibility_policy": {
+    "mode": "allow_multiple_leagues",
+    "approved": true,
+    "source_reference": "REPLACE WITH DOCUMENTED FOUNDER DECISION"
+  }
+}
+```
+
+This is an **illustrative schema, not an approved founder policy**. If the
+policy is absent, overlapping memberships are a review question. Invalid or
+unapproved policy objects fail closed and do not dump private input fields.
+The command remains offline and never returns `can_launch: true`.
