@@ -3,6 +3,7 @@
 // It never reads credentials, touches a database, sends network requests, or writes scores.
 import {GOAT_GAMES} from '../rules/goat-games.mjs';
 import {setupProgress} from './overview.mjs';
+import {auditApprovedEntryCollisions} from './eligibility-audit.mjs';
 
 const KEYS = Object.freeze(GOAT_GAMES.map(game => game.id));
 const SEASONS = /^20(?:2[6-9]|[3-9][0-9])$/;
@@ -61,6 +62,7 @@ export function auditFiveGameCandidate(snapshots, {seasonByGame} = {}) {
   if (!Array.isArray(snapshots) || snapshots.length > 100)
     throw new Error('invalid_competition_candidate');
   const expectedSeasons = validateSeasonMap(seasonByGame);
+  const eligibility=auditApprovedEntryCollisions(snapshots);
   const grouped = new Map(KEYS.map(key => [key, []]));
   let unknown = 0;
   for (const snap of snapshots) {
@@ -76,9 +78,16 @@ export function auditFiveGameCandidate(snapshots, {seasonByGame} = {}) {
     const issues = [];
     if (records.length !== 1) {
       issues.push(records.length === 0 ? 'missing_competition_snapshot' : 'duplicate_competition_snapshot');
+      if(eligibility.conflicts_by_game[game_key]>0)
+        issues.push('duplicate_approved_game_season_entry');
       return Object.freeze({game_key, saved_setup_complete:false, issues:Object.freeze(issues)});
     }
     const data = records[0];
+    if(eligibility.conflicts_by_game[game_key]>0)
+      issues.push('duplicate_approved_game_season_entry');
+    if(eligibility.incomplete_entry_records>0 && Array.isArray(data.entries) &&
+       data.entries.some(e=>e?.status==='approved' && (!e.user_id || !data.league.id)))
+      issues.push('entry_audit_incomplete');
     if (!seasonIsValid(data.league.season)) issues.push('invalid_season');
     if (expectedSeasons && seasonIsValid(data.league.season) &&
         Number(data.league.season) !== Number(expectedSeasons[game_key]))
@@ -114,6 +123,8 @@ export function auditFiveGameCandidate(snapshots, {seasonByGame} = {}) {
     can_launch:false,
     unknown_snapshots:unknown,
     season_mapping_checked:Boolean(expectedSeasons),
+    // Counts only: never return raw profiles or member identifiers.
+    member_eligibility_audit:eligibility,
     games:Object.freeze(games),
     external_approvals_required:REQUIRES_EXTERNAL
   });
