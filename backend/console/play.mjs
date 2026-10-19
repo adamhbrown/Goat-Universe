@@ -3,6 +3,8 @@ let accessToken = '';
 let refreshToken = '';
 let myUserId = '';
 let activeLeagueId = '';
+let authorizedLeagues = [];
+let selectedCatalogGame = null;
 const el = id => document.getElementById(id);
 const node = (tag, text, className) => {
   const item = document.createElement(tag);
@@ -75,6 +77,7 @@ async function send(path, payload, authenticated = true, allowRefresh = true) {
   return result;
 }
 function openGameJourney(game) {
+  selectedCatalogGame = game;
   // Display the status supplied by the public catalog, never a simulated launch.
   const status = game.local_scoring_status === 'implemented_development'
     ? 'Development engine available. No live competition or public entries are open.'
@@ -87,7 +90,35 @@ function openGameJourney(game) {
   el('game-journey-member-link').textContent = accessToken ? 'View my leagues' : 'Sign in or view my leagues';
   const journey = el('game-journey');
   journey.hidden = false;
+  renderGameJourneyMemberLeagues();
   journey.scrollIntoView?.({ behavior: 'auto', block: 'start' });
+}
+function renderGameJourneyMemberLeagues() {
+  const holder = el('game-journey-member-leagues');
+  holder.replaceChildren();
+  el('game-journey-member-link').textContent = accessToken ? 'View all my leagues' : 'Sign in or view my leagues';
+  if (!selectedCatalogGame || !accessToken) return;
+  // This list comes only from the authenticated /query leagues response.
+  const matches = authorizedLeagues.filter(league => league.sport === selectedCatalogGame.sport);
+  if (!matches.length) {
+    holder.append(node('p', 'No authorized ' + selectedCatalogGame.name + ' leagues on this account yet. Commissioners can issue private invitations.', 'small'));
+    return;
+  }
+  holder.append(node('h4', 'Your ' + selectedCatalogGame.name + ' competitions'));
+  for (const league of matches) {
+    const control = node('button', 'Open ' + league.name, 'secondary');
+    control.type = 'button';
+    control.addEventListener('click', async () => {
+      control.disabled = true;
+      try {
+        await openLeague(league.id);
+        el('league-panel').scrollIntoView?.({ behavior: 'auto', block: 'start' });
+      } catch (error) {
+        notice(error.message, 'error');
+      } finally { control.disabled = false; }
+    });
+    holder.append(control);
+  }
 }
 async function loadGoatGamesCatalog() {
   const list = el('goat-games-catalog');
@@ -122,6 +153,8 @@ async function query(op, extras = {}) { return send('query', { op, ...extras });
 async function command(op, extras = {}) { return send('commands', { op, ...extras }); }
 function showSignedOut() {
   accessToken = ''; refreshToken = ''; myUserId = ''; activeLeagueId = '';
+  authorizedLeagues = [];
+  renderGameJourneyMemberLeagues();
   renderGpi(null);
   el('account-panel').hidden = false;
   el('member-panel').hidden = true;
@@ -139,6 +172,8 @@ async function showSignedIn() {
 }
 async function loadLeagues() {
   const leagues = await query('leagues');
+  authorizedLeagues = leagues;
+  renderGameJourneyMemberLeagues();
   const list = el('leagues');
   list.replaceChildren();
   if (!leagues.length) {
