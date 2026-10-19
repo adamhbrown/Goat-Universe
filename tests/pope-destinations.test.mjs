@@ -47,6 +47,13 @@ test('Media keeps editorial content separate from local playback and never auto-
   assert.match(media,new RegExp('id="'+id+'"'));
  assert.match(mediaCss,/\.media-shelves/);
 });
+test('Founder-supplied opt-in theme is a real destination from City and Stadium',()=>{
+ assert.ok(media.includes('class="media-audio-section" id="music"'));
+ assert.ok(city.includes('href="goatville-cinema.html#music"'));
+ assert.ok(stadium.includes('href="goatville-cinema.html#music"'));
+ assert.ok(media.includes('src="assets/goatville/official-theme.mp4"'));
+ assert.ok(!media.includes('autoplay'));
+});
 test('All internal links resolve to exposed files, the games workspace or guarded account routes',()=>{
  const files=['index.html',...publicFiles];
  for(const [label,html] of Object.entries(pages)){
