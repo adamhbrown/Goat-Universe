@@ -43,6 +43,9 @@ test('member portal exposes the founder-approved mobile journey without implying
   assert.match(html, /id="my-league"/);
   assert.match(html, /id="game-journey"/);
   assert.match(html, /id="game-journey-member-link" href="#my-league"/);
+  assert.match(html, /id="game-journey-member-leagues"[^>]*aria-live="polite"/);
+  assert.match(script, /authorizedLeagues\.filter\(league => league\.sport === selectedCatalogGame\.sport\)/);
+  assert.match(script, /authorizedLeagues = \[\]/);
   assert.match(html, /href="\/manage"/);
   assert.match(script, /function openGameJourney\(game\)/);
   assert.match(script, /Rules and scoring are pending approval/);
@@ -179,6 +182,15 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
   assert.equal(ids['account-panel'].hidden, true);
   assert.equal(ids['member-panel'].hidden, false);
   assert.equal(ids['member-name'].textContent, 'Welcome, Fixture Member');
+  await find(ids['goat-games-catalog'].children[0], 'BUTTON').fire('click');
+  const gameLeagueButton = find(ids['game-journey-member-leagues'], 'BUTTON');
+  assert.equal(gameLeagueButton.textContent, 'Open GOAT TEST LEAGUE', 'Only actual authorized NFL leagues are offered');
+  await gameLeagueButton.fire('click');
+  assert.equal(ids['league-panel'].hidden, false, 'The game card opens the authorized competition');
+  await ids.back.fire('click');
+  await find(ids['goat-games-catalog'].children[2], 'BUTTON').fire('click');
+  assert.equal(find(ids['game-journey-member-leagues'], 'BUTTON'), undefined, 'No cross-sport league leak');
+  assert.match(ids['game-journey-member-leagues'].children[0].textContent, /No authorized GOAT Crossover leagues/);
   assert.equal(ids['gpi-rankings'].children.length, 5);
   assert.equal(ids['gpi-rankings'].children[0].children[1].textContent, '#42');
   assert.equal(ids['gpi-rankings'].children[1].children[2].textContent, 'Parkside Avenue · of 18');
@@ -209,4 +221,7 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
   await approve.fire('click');
   assert.ok(api.some(x => x.payload.op === 'entry_decide' && x.payload.user_id === 'pending-fixture-user' && x.payload.approved === true));
   assert.equal(api.some(x => /outreach\/send|billing\/checkout/.test(x.url)), false);
+  await ids.signout.fire('click');
+  assert.equal(ids['game-journey-member-leagues'].children.length, 0, 'Signing out removes private league links');
+  assert.equal(ids['game-journey-member-link'].textContent, 'Sign in or view my leagues');
 });
