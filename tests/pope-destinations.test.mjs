@@ -52,6 +52,15 @@ test('All internal links resolve to exposed files, the games workspace or guarde
   }
  }
 });
+test('City, Stadium and Media display one existing DST-safe GST clock implementation',()=>{
+ for(const [name,html] of Object.entries(pages)){
+  assert.ok(html.includes('href="experience/gst-clock.css"'),name+' clock style missing');
+  assert.ok(html.includes('type="module" src="experience/gst-clock.js"'),name+' clock script missing');
+ }
+ assert.ok(publicFiles.has('experience/gst-clock.js'));
+ assert.ok(publicFiles.has('experience/gst-clock.css'));
+ assert.ok(publicFiles.has('experience/gst-time.js'));
+});
 test('Pope pages preserve correct brand and protected public media assets',()=>{
  for(const file of ['goatville-city.html','goatville-stadium.html','goatville-cinema.html','assets/goatville/founder-arrival-gate.jpg','assets/goatville/official-theme.mp4'])
   assert.ok(publicFiles.has(file),'Missing published allowlist asset: '+file);
