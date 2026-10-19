@@ -37,6 +37,12 @@ def capture(browser, label: str, viewport: dict, base: str) -> None:
     page.locator("body.entered").wait_for()
     page.wait_for_timeout(450)
     assert page.locator(".cards a.card[href^='/games/']").count() == 5
+    gateway = page.locator(".goatville-portal")
+    gateway.wait_for(state="visible")
+    assert gateway.get_by_role("link", name="Enter Goatville City").count() == 1
+    assert gateway.get_by_text("ENTER GOATVILLE").count() == 1
+    assert_fits(page, "Goatville gateway " + label)
+    gateway.screenshot(path=str(OUTPUT / f"goatville-gateway-{label}.png"))
     assert_fits(page, "universe " + label)
     page.screenshot(path=str(OUTPUT / f"world-{label}.png"), full_page=True)
 
@@ -49,6 +55,12 @@ def capture(browser, label: str, viewport: dict, base: str) -> None:
     assert page.url.endswith("#state")
     assert_fits(page, "state GPI " + label)
     page.screenshot(path=str(OUTPUT / f"gpi-state-{label}.png"), full_page=True)
+    # The primary gateway must actually open Pope's existing City, not a dead end.
+    page.goto(base + "/arrival-experience.html#universe", wait_until="networkidle")
+    page.locator(".goatville-portal-link").click()
+    assert page.url.endswith("/goatville-city.html"), page.url
+    assert page.get_by_text("WELCOME TO").count() >= 1
+    assert_fits(page, "City handoff " + label)
     assert not errors, f"Browser script errors: {errors}"
     context.close()
 
@@ -75,4 +87,4 @@ if __name__ == "__main__":
                 browser.close()
     finally:
         server.shutdown()
-    print(f"Validated both viewports. Eight screenshots saved in {OUTPUT}")
+    print(f"Validated both viewports. Ten screenshots saved in {OUTPUT}")
