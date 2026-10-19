@@ -33,7 +33,8 @@ test('no duplicate element IDs and all internal anchors resolve',()=>{
 });
 test('no remote code, tracking, or payment widgets',()=>{
  assert.doesNotMatch(city,/<script\b[^>]+src=["'](?:https?:)?\/\/|fetch\(|<iframe|checkout\.stripe|paypal/);
- for(const [,source] of city.matchAll(/<script\b[^>]+src="([^"]+)"/g))assert.equal(source,'experience/universe-shell.js');
+ const reviewedScripts=new Set(['experience/universe-shell.js','experience/gst-clock.js']);
+ for(const [,source] of city.matchAll(/<script\b[^>]+src="([^"]+)"/g))assert.ok(reviewedScripts.has(source),'Unreviewed City script: '+source);
 });
 
 test('premium cinematic entrance is explicitly opt-in, three chapters and skippable',()=>{
