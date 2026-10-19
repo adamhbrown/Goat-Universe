@@ -12,6 +12,12 @@ test('member portal exposes the founder-approved mobile journey without implying
   ]);
   assert.match(html, /aria-label="GOAT Universe"/);
   for (const label of ['Goatville', 'Games', 'Media', 'My League', 'Enter the Universe']) assert.match(html, new RegExp('>' + label + '<', 'i'));
+  assert.match(html, /href="#media"/);
+  assert.match(html, /id="media"/);
+  assert.match(html, /Included with every league/);
+  for (const format of ['GOAT Alerts', 'BAA Reports', 'League Magazines', 'Player Spotlights']) assert.match(html, new RegExp(format));
+  assert.match(html, /https:\/\/goatverse-publications\.downtownadamb\.chatgpt\.site\//);
+  assert.match(html, /integration is in development/);
   assert.match(html, /id="my-league"/);
   for (const scope of ['Global', 'Block', 'County', 'State', 'Region']) assert.match(script, new RegExp(scope, 'i'));
   assert.match(html, /Verified results only/);
