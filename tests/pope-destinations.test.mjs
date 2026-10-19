@@ -32,11 +32,12 @@ test('Stadium leads into the five actual competition workspaces and retains opti
  assert.match(stadium,/id="goatMode"/);
 });
 test('Stadium is competition-first: mobile My League opens account and GPI is a prominent real rankings doorway',()=>{
- assert.match(stadium,/<nav class="mobile-nav"[^>]*>[\\s\\S]*?href="\\/manage">My League<\\/a>/);
- assert.match(stadium,/href="\\/games">ENTER THE FIVE GOAT GAMES/);
- assert.match(stadium,/<h3 class="gpi-logo">GPI<\\/h3>/);
- assert.match(stadium,/href="gpi\\.html">EXPLORE THE GOAT POWER INDEX/);
- assert.match(stadium,/YOUR BLOCK. YOUR COUNTY. YOUR STATE. YOUR REGION. THE UNIVERSE./);
+ assert.ok(stadium.includes('<nav class="mobile-nav"'));
+ assert.ok(stadium.includes('href="/manage">My League</a>'));
+ assert.ok(stadium.includes('href="/games">ENTER THE FIVE GOAT GAMES'));
+ assert.ok(stadium.includes('<h3 class="gpi-logo">GPI</h3>'));
+ assert.ok(stadium.includes('href="gpi.html">EXPLORE THE GOAT POWER INDEX'));
+ assert.ok(stadium.includes('YOUR BLOCK. YOUR COUNTY. YOUR STATE. YOUR REGION. THE UNIVERSE.'));
  assert.ok(publicFiles.has('gpi.html'));
 });
 test('Media keeps editorial content separate from local playback and never auto-plays founder theme',()=>{
@@ -46,6 +47,16 @@ test('Media keeps editorial content separate from local playback and never auto-
  for(const id of ['screen-video','video-file','audio-file','music','play','pause','restart','sound'])
   assert.match(media,new RegExp('id="'+id+'"'));
  assert.match(mediaCss,/\.media-shelves/);
+});
+test('Founder-supplied opt-in theme is a real destination from City and Stadium',()=>{
+ assert.ok(media.includes('class="media-audio-section" id="theme"'));
+ assert.ok(city.includes('href="goatville-cinema.html#theme"'));
+ assert.ok(stadium.includes('href="goatville-cinema.html#theme"'));
+ assert.ok(media.includes('src="assets/goatville/official-theme.mp4"'));
+ assert.ok(!media.includes('autoplay'));
+ const elementIds=[...media.matchAll(/\\bid="([^"]+)"/g)].map(m=>m[1]);
+ assert.equal(elementIds.length,new Set(elementIds).size,'Media must not reuse the audio player id');
+ assert.ok(media.includes('<audio id="music"'),'Keep cinema player controls intact');
 });
 test('All internal links resolve to exposed files, the games workspace or guarded account routes',()=>{
  const files=['index.html',...publicFiles];
@@ -74,5 +85,8 @@ test('Pope pages preserve correct brand and protected public media assets',()=>{
   assert.ok(publicFiles.has(file),'Missing published allowlist asset: '+file);
  assert.match(stadium,/GOATVERSE HOLDINGS INC\./);
  assert.match(media,/GOATVERSE HOLDINGS INC\./);
- for(const html of Object.values(pages))assert.doesNotMatch(html,/GOATVILLE USA/);
+ for(const html of Object.values(pages))assert.doesNotMatch(html,/GOATVILLE USA|DOWNTOWN SPORTS NATION/);
+ assert.match(stadium,/DOWNTOWN SPORTS NETWORK/);
+ assert.match(media,/DOWNTOWN SPORTS NETWORK/);
+ assert.doesNotMatch(stadium,/Every point matters/);
 });

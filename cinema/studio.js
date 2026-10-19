@@ -6,7 +6,7 @@
 
   const byId = id => document.getElementById(id);
   const video = byId('screen-video');
-  const music = byId('studio-music');
+  const music = byId('music');
   const videoInput = byId('video-file');
   const audioInput = byId('audio-file');
   const playButton = byId('play');
