@@ -14,6 +14,21 @@ test('member portal exposes the founder-approved mobile journey without implying
   for (const label of ['Goatville', 'Games', 'Media', 'My League', 'Enter the Universe']) assert.match(html, new RegExp('>' + label + '<', 'i'));
   assert.match(html, /href="#media"/);
   assert.match(html, /id="media"/);
+  assert.match(html, /href="#gpi">GPI · What's Your Ranking\?/);
+  assert.match(html, /id="gpi" class="panel gpi-public journey-anchor"/);
+  assert.match(html, /id="gpi-public-heading"/);
+  assert.match(html, /class="gpi-public-mark">GPI</);
+  assert.match(html, /WHAT'S YOUR RANKING\?/);
+  for (const scope of ['BLOCK', 'COUNTY', 'STATE', 'REGION', 'GLOBAL'])
+    assert.match(html, new RegExp('<strong>' + scope + '</strong>'));
+  assert.match(html, /id="gpi-public-heading"[\s\S]*href="#my-league">Explore member access/);
+  assert.match(html, /No fictional rankings, automatic location tracking, or estimated scores/);
+  assert.match(html, /class="gpi-member-mark">GPI</);
+  assert.match(css, /\.gpi-public-mark\{[^}]*font-size:clamp/);
+  assert.match(css, /@media\(max-width:700px\)[^}]*\.gpi-public-emblem\{display:none\}/);
+  const publicGpi = html.slice(html.indexOf('<section id="gpi"'),html.indexOf('<section id="media"'));
+  assert.doesNotMatch(publicGpi, /#[0-9]+\b|navigator\.geolocation|latitude|longitude/i);
+
   assert.match(html, /Included with every league/);
   for (const format of ['GOAT Alerts', 'BAA Reports', 'League Magazines', 'Player Spotlights']) assert.match(html, new RegExp(format));
   assert.match(html, /https:\/\/goatverse-publications\.downtownadamb\.chatgpt\.site\//);
