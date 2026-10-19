@@ -112,6 +112,19 @@ test('five actual synthetic competition workflows finalize before certification 
  await assert.rejects(command({op:'annual_policy_set',championship_id:championship.id,policy:policy()}),/championship_final/);
 });
 
+test('member dashboards represent five competitions; performance history and annual tables remain actor scoped',async()=>{
+ const dashboard=await query({op:'competition_dashboard'},members[0]);assert.deepEqual(dashboard.competitions.map(g=>g.game_key).sort(),keys.toSorted());
+ assert.ok(dashboard.competitions.every(g=>g.leagues.length===1&&g.leagues[0].finishes_certified));
+ assert.ok((await query({op:'competition_dashboard'},outsider)).competitions.every(g=>g.leagues.length===0));
+ const history=await query({op:'member_history',user_id:members[2]},members[0]);assert.equal(history.length,5);assert.ok(history.every(h=>h.finish.user_id===members[0]));
+ await assert.rejects(command({op:'annual_competition_attach',championship_id:championship.id,league_id:leagues[0].id},outsider),/championship_owner_required/);
+ const scoped=(fn)=>db.exclusive(()=>db.db.transaction(async tx=>{await tx.exec('set local role authenticated');await tx.query("select set_config('request.jwt.claim.sub',$1,true)",[outsider]);return fn(tx);}));
+ assert.equal((await scoped(tx=>tx.query('select * from public.goat_championships'))).rows.length,0);
+ assert.equal((await scoped(tx=>tx.query('select * from public.goat_championship_results'))).rows.length,0);
+ await assert.rejects(scoped(tx=>tx.query('update public.goat_championships set policy=\'{}\'')),/permission denied/);
+ await assert.rejects(scoped(tx=>tx.query('select public.goat_annual_standings($1)',[championship.id])),/permission denied/);
+});
+
 // Separate commissioner leagues may legitimately have overlapping members.
 // One annual championship, however, can attach only ONE certified finishing
 // snapshot per official GOAT Game, preventing duplicated BAAS allocations.
@@ -143,17 +156,4 @@ test('two certified commissioner leagues of one GOAT Game cannot double award an
  assert.equal(recorded.competitions.length,1);
  assert.equal(recorded.competitions[0].league_id,leagueIds[0]);
  assert.equal(recorded.baas_awarded,false);
-});
-
-test('member dashboards represent five competitions; performance history and annual tables remain actor scoped',async()=>{
- const dashboard=await query({op:'competition_dashboard'},members[0]);assert.deepEqual(dashboard.competitions.map(g=>g.game_key).sort(),keys.toSorted());
- assert.ok(dashboard.competitions.every(g=>g.leagues.length===1&&g.leagues[0].finishes_certified));
- assert.ok((await query({op:'competition_dashboard'},outsider)).competitions.every(g=>g.leagues.length===0));
- const history=await query({op:'member_history',user_id:members[2]},members[0]);assert.equal(history.length,5);assert.ok(history.every(h=>h.finish.user_id===members[0]));
- await assert.rejects(command({op:'annual_competition_attach',championship_id:championship.id,league_id:leagues[0].id},outsider),/championship_owner_required/);
- const scoped=(fn)=>db.exclusive(()=>db.db.transaction(async tx=>{await tx.exec('set local role authenticated');await tx.query("select set_config('request.jwt.claim.sub',$1,true)",[outsider]);return fn(tx);}));
- assert.equal((await scoped(tx=>tx.query('select * from public.goat_championships'))).rows.length,0);
- assert.equal((await scoped(tx=>tx.query('select * from public.goat_championship_results'))).rows.length,0);
- await assert.rejects(scoped(tx=>tx.query('update public.goat_championships set policy=\'{}\'')),/permission denied/);
- await assert.rejects(scoped(tx=>tx.query('select public.goat_annual_standings($1)',[championship.id])),/permission denied/);
 });
