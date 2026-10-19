@@ -82,5 +82,8 @@ test('Pope pages preserve correct brand and protected public media assets',()=>{
   assert.ok(publicFiles.has(file),'Missing published allowlist asset: '+file);
  assert.match(stadium,/GOATVERSE HOLDINGS INC\./);
  assert.match(media,/GOATVERSE HOLDINGS INC\./);
- for(const html of Object.values(pages))assert.doesNotMatch(html,/GOATVILLE USA/);
+ for(const html of Object.values(pages))assert.doesNotMatch(html,/GOATVILLE USA|DOWNTOWN SPORTS NATION/);
+ assert.match(stadium,/DOWNTOWN SPORTS NETWORK/);
+ assert.match(media,/DOWNTOWN SPORTS NETWORK/);
+ assert.doesNotMatch(stadium,/Every point matters/);
 });
