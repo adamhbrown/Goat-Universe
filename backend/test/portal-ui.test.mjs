@@ -18,6 +18,13 @@ test('member portal exposes the founder-approved mobile journey without implying
   for (const format of ['GOAT Alerts', 'BAA Reports', 'League Magazines', 'Player Spotlights']) assert.match(html, new RegExp(format));
   assert.match(html, /https:\/\/goatverse-publications\.downtownadamb\.chatgpt\.site\//);
   assert.match(html, /integration is in development/);
+  assert.match(html, /id="founder"/);
+  assert.match(html, /Adam Brown/);
+  assert.match(html, /El Commissioner de Goat · Founder &amp; CEO/);
+  assert.match(html, /making being a sports fan more entertaining/);
+  for (const path of ['Brand &amp; Licensing', 'Leagues &amp; Platforms', 'Media &amp; Capital']) assert.match(html, new RegExp(path));
+  assert.match(html, /Public inquiry routing is not yet open/);
+  assert.doesNotMatch(html, /<form[^>]+(?:contact|partner)|mailto:/i);
   assert.match(html, /id="my-league"/);
   for (const scope of ['Global', 'Block', 'County', 'State', 'Region']) assert.match(script, new RegExp(scope, 'i'));
   assert.match(html, /Verified results only/);
