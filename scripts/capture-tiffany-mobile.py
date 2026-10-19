@@ -24,7 +24,7 @@ def assert_fits(page, label: str) -> None:
 
 
 def capture(browser, label: str, viewport: dict, base: str) -> None:
-    context = browser.new_context(viewport=viewport, device_scale_factor=2, is_mobile=label == "mobile", has_touch=label == "mobile")
+    context = browser.new_context(viewport=viewport, device_scale_factor=2, is_mobile=label != "desktop", has_touch=label != "desktop")
     page = context.new_page()
     errors = []
     page.on("pageerror", lambda err: errors.append(str(err)))
@@ -83,6 +83,9 @@ def capture(browser, label: str, viewport: dict, base: str) -> None:
     assert page.locator("article.district").count() == 7
     assert page.locator("#gv-gst-clock time").is_visible()
     page.screenshot(path=str(OUTPUT / f"city-{label}.png"), full_page=True)
+    page.locator('article.district[data-district="market"] a[href="commerce.html#collections"]').click()
+    assert page.url.endswith("/commerce.html#collections"), page.url
+    assert page.get_by_role("heading", name="GOATVILLE WEAR THE UNIVERSE.").is_visible()
 
     page.goto(base + "/goatville-stadium.html", wait_until="networkidle")
     assert page.locator("a.games-card-link[href^='/games/']").count() == 5
@@ -110,20 +113,6 @@ def capture(browser, label: str, viewport: dict, base: str) -> None:
     context.close()
 
 
-def capture_compact(browser, base: str) -> None:
-    """320px narrow-phone regression for Tiffany's new GPI and season views."""
-    context = browser.new_context(viewport={"width": 320, "height": 640}, device_scale_factor=2, is_mobile=True, has_touch=True)
-    page = context.new_page()
-    errors = []
-    page.on("pageerror", lambda err: errors.append(str(err)))
-    for route, name in [("/championships.html", "championship-season-320"), ("/gpi.html", "gpi-320")]:
-        page.goto(base + route, wait_until="networkidle")
-        assert_fits(page, name)
-        page.screenshot(path=str(OUTPUT / f"{name}.png"), full_page=True)
-    assert not errors, f"320px browser script errors: {errors}"
-    context.close()
-
-
 class Quiet(SimpleHTTPRequestHandler):
     def log_message(self, *args) -> None:
         return
@@ -140,11 +129,11 @@ if __name__ == "__main__":
         with sync_playwright() as p:
             browser = p.chromium.launch()
             try:
+                capture(browser, "small-mobile", {"width": 320, "height": 694}, base)
                 capture(browser, "mobile", {"width": 390, "height": 844}, base)
                 capture(browser, "desktop", {"width": 1440, "height": 900}, base)
-                capture_compact(browser, base)
             finally:
                 browser.close()
     finally:
         server.shutdown()
-    print(f"Validated both viewports. Twenty-four screenshots saved in {OUTPUT}")
+    print(f"Validated three viewports. Thirty-three screenshots saved in {OUTPUT}")
