@@ -20,9 +20,30 @@ const node = (tag, text, className) => {
   if (className) item.className = className;
   return item;
 };
+const GPI_SCOPES = Object.freeze([
+  ['block', 'Block'], ['county', 'County'], ['state', 'State'], ['region', 'Region'], ['global', 'Global']
+]);
 function notice(message, type = '') {
   el('notice').textContent = message;
   el('notice').className = 'notice ' + type;
+}
+function renderGpi(gpi) {
+  const list = el('gpi-rankings');
+  const verified = gpi?.verified === true && gpi.ranks && typeof gpi.ranks === 'object' && !Array.isArray(gpi.ranks);
+  list.replaceChildren();
+  for (const [key, label] of GPI_SCOPES) {
+    const record = verified && gpi.ranks[key] && typeof gpi.ranks[key] === 'object' ? gpi.ranks[key] : null;
+    const rank = Number.isSafeInteger(record?.rank) && record.rank > 0 ? record.rank : null;
+    const total = Number.isSafeInteger(record?.total) && record.total >= rank ? record.total : null;
+    const place = typeof record?.label === 'string' && record.label.trim() ? record.label.trim().slice(0, 80) : `${label} standing`;
+    const card = node('article', null, 'gpi-card');
+    card.append(node('h4', label), node('strong', rank ? `#${rank.toLocaleString('en-US')}` : '—'),
+      node('p', rank && total ? `${place} · of ${total.toLocaleString('en-US')}` : rank ? place : 'Not ranked'));
+    list.append(card);
+  }
+  el('gpi-status').textContent = verified
+    ? 'Only authenticated, verified competition results are included.'
+    : 'Ranks appear after verified competition results are available. No estimated or fictional ranks are shown.';
 }
 function renderGameJourneyMemberLeagues() {
   const holder = el('game-journey-member-leagues');
@@ -100,6 +121,7 @@ function showSignedOut() {
   leagueViewGeneration++;
   myUserId = ''; activeLeagueId = ''; signedIn = false; authorizedLeagues = [];
   renderGameJourneyMemberLeagues();
+  renderGpi(null);
   el('password').value='';el('password').type='password';
   el('show-password').textContent='Show password';el('show-password').setAttribute('aria-pressed','false');
   for(const id of ['leagues','rounds','standings','entry-requests','league-details'])el(id).replaceChildren();
@@ -113,6 +135,7 @@ async function showSignedIn() {
   const me = await query('me');
   myUserId = me.profile.user_id;
   signedIn = true;
+  renderGpi(me.gpi);
   el('member-name').textContent = 'Welcome, ' + me.profile.display_name;
   el('account-panel').hidden = true;
   el('member-panel').hidden = false;
