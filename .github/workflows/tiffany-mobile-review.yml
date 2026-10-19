@@ -1,0 +1,36 @@
+name: Tiffany mobile visual review
+on:
+  pull_request:
+    paths:
+      - 'arrival-experience.html'
+      - 'gpi.html'
+      - 'championships.html'
+      - 'scripts/capture-tiffany-mobile.py'
+      - '.github/workflows/tiffany-mobile-review.yml'
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install isolated browser test dependencies
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Capture and test mobile / desktop experience
+        run: python scripts/capture-tiffany-mobile.py
+      - name: Save founder screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tiffany-mobile-visual-review
+          path: build/tiffany-mobile-review/*.png
+          if-no-files-found: warn
+          retention-days: 14

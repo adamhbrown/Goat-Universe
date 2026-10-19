@@ -7,19 +7,120 @@ const api = client(fetch, {onSessionEnd(reason) {
 if(typeof window !== 'undefined')window.addEventListener('pagehide',()=>api.forget());
 let myUserId = '';
 let activeLeagueId = '';
+let signedIn = false;
+let authorizedLeagues = [];
+let selectedCatalogGame = null;
 // Network replies from a previously visited competition must not restore its UI.
 // Invalidate pending views whenever a new league is selected or the user leaves.
 let leagueViewGeneration = 0;
 const el = id => document.getElementById(id);
+const APPROVED_SOUNDTRACK = Object.freeze([
+  // Add only owner-approved, licensed, same-origin music files after upload and review.
+  // { title: 'Approved title', src: '/media/approved-file.mp3' }
+]);
+function initializeSoundtrack() {
+  const track = APPROVED_SOUNDTRACK[0];
+  const player = el('soundtrack-player');
+  if (!track || !/^\/media\/[a-z0-9][a-z0-9._/-]*\.(?:mp3|m4a|ogg)$/i.test(track.src)) return;
+  const audio = el('soundtrack-audio');
+  const toggle = el('soundtrack-toggle');
+  const mute = el('soundtrack-mute');
+  const volume = el('soundtrack-volume');
+  audio.src = track.src;
+  audio.volume = Number(volume.value) / 100;
+  el('soundtrack-title').textContent = track.title;
+  player.hidden = false;
+  const sync = () => {
+    const playing = !audio.paused;
+    toggle.textContent = playing ? 'Pause' : 'Play';
+    toggle.setAttribute('aria-label', playing ? 'Pause soundtrack' : 'Play soundtrack');
+    toggle.setAttribute('aria-pressed', String(playing));
+    mute.textContent = audio.muted ? 'Unmute' : 'Mute';
+    mute.setAttribute('aria-pressed', String(audio.muted));
+  };
+  toggle.addEventListener('click', async () => {
+    try { if (audio.paused) await audio.play(); else audio.pause(); }
+    catch { notice('Soundtrack playback was blocked by your browser. Press Play again.', 'error'); }
+    sync();
+  });
+  mute.addEventListener('click', () => { audio.muted = !audio.muted; sync(); });
+  volume.addEventListener('input', () => { audio.volume = Number(volume.value) / 100; });
+  audio.addEventListener('play', sync);
+  audio.addEventListener('pause', sync);
+  audio.addEventListener('ended', sync);
+  sync();
+}
+
 const node = (tag, text, className) => {
   const item = document.createElement(tag);
   if (text !== undefined && text !== null) item.textContent = String(text);
   if (className) item.className = className;
   return item;
 };
+const GPI_SCOPES = Object.freeze([
+  ['block', 'Block'], ['county', 'County'], ['state', 'State'], ['region', 'Region'], ['global', 'Global']
+]);
 function notice(message, type = '') {
   el('notice').textContent = message;
   el('notice').className = 'notice ' + type;
+}
+function renderGpi(gpi) {
+  const list = el('gpi-rankings');
+  const verified = gpi?.verified === true && gpi.ranks && typeof gpi.ranks === 'object' && !Array.isArray(gpi.ranks);
+  list.replaceChildren();
+  for (const [key, label] of GPI_SCOPES) {
+    const record = verified && gpi.ranks[key] && typeof gpi.ranks[key] === 'object' ? gpi.ranks[key] : null;
+    const rank = Number.isSafeInteger(record?.rank) && record.rank > 0 ? record.rank : null;
+    const total = Number.isSafeInteger(record?.total) && record.total >= rank ? record.total : null;
+    const place = typeof record?.label === 'string' && record.label.trim() ? record.label.trim().slice(0, 80) : `${label} standing`;
+    const card = node('article', null, 'gpi-card');
+    card.append(node('h4', label), node('strong', rank ? `#${rank.toLocaleString('en-US')}` : '—'),
+      node('p', rank && total ? `${place} · of ${total.toLocaleString('en-US')}` : rank ? place : 'Not ranked'));
+    list.append(card);
+  }
+  el('gpi-status').textContent = verified
+    ? 'Only authenticated, verified competition results are included.'
+    : 'Ranks appear after verified competition results are available. No estimated or fictional ranks are shown.';
+}
+function renderGameJourneyMemberLeagues() {
+  const holder = el('game-journey-member-leagues');
+  holder.replaceChildren();
+  el('game-journey-member-link').textContent = signedIn ? 'View all my leagues' : 'Sign in or view my leagues';
+  el('game-journey-member-link').href = signedIn ? '#member-panel' : '#account-panel';
+  if (!selectedCatalogGame || !signedIn) return;
+  const matches = authorizedLeagues.filter(league => league.sport === selectedCatalogGame.sport);
+  if (!matches.length) {
+    holder.append(node('p', `No authorized ${selectedCatalogGame.name} leagues on this account yet. Commissioners can issue private invitations.`, 'small'));
+    return;
+  }
+  holder.append(node('h4', `Your ${selectedCatalogGame.name} competitions`));
+  for (const league of matches) {
+    const control = node('button', `Open ${league.name}`, 'secondary');
+    control.type = 'button';
+    control.addEventListener('click', async () => {
+      control.disabled = true;
+      try {
+        await openLeague(league.id);
+        el('league-panel').scrollIntoView?.({behavior:'auto',block:'start'});
+      } catch (error) { notice(error.message.replaceAll('_',' '), 'error'); }
+      finally { control.disabled = false; }
+    });
+    holder.append(control);
+  }
+}
+function openGameJourney(game) {
+  selectedCatalogGame = game;
+  const status = game.local_scoring_status === 'implemented_development'
+    ? 'Development engine available. No live competition or public entries are open.'
+    : game.local_scoring_status === 'verified_structure'
+      ? 'League structure documented. Hosted play and automated scoring are not open.'
+      : 'Rules and scoring are pending approval. Real entries and picks are not open.';
+  el('game-journey-title').textContent = game.name;
+  el('game-journey-mechanics').textContent = game.mechanics;
+  el('game-journey-status').textContent = status;
+  el('game-journey').hidden = false;
+  renderGameJourneyMemberLeagues();
+  el('game-journey').scrollIntoView?.({behavior:'auto',block:'start'});
 }
 async function send(path, payload, authenticated = true) {
   return api.request('/' + path, payload, authenticated);
@@ -41,6 +142,10 @@ async function loadGoatGamesCatalog() {
         node('p', game.local_scoring_status === 'implemented_development'
           ? 'Development engine available · Not live'
           : 'Rulebook and scoring under development', 'small'));
+      const explore = node('button', `Explore ${game.name}`, 'game-explore');
+      explore.type = 'button';
+      explore.addEventListener('click', () => openGameJourney(game));
+      card.append(explore);
       list.append(card);
     }
   } catch {
@@ -51,7 +156,9 @@ async function query(op, extras = {}) { return send('query', { op, ...extras });
 async function command(op, extras = {}) { return send('commands', { op, ...extras }); }
 function showSignedOut() {
   leagueViewGeneration++;
-  myUserId = ''; activeLeagueId = '';
+  myUserId = ''; activeLeagueId = ''; signedIn = false; authorizedLeagues = [];
+  renderGameJourneyMemberLeagues();
+  renderGpi(null);
   el('password').value='';el('password').type='password';
   el('show-password').textContent='Show password';el('show-password').setAttribute('aria-pressed','false');
   for(const id of ['leagues','rounds','standings','entry-requests','league-details'])el(id).replaceChildren();
@@ -64,6 +171,8 @@ function showSignedOut() {
 async function showSignedIn() {
   const me = await query('me');
   myUserId = me.profile.user_id;
+  signedIn = true;
+  renderGpi(me.gpi);
   el('member-name').textContent = 'Welcome, ' + me.profile.display_name;
   el('account-panel').hidden = true;
   el('member-panel').hidden = false;
@@ -72,6 +181,8 @@ async function showSignedIn() {
 }
 async function loadLeagues() {
   const leagues = await query('leagues');
+  authorizedLeagues = leagues;
+  renderGameJourneyMemberLeagues();
   const list = el('leagues');
   list.replaceChildren();
   if (!leagues.length) {
@@ -346,3 +457,4 @@ el('signout').addEventListener('click', async () => {
 });
 showSignedOut();
 loadGoatGamesCatalog();
+initializeSoundtrack();

@@ -6,9 +6,9 @@ const page = readFileSync(new URL('../goatville.html', import.meta.url), 'utf8')
 const home = readFileSync(new URL('../goatville-stadium.html', import.meta.url), 'utf8');
 const script = page.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 
-test('GOATVILLE is reachable from both main and mobile homepage navigation', () => {
-  assert.match(home, /<a href="goatville\.html">GOATVILLE<\/a>/);
-  assert.match(home, /<a href="goatville\.html">Play<\/a>/);
+test('GOATVILLE City is reachable from the Stadium and its mobile navigation', () => {
+  assert.match(home, /href="goatville-city\.html"/);
+  assert.match(home, /<nav class="mobile-nav" aria-label="Stadium mobile navigation">/);
   assert.match(home, /id="goatville"/);
   assert.match(home, /ENTER GOATVILLE CITY/);
 });

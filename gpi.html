@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080909">
+<meta name="description" content="The GOAT Power Index: your personal standing and the competitive ladder from Block to Global. Verified GOAT Universe rankings only.">
+<title>GOAT Power Index | Your Place in the Universe</title>
+<style>
+@font-face{font-family:Manrope;src:url("./assets/fonts/manrope-latin.woff") format("woff");font-display:swap;font-weight:200 800}
+@font-face{font-family:Inter;src:url("./assets/fonts/inter-latin.woff") format("woff");font-display:swap;font-weight:100 900}
+:root{color-scheme:dark;--black:#080909;--surface:#111417;--gold:#e6ba65;--light:#faf6ed;--muted:#bdbbb7;--line:#675736}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--black);color:var(--light);font:15px/1.65 Inter,system-ui,sans-serif}
+a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
+a:focus-visible,button:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.wrap{width:min(1160px,calc(100% - 38px));margin:0 auto}
+.skip{position:absolute;left:12px;top:-90px;background:var(--gold);color:#090909;padding:12px;z-index:30}
+.skip:focus{top:12px}
+.mast{position:relative;z-index:4;border-bottom:1px solid #6f5e394d;background:#0a0c0df0}
+.mast .wrap{min-height:80px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{font:900 1rem Manrope,sans-serif;letter-spacing:.045em;white-space:nowrap}.brand strong{color:var(--gold)}
+.topnav{display:flex;align-items:center;flex-wrap:wrap;gap:clamp(10px,2.2vw,27px);font-weight:800;font-size:.72rem;letter-spacing:.06em}
+.topnav a:hover,.topnav a[aria-current]{color:var(--gold)}
+.kicker{font-size:.71rem;text-transform:uppercase;letter-spacing:.23em;font-weight:900;color:var(--gold)}
+.hero{position:relative;isolation:isolate;overflow:hidden;padding:clamp(75px,10vw,142px) 0 clamp(65px,9vw,110px);border-bottom:1px solid #5c4d2f5e;background:radial-gradient(ellipse at 78% 24%,#926b2b44,transparent 42%),linear-gradient(135deg,#1a1d1f,#080909 74%)}
+.hero:before{content:"GPI";position:absolute;top:0;right:-.07em;font:1000 clamp(13rem,33vw,35rem)/1 Manrope,sans-serif;letter-spacing:-.12em;color:#ecc16c0a;z-index:-1}
+.hero h1{max-width:900px;font:900 clamp(3.5rem,8.8vw,8.2rem)/.94 Manrope,sans-serif;letter-spacing:-.075em;margin:24px 0}
+.hero h1 em{color:var(--gold);font-style:normal}
+.hero .lead{max-width:680px;color:#ded9ce;font-size:clamp(1.04rem,2.2vw,1.33rem);line-height:1.8}
+.hero .signature{max-width:520px;margin-top:32px;padding-left:17px;border-left:3px solid var(--gold);color:#f7e9c9;font-size:.89rem}
+.chevron{color:var(--gold)}
+.statusline{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:35px;font-size:.78rem;color:#d8c9ab}
+.pulse{display:inline-block;height:9px;width:9px;border-radius:50%;background:#d1a760;box-shadow:0 0 0 4px #d1a76022}
+.statusline b{color:var(--light)}
+.main{padding:clamp(48px,7vw,95px) 0 100px}
+.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:25px;flex-wrap:wrap;margin-bottom:27px}
+.sectionhead h2{font:900 clamp(2rem,4.5vw,3.5rem)/1.08 Manrope,sans-serif;letter-spacing:-.055em;margin:10px 0}
+.sub{color:var(--muted);max-width:670px;line-height:1.85}
+.label{font-size:.65rem;font-weight:900;text-transform:uppercase;letter-spacing:.19em;color:var(--gold)}
+.personal{display:grid;grid-template-columns:1fr 1.5fr;border:1px solid #8b7345;border-radius:18px;overflow:hidden;background:linear-gradient(140deg,#1f2424,#101214 80%);margin-bottom:80px}
+.personal .identity{padding:clamp(28px,4vw,48px);border-right:1px solid #645538}
+.personal .name{font:900 clamp(2.3rem,5vw,4.4rem)/1.08 Manrope,sans-serif;letter-spacing:-.055em;margin:19px 0}
+.personal .identity p{max-width:400px;color:#cbc7be}
+.action{display:inline-flex;justify-content:center;align-items:center;min-height:50px;padding:13px 19px;border-radius:5px;background:var(--gold);color:#15100a;font-size:.76rem;letter-spacing:.065em;font-weight:900;text-transform:uppercase;margin-top:17px}
+.action.secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.personal .record{padding:clamp(28px,4vw,48px)}
+.metricgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.metric{padding:20px 0;border-bottom:1px solid #524a3c}
+.metric strong{display:block;font:900 clamp(1.7rem,4vw,3rem) Manrope,sans-serif;color:#f2d59c;margin-top:8px}
+.metric span{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:#cbc2af}
+.caution{font-size:.85rem;color:#c7c1b6;line-height:1.75;margin:24px 0 0}
+.ladder{margin-top:15px}
+.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:28px;margin-bottom:18px}
+.tab{border:1px solid #63563e;background:#15181b;color:#d9d5c9;padding:17px 6px;min-height:60px;font-size:clamp(.65rem,1.6vw,.82rem);letter-spacing:.08em;text-transform:uppercase;font-weight:900;border-radius:7px}
+.tab:hover{border-color:var(--gold);color:#fff}
+.tab[aria-selected="true"]{background:var(--gold);color:#120f0b;border-color:var(--gold)}
+.board{border:1px solid #7a663d;border-radius:16px;overflow:hidden;background:radial-gradient(ellipse at 87% 7%,#7c572d30,transparent 58%),#111517}
+.boardtop{display:flex;justify-content:space-between;gap:25px;flex-wrap:wrap;align-items:start;padding:clamp(26px,4vw,44px);border-bottom:1px solid #6c5a3c}
+.board h3{font:900 clamp(2.25rem,5vw,4.2rem)/1.02 Manrope,sans-serif;letter-spacing:-.065em;margin:12px 0}
+.boardtop p{color:#d3cbc0;margin:0;max-width:550px}
+.boardmark{font:900 clamp(2.8rem,7vw,5.7rem)/1 Manrope,sans-serif;color:#ead0a0;letter-spacing:-.07em}
+.board-body{padding:clamp(26px,4vw,44px)}
+.columnhead{display:grid;grid-template-columns:85px 1fr 100px;gap:12px;padding:0 0 15px;border-bottom:1px solid #685b47;color:#d1bea0;font-size:.67rem;letter-spacing:.12em;font-weight:900;text-transform:uppercase}
+.empty{min-height:205px;padding:35px 0;display:flex;justify-content:center;flex-direction:column;align-items:center;text-align:center}
+.empty h4{font:900 clamp(1.3rem,3vw,1.8rem) Manrope,sans-serif;margin:15px 0 6px}
+.empty p{max-width:540px;color:var(--muted);margin:0}
+.empty .glyph{height:50px;width:50px;border:1px solid #a78a55;border-radius:50%;display:grid;place-items:center;color:var(--gold);font-size:1.65rem}
+.context{border-top:1px solid #665637;padding:25px clamp(26px,4vw,44px);font-size:.86rem;color:#ddd5c6}
+.context strong{color:var(--gold)}
+.note{font-size:.75rem;color:#bdb6a8;margin-top:16px}
+.featuregrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:65px}
+.feature{padding:27px;border:1px solid #4c453b;background:#131719;border-radius:9px}
+.feature b{display:block;color:var(--gold);font:900 1.4rem Manrope,sans-serif;margin-bottom:13px}
+.feature h3{font:900 1.25rem Manrope,sans-serif;margin:0 0 12px}
+.feature p{margin:0;color:#c7c2b8;font-size:.86rem}
+.more{margin-top:65px;padding:clamp(30px,6vw,70px);border:1px solid #947848;border-radius:17px;background:linear-gradient(120deg,#302519,#111517)}
+.more h2{font:900 clamp(2rem,4vw,3.4rem)/1.08 Manrope,sans-serif;letter-spacing:-.05em;margin:12px 0}
+.more p{color:#d8d0c3;max-width:680px}
+.more .links{display:flex;gap:13px;flex-wrap:wrap}
+footer{border-top:1px solid #6c5b3b;padding:25px 0 calc(env(safe-area-inset-bottom) + 40px);font-size:.75rem;color:#aba69d}
+footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+@media(max-width:760px){.mast .wrap{padding:13px 0;display:block}.topnav{margin-top:12px;gap:15px}.personal{grid-template-columns:1fr}.personal .identity{border-right:0;border-bottom:1px solid #645538}.featuregrid{grid-template-columns:1fr}.hero{padding-top:80px}}
+@media(max-width:480px){.wrap{width:calc(100% - 30px)}.tabs{gap:4px}.tab{padding:15px 2px;letter-spacing:.005em;font-size:.62rem;min-height:56px}.columnhead{grid-template-columns:54px 1fr 60px}.metric{padding:14px 0}.boardmark{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* GPI is a flagship sports ranking brand, not fine-print navigation text. */
+.hero{padding-top:clamp(55px,8vw,112px);padding-bottom:clamp(65px,9vw,130px)}
+.hero:before{top:auto;bottom:-.19em;right:-.08em;font-size:clamp(10rem,24vw,30rem);color:#ecc16c08}
+.hero h1.gpi-wordmark{display:block;position:relative;margin:21px 0 6px;max-width:none;width:100%;font-family:Manrope,Inter,sans-serif;font-size:clamp(7.1rem,30vw,23rem);font-weight:1000;line-height:.81;letter-spacing:-.095em;color:#f2c36b;text-transform:uppercase;white-space:nowrap;text-shadow:0 12px 60px #0008}
+.gpi-fullname{font:900 clamp(.95rem,2.4vw,1.9rem)/1.3 Manrope,Inter,sans-serif;letter-spacing:clamp(.1em,.8vw,.23em);color:#f9e5b8;margin:18px 0 46px}
+.gpi-question{font:900 clamp(2.2rem,5.6vw,5rem)/1.04 Manrope,Inter,sans-serif;letter-spacing:-.06em;margin:0 0 25px}
+.gpi-question em{color:var(--gold);font-style:normal}
+.hero .lead{max-width:710px}
+.block-identity{margin-top:64px;padding:clamp(26px,5vw,62px);background:linear-gradient(140deg,#29251b,#111619 70%);border:1px solid #97774c;border-radius:16px}
+.block-identity h2{font:900 clamp(2.4rem,5vw,4.5rem)/1.01 Manrope,Inter,sans-serif;letter-spacing:-.06em;margin:17px 0}
+.block-identity h2 em{font-style:normal;color:var(--gold)}
+.block-identity>p{max-width:850px;color:#d8d0c1;line-height:1.85}
+.block-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:31px}
+.block-steps>div{padding:22px;background:#0b1011b5;border:1px solid #716043;border-radius:9px}
+.block-steps b{display:block;color:#ecc982;font:900 .85rem Manrope,Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.block-steps span{display:block;color:#d4cbbd;font-size:.85rem;line-height:1.8}
+.block-identity .block-note{font-size:.78rem;color:#bdb4a4;margin:26px 0 0}
+@media(max-width:680px){.block-steps{grid-template-columns:1fr}.gpi-fullname{margin-bottom:35px}.gpi-wordmark{letter-spacing:-.11em!important}.block-identity{margin-top:45px}}
+
+
+/* Aspirational geographic challenges, never reported player ranks. */
+.challenge-ladder{margin:58px 0 40px}
+.challenge-ladder .challenge-heading{font:950 clamp(2.45rem,5.8vw,5.8rem)/.98 Manrope,Inter,sans-serif;letter-spacing:-.073em;text-transform:uppercase;margin:14px 0}
+.challenge-heading em{color:var(--gold);font-style:normal}
+.challenge-intro{max-width:760px;color:#d1c8b9;margin:12px 0 30px}
+.challenge-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.challenge{display:flex;flex-direction:column;justify-content:space-between;min-height:255px;padding:22px;border:1px solid #78613e;border-radius:8px;background:radial-gradient(circle at 80% 10%,#c2923422,transparent 62%),linear-gradient(150deg,#202323,#111618);transition:border-color .2s,transform .2s}
+.challenge:hover,.challenge:focus-visible{border-color:#f0c887;transform:translateY(-3px)}
+.challenge .level{font:.7rem Manrope,Inter,sans-serif;font-weight:900;color:var(--gold);letter-spacing:.16em}
+.challenge strong{display:block;font:950 clamp(1.7rem,2.7vw,3rem)/1.05 Manrope,Inter,sans-serif;letter-spacing:-.07em;margin:32px 0 18px}
+.challenge .target{display:block;font-size:.71rem;color:#d3ba8d;letter-spacing:.05em;font-weight:900}
+.challenge .disclaimer{display:block;font-size:.68rem;color:#c9c0b2;margin-top:20px}
+@media(max-width:1080px){.challenge-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.challenge-grid{grid-template-columns:1fr 1fr}.challenge{min-height:215px;padding:17px}.challenge strong{font-size:clamp(1.5rem,6vw,2.4rem)}}
+@media(max-width:360px){.challenge-grid{grid-template-columns:1fr}.challenge{min-height:155px}.challenge strong{margin:20px 0}}
+@media(prefers-reduced-motion:reduce){.challenge{transition:none}.challenge:hover{transform:none}}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#personal">Skip to rankings</a>
+<header class="mast"><div class="wrap"><a class="brand" href="./arrival-experience.html#universe">GOAT <strong>UNIVERSE</strong></a><nav class="topnav" aria-label="Primary"><a href="./goatville-city.html">Goatville</a><a href="/games">Games</a><a href="./goatville-cinema.html">Media</a><a href="/manage">My League</a><a href="./gpi.html" aria-current="page">GPI</a></nav></div></header>
+<section class="hero"><div class="wrap"><div class="kicker">THE RANKING IDENTITY OF GOAT UNIVERSE</div><h1 class="gpi-wordmark" id="gpi-title">GPI</h1><div class="gpi-fullname">GOAT POWER INDEX</div><h2 class="gpi-question">Where do <em>you</em> rank?</h2><p class="lead">Your league is only the beginning. Track your place among the GOATs on your block, in your county, across your state and region, and around the world.</p><p class="signature">The GPI is the competitive identity of GOAT Universe. Only verified, approved competition data belongs on the board.</p><div class="statusline"><span class="pulse" aria-hidden="true"></span><b>Rankings connection pending</b><span>No official GPI positions or competitor records have been published here.</span></div></div></section>
+<main id="personal" class="main"><div class="wrap">
+<div class="sectionhead"><div><span class="label">Your own story</span><h2>Your GOAT profile</h2></div><p class="sub">A personal GPI will connect your verified competition performance with your standings. You control whether to participate in eligible geographic leaderboards.</p></div>
+<section class="personal" aria-label="Personal GPI status"><div class="identity"><span class="label">Member connection</span><h3 class="name">Your place.<br>Your legacy.</h3><p>You are viewing the public rankings experience. Your account and verified league records are not connected to this page.</p><a class="action" href="/manage">Open My Account →</a></div><div class="record"><span class="label">Official performance</span><div class="metricgrid"><div class="metric"><span>My GPI</span><strong>—</strong></div><div class="metric"><span>Global rank</span><strong>—</strong></div><div class="metric"><span>My league rank</span><strong>—</strong></div><div class="metric"><span>Verified BAAs</span><strong>—</strong></div></div><p class="caution">Not zero. Not unranked. These values are simply unavailable until account identity, scoring rules and authorized results are connected.</p></div></section>
+<div class="sectionhead"><div><span class="label">THE GPI WORLD RANKINGS</span><h2>How far can you climb?</h2></div><p class="sub">Choose a level to explore your competitive neighborhood. Rankings never substitute invented players, sample results or speculative scores.</p></div>
+<section class="ladder" aria-label="Geographic rankings"><div class="tabs" role="tablist" aria-label="GPI geographic scope">
+<button class="tab" id="scope-block" type="button" role="tab" aria-controls="ranking-panel" aria-selected="true" tabindex="0" data-scope="block">Block</button>
+<button class="tab" id="scope-county" type="button" role="tab" aria-controls="ranking-panel" aria-selected="false" tabindex="-1" data-scope="county">County</button>
+<button class="tab" id="scope-state" type="button" role="tab" aria-controls="ranking-panel" aria-selected="false" tabindex="-1" data-scope="state">State</button>
+<button class="tab" id="scope-region" type="button" role="tab" aria-controls="ranking-panel" aria-selected="false" tabindex="-1" data-scope="region">Region</button>
+<button class="tab" id="scope-global" type="button" role="tab" aria-controls="ranking-panel" aria-selected="false" tabindex="-1" data-scope="global">Global</button>
+</div>
+<div class="board" id="ranking-panel" role="tabpanel" aria-labelledby="scope-block" tabindex="0"><div class="boardtop"><div><span class="label" id="scope-kicker">The neighborhood challenge</span><h3 id="scope-title">Own your block.</h3><p id="scope-description">An opt-in neighborhood-level comparison, once verified local eligibility and privacy rules are in place.</p></div><div class="boardmark" id="scope-mark" aria-hidden="true">01 / 05</div></div>
+<div class="board-body"><div class="columnhead"><span>Rank</span><span>GOAT</span><span>GPI</span></div><div class="empty" role="status" aria-live="polite"><span class="glyph" aria-hidden="true">◇</span><h4>No verified rankings published</h4><p>Official competitors and scores will appear only after approved results and ranking eligibility are connected. Nothing here is a fictional leaderboard.</p></div></div>
+<div class="context"><strong id="scope-context-label">Block leaderboard:</strong> <span id="scope-context">Opted-in verified members will share a GOAT Block when their private eligible locations map to the same defined street segment. No location verification is live.</span></div>
+</div><p class="note">Status: founder-development experience · No public player directory, official results feed or geographic membership verification is enabled.</p></section>
+<section class="challenge-ladder" aria-labelledby="challenge-heading">
+<span class="label">GPI / The five challenges</span><h2 class="challenge-heading" id="challenge-heading">Are you the <em>GOAT?</em></h2>
+<p class="challenge-intro">The best on your block? Top 10 in your county? Top 100 in your state? This is the ambition behind GPI. Select a challenge to explore its leaderboard rules. These are <strong>goals, not anyone's current ranking.</strong></p>
+<div class="challenge-grid" aria-label="GPI aspirational geographic targets">
+<a class="challenge" href="#block" data-target-scope="block"><span class="level">01 / BLOCK</span><strong>#1<br>ON YOUR BLOCK?</strong><span class="target">CHALLENGE · OWN YOUR STREET</span><span class="disclaimer">Not a verified placement ↗</span></a>
+<a class="challenge" href="#county" data-target-scope="county"><span class="level">02 / COUNTY</span><strong>TOP 10<br>COUNTY?</strong><span class="target">CHALLENGE · COUNTY PRIDE</span><span class="disclaimer">Not a verified placement ↗</span></a>
+<a class="challenge" href="#state" data-target-scope="state"><span class="level">03 / STATE</span><strong>TOP 100<br>STATE?</strong><span class="target">CHALLENGE · THE BIG LEAGUES</span><span class="disclaimer">Not a verified placement ↗</span></a>
+<a class="challenge" href="#region" data-target-scope="region"><span class="level">04 / REGION</span><strong>RULE YOUR<br>REGION?</strong><span class="target">CHALLENGE · BEYOND BORDERS</span><span class="disclaimer">Not a verified placement ↗</span></a>
+<a class="challenge" href="#global" data-target-scope="global"><span class="level">05 / GLOBAL</span><strong>THE WORLD<br>AWAITS.</strong><span class="target">CHALLENGE · GLOBAL GOAT</span><span class="disclaimer">Not a verified placement ↗</span></a>
+</div></section>
+<section class="block-identity" aria-labelledby="block-heading"><span class="label">GPI LOCATION ELIGIBILITY · IN DEVELOPMENT</span><h2 id="block-heading">Same block.<br><em>Real rankings.</em></h2>
+<p>To establish who is #1, #2 or #10 on a block, eligible participants need a privately verified location, a consistent GOAT Block identifier, and approved GPI scores. Nearby phones or a shared ZIP code are not sufficient.</p>
+<div class="block-steps"><div><b>01 / Verify</b><span>A member opts in and privately verifies an eligible address. No public street addresses.</span></div><div><b>02 / Match</b><span>A secure mapping service assigns a common street-segment ID between intersections, with a reviewed fallback for unusual streets or ambiguous boundaries. This is not necessarily a Census block.</span></div><div><b>03 / Rank</b><span>Only verified participating members with eligible official results appear. A rank never claims to represent neighbors who have not joined.</span></div></div>
+<p class="block-note">No GPS tracking, background geofencing, geocoding service, verified address enrollment, or public neighborhood leaderboard is enabled in this candidate.</p></section>
+<div class="featuregrid"><article class="feature"><b>01</b><h3>Earn your standing</h3><p>Play the five GOAT Games. Eligible, verified performance builds your competitive history; a score is never awarded for a practice drill.</p></article><article class="feature"><b>02</b><h3>Represent your community</h3><p>Opt into an approved location tier when the system supports it. Local ranking must respect player privacy and consent.</p></article><article class="feature"><b>03</b><h3>Chase the Global Championship</h3><p>From your league to the wider world, rankings will become a way to celebrate real achievement across the universe.</p></article></div>
+<section class="more"><div class="label">Keep exploring</div><h2>Your next move is yours.</h2><p>Explore the five competitions, return to the city or open your league workspace. Practice activities are available elsewhere in Goatville, but they do not affect GPI.</p><div class="links"><a class="action" href="/games">Explore GOAT Games →</a><a class="action secondary" href="./goatville-city.html">Explore Goatville ↗</a><a class="action secondary" href="./championships.html">2027 Championship Roadmap ↗</a></div></section>
+</div></main>
+<footer><div class="wrap"><span>GOAT Universe · Goatverse Holdings Inc.</span><span>Founder candidate · No public launch or paid competitions</span></div></footer>
+<script>
+(function(){
+'use strict';
+const data={
+block:{kicker:'The neighborhood challenge',title:'Own your block.',description:'An opt-in neighborhood-level comparison, once verified local eligibility and privacy rules are in place.',context:'Opted-in verified members will share a GOAT Block when their private eligible locations map to the same defined street segment. No location verification is live.'},
+county:{kicker:'County pride',title:'Make your county proud.',description:'Discover how you compare against eligible GOATs across your county, once verified local competition data becomes available.',context:'County identity and player consent must be validated before any placement is shown.'},
+state:{kicker:'State of the game',title:'Take on your state.',description:'One state. A much bigger field. State leaderboards will include verified participants and authorized competition standings only.',context:'State top-ten and top-hundred positions will never be estimated from incomplete records.'},
+region:{kicker:'Beyond state lines',title:'Rule your region.',description:'Compare your GPI with eligible competition players across the approved regional boundaries.',context:'Region definitions and participant eligibility must be published before official placement.'},
+global:{kicker:'The global stage',title:'Take on the world.',description:'Your path to the GOAT Universe Global Championship starts with real games and verified performance.',context:'Only globally eligible and verified results can establish an official worldwide position.'}
+};
+const tabs=Array.from(document.querySelectorAll('[data-scope]'));
+function selectScope(scope,focus){
+ if(!Object.prototype.hasOwnProperty.call(data,scope))return;
+ const v=data[scope];
+ tabs.forEach(function(b){const selected=b.dataset.scope===scope;b.setAttribute('aria-selected',String(selected));b.tabIndex=selected?0:-1;if(selected&&focus)b.focus();});
+ document.getElementById('scope-kicker').textContent=v.kicker;
+ document.getElementById('scope-title').textContent=v.title;
+ document.getElementById('scope-description').textContent=v.description;
+ document.getElementById('scope-context-label').textContent=scope.charAt(0).toUpperCase()+scope.slice(1)+' leaderboard:';
+ document.getElementById('scope-context').textContent=v.context;
+ document.getElementById('scope-mark').textContent=String(tabs.findIndex(function(b){return b.dataset.scope===scope;})+1).padStart(2,'0')+' / 05';
+ document.getElementById('ranking-panel').setAttribute('aria-labelledby','scope-'+scope);
+ if(history.replaceState)history.replaceState(null,'','#'+scope);
+}
+tabs.forEach(function(tab,index){
+ tab.addEventListener('click',function(){selectScope(tab.dataset.scope,false);});
+ tab.addEventListener('keydown',function(e){
+  if(!['ArrowRight','ArrowLeft','Home','End'].includes(e.key))return;
+  e.preventDefault();let next=index;
+  if(e.key==='Home')next=0;else if(e.key==='End')next=tabs.length-1;else next=(index+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+  selectScope(tabs[next].dataset.scope,true);
+ });
+});
+document.querySelectorAll('[data-target-scope]').forEach(link=>{
+ link.addEventListener('click',function(event){
+  event.preventDefault();
+  selectScope(link.dataset.targetScope,true);
+ });
+});
+window.addEventListener('hashchange',function(){
+ const hash=location.hash.slice(1).toLowerCase();
+ if(Object.prototype.hasOwnProperty.call(data,hash))selectScope(hash,false);
+});
+const selected=location.hash.slice(1).toLowerCase();
+if(Object.prototype.hasOwnProperty.call(data,selected))selectScope(selected,false);
+})();
+</script>
+</body>
+</html>

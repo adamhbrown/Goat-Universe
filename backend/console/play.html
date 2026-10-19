@@ -25,6 +25,18 @@
     <h2 id="goat-games-heading">Five leagues. One annual champion.</h2>
     <p class="small">Each competition keeps its own rules. Final results can feed the annual Baas championship only after the conversion policies are approved.</p>
     <div id="goat-games-catalog" class="cards" aria-live="polite"><p class="small">Loading competition catalog…</p></div>
+    <section id="game-journey" class="game-journey" aria-labelledby="game-journey-title" hidden>
+      <p class="eyebrow">YOUR COMPETITION JOURNEY</p>
+      <h3 id="game-journey-title">Choose a GOAT Game</h3>
+      <p id="game-journey-mechanics"></p>
+      <p id="game-journey-status" class="game-journey-status"></p>
+      <div class="game-journey-actions">
+        <a id="game-journey-member-link" href="#account-panel">Sign in or view my leagues</a>
+        <a class="secondary-link" href="/manage">Commissioner workspace</a>
+      </div>
+      <div id="game-journey-member-leagues" class="game-journey-member-leagues" aria-live="polite"></div>
+      <p class="small">Only competitions authorized for the signed-in account appear here. Drafts and previews are not open competitions.</p>
+    </section>
   </section>
   <div id="notice" class="notice" role="status" aria-live="polite">Development portal. Sign in with a development account.</div>
   <section id="account-panel" class="panel" aria-labelledby="account-heading">
@@ -47,6 +59,12 @@
   </section>
   <section id="member-panel" class="panel" hidden>
     <div class="section-head"><div><p class="eyebrow">MEMBER HQ</p><h2 id="member-name">GOAT Games</h2></div><button id="signout" class="secondary" type="button">Sign out</button></div>
+    <section class="gpi-board" aria-labelledby="gpi-heading">
+      <div class="gpi-head"><div><p class="eyebrow">GOAT POWER INDEX</p><h3 id="gpi-heading"><span class="gpi-mark">GPI</span>Your place in the Universe</h3></div><span class="verified-label">Verified results only</span></div>
+      <p class="small">One competitive identity across GOAT Games, from your block to the global standings.</p>
+      <div id="gpi-rankings" class="gpi-grid" aria-live="polite"></div>
+      <p id="gpi-status" class="gpi-status">Ranks appear after verified competition results are available.</p>
+    </section>
     <div class="actions"><button id="reload" type="button">Refresh my leagues</button></div>
     <p><a href="/manage">Account settings and commissioner workspace</a> <span class="small">· Sign in there to manage your profile, password, and March Madness bracket.</span></p>
     <h3>My competitions</h3>
@@ -69,6 +87,15 @@
     <h3>Rounds &amp; picks</h3><div id="rounds" class="cards"></div>
   </section>
 </main>
+<aside id="soundtrack-player" class="soundtrack-player" aria-label="GOAT Universe soundtrack" hidden>
+  <div class="soundtrack-copy"><strong>GOAT UNIVERSE SOUNDTRACK</strong><span id="soundtrack-title">Soundtrack available when approved music is connected</span></div>
+  <div class="soundtrack-actions">
+    <button id="soundtrack-toggle" type="button" aria-label="Play soundtrack" aria-pressed="false">Play</button>
+    <label for="soundtrack-volume">Volume <input id="soundtrack-volume" type="range" min="0" max="100" value="55"></label>
+    <button id="soundtrack-mute" type="button" aria-label="Mute soundtrack" aria-pressed="false">Mute</button>
+  </div>
+  <audio id="soundtrack-audio" preload="none" loop></audio>
+</aside>
 <footer>GOAT UNIVERSE · WHERE THE GOATS PLAY</footer>
 <script type="module" src="/play.mjs"></script>
 </body>

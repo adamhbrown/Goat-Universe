@@ -98,7 +98,7 @@ export async function application(config = configuration()) {
       return respond(404, { error: 'route_not_found' });
     } catch (err) {
       const code = /^[a-z][a-z0-9_]+$/.test(err.message) ? err.message : 'request_failed';
-      const status = /auth_email_not_enabled|email_recovery_unavailable|password_updated_session_revocation_failed/.test(code) ? 503 : /authentication_required|invalid_credentials|verified_email_required/.test(code) ? 401 :
+      const status = /auth_email_not_enabled|email_recovery_unavailable|password_updated_session_revocation_failed|auth_provider_unavailable/.test(code) ? 503 : code === 'auth_rate_limited' ? 429 : /authentication_required|invalid_credentials|invalid_refresh_token|verified_email_required/.test(code) ? 401 :
         /required$|denied$|forbidden/.test(code) || err.code === '42501' ? 403 :
         err.code === '23505' || /conflict$/.test(code) ? 409 : code === 'request_too_large' ? 413 : 400;
       respond(status, { error: code });

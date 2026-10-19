@@ -13,9 +13,11 @@ test('home and playground lead to city',()=>{
  assert.match(playground,/href="goatville-city.html"/);
 });
 test('playable sports destination links to working play lab',()=>assert.match(city,/href="goat-games-play-lab.html"/));
-test('original responsive skyline illustration and accessible navigation',()=>{
- assert.match(city,/<svg class="skyline"/);
- assert.match(city,/aria-label="Illustrated nighttime GOATVILLE skyline/);
+test('approved photographic city entrance and accessible navigation',()=>{
+ assert.match(city,/<figure class="city city-photo">/);
+ assert.match(city,/src="assets\/goatville\/founder-arrival-gate\.jpg"/);
+ assert.match(city,/alt="The approved GOAT Universe cinematic golden entrance gate/);
+ assert.doesNotMatch(city,/<svg class="skyline"/);
  assert.match(city,/href="#districts"/);
  assert.match(city,/prefers-reduced-motion:reduce/);
 });
@@ -31,7 +33,8 @@ test('no duplicate element IDs and all internal anchors resolve',()=>{
 });
 test('no remote code, tracking, or payment widgets',()=>{
  assert.doesNotMatch(city,/<script\b[^>]+src=["'](?:https?:)?\/\/|fetch\(|<iframe|checkout\.stripe|paypal/);
- for(const [,source] of city.matchAll(/<script\b[^>]+src="([^"]+)"/g))assert.ok(['experience/universe-shell.js','experience/gst-clock.js'].includes(source),source);
+ const reviewedScripts=new Set(['experience/universe-shell.js','experience/gst-clock.js']);
+ for(const [,source] of city.matchAll(/<script\b[^>]+src="([^"]+)"/g))assert.ok(reviewedScripts.has(source),'Unreviewed City script: '+source);
 });
 
 test('premium cinematic entrance is explicitly opt-in, three chapters and skippable',()=>{

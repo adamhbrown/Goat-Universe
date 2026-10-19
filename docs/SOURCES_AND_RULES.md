@@ -51,7 +51,7 @@ clear unresolved items before a league opens.
   OCR to inspect its business architecture and partner/revenue categories.
   No unreadable diagram has been treated as a scoring specification.
 
-No Baas payout curve, GPI formula, membership price, advertised audience size,
+No *complete five-game annual* BAAS conversion schedule, GPI formula, membership price, advertised audience size,
 payment charge, or partnership has been invented. The first implemented scoring
 strategy is `ranked_ats_v1`. Shared account, league, event, history, and access
 control tables support adding other sports; their scoring strategies still need
@@ -81,3 +81,18 @@ actor-bound picks, one main submission, graph-consistency validation, standings
 and shared audit/history. Other competitions now have persistent gated drafts
 and sourced scoring helpers, not approved live leagues. Their caller-provided
 fixture scoring policies must never be treated as founder-approved rules.
+
+
+## 1st & BAA — founder-confirmed league finishing BAAS
+
+The founder specified the **20-entrant league cap** and the following fixed
+finishing-place BAAS awards for the NFL Playoff League (places 1–20):
+
+`100, 90, 80, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0, 0, 0`.
+
+The verified, immutable lookup lives in
+`backend/rules/nfl-baas.mjs`. It checks a position against the actual
+field size and enforces the 20-person ceiling. Its existence **does not**
+activate BAAS awards, settle exact/shared ties, establish the competition's
+complete submission policies, or approve annual championship conversions for
+the other four GOAT Games. No fixture BAAS awards are published as real.

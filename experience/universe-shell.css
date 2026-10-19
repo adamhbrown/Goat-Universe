@@ -53,10 +53,15 @@
 .one-universe-bar{display:flex;gap:18px;align-items:center;overflow-x:auto;padding:12px 18px;background:#0b0b0d;border-bottom:1px solid #8b703c;color:#e9bf59;font:700 12px/1.5 Arial,sans-serif;white-space:nowrap;position:relative;z-index:25}
 .one-universe-bar a{color:inherit;text-decoration:none;min-height:28px;display:inline-flex;align-items:center}
 .one-universe-bar a:focus-visible{outline:2px solid #e9bf59;outline-offset:3px}
-.gv-headquarters{display:grid;grid-template-columns:1.1fr 1fr;gap:32px;margin:36px auto;padding:30px;border:1px solid #9b7d47;background:linear-gradient(125deg,#24251f,#101820);border-radius:12px;color:#f7f0e1}
-.gv-headquarters h2{font:900 clamp(2rem,4vw,3.5rem)/1.05 Manrope,Arial,sans-serif;margin:14px 0;color:#f0cb7c}
-.gv-headquarters p{font-size:.9rem;line-height:1.7;color:#d2c8b6}
-.gv-headquarters nav{display:grid;gap:10px}
-.gv-headquarters .btn{display:block;white-space:normal;line-height:1.5}
-@media(max-width:700px){.gv-headquarters{grid-template-columns:1fr;padding:22px;gap:20px}}
-@media(max-width:380px){#gv-portal-launch .gv-launch-icon{display:none}}
+
+
+/* Navigation hierarchy: four primary destinations; supporting rooms stay behind an explicit choice. */
+#gv-portal-dialog .gv-secondary{margin-top:22px;border:1px solid #6b593a;border-radius:10px;padding:0 15px;background:#0e1417}
+#gv-portal-dialog .gv-secondary>summary{padding:21px 7px;cursor:pointer;color:#f1d193;font:850 .83rem Inter,sans-serif;letter-spacing:.06em}
+#gv-portal-dialog .gv-secondary>summary:focus-visible{outline:3px solid #f3d28f;outline-offset:2px}
+#gv-portal-dialog .gv-additional{padding:0 0 18px;grid-template-columns:repeat(3,minmax(0,1fr))}
+#gv-portal-dialog .gv-additional .gv-destination{min-height:110px}
+#gv-portal-dialog .gv-additional .gv-entry-description{color:#c0beb6}
+#gv-portal-dialog .gv-navigation:not(.gv-additional){grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:840px){#gv-portal-dialog .gv-navigation:not(.gv-additional){grid-template-columns:repeat(2,minmax(0,1fr))}#gv-portal-dialog .gv-additional{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){#gv-portal-dialog .gv-navigation:not(.gv-additional),#gv-portal-dialog .gv-additional{grid-template-columns:1fr}#gv-portal-dialog .gv-secondary{padding:0 11px}#gv-portal-dialog .gv-secondary>summary{padding:17px 5px}}

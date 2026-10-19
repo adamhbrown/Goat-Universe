@@ -1,0 +1,92 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const city=read('goatville-city.html'),stadium=read('goatville-stadium.html'),media=read('goatville-cinema.html'),mediaCss=read('cinema/studio.css');
+const publicFiles=new Set(JSON.parse(read('backend/public-files.json')));
+const games=['first-and-baa','horns-and-hoops','goat-crossover','league-of-greatness','goat-classic'];
+const pages={city,stadium,media};
+test('Pope City uses reviewed media and keeps its seven working districts and cinematic controls',()=>{
+ assert.match(city,/<figure class="city city-photo"><img src="assets\/goatville\/founder-arrival-gate\.jpg"/);
+ assert.doesNotMatch(city,/<svg class="skyline"/);
+ assert.equal((city.match(/<article class="district"/g)||[]).length,7);
+ for(const id of ['open-cinema','cinema-close','cinema-next','cinema-skip','filter-status'])
+  assert.match(city,new RegExp('id="'+id+'"'));
+ assert.match(city,/<details class="city-optional">/);
+ assert.match(city,/href="goatville-stadium\.html"/);
+ assert.match(city,/href="\/games"/);
+});
+test('City, Stadium and Creative Media return to one latest founder gateway; City market has a real destination',()=>{
+ assert.ok(city.includes('href="arrival-experience.html#universe"'));
+ assert.ok(stadium.includes('href="arrival-experience.html#universe"'));
+ assert.ok(media.includes('href="arrival-experience.html#media"'));
+ const market=city.split('<article class="district" data-district="market">')[1]?.split('</article>')[0];
+ assert.ok(market?.includes('href="commerce.html#collections"'));
+ assert.ok(publicFiles.has('commerce.html'));
+ assert.ok(publicFiles.has('commerce/collections.js'));
+});
+test('Stadium leads into the five actual competition workspaces and retains optional game details',()=>{
+ for(const game of games)assert.ok(stadium.includes('class="games-card-link" href="/games/'+game+'"'),game);
+ assert.equal((stadium.match(/<details class="game-detail"/g)||[]).length,5);
+ assert.match(stadium,/No verified GOAT Universe standings published yet/);
+ assert.match(stadium,/id="goatMode"/);
+});
+test('Stadium is competition-first: mobile My League opens account and GPI is a prominent real rankings doorway',()=>{
+ assert.ok(stadium.includes('<nav class="mobile-nav"'));
+ assert.ok(stadium.includes('href="/manage">My League</a>'));
+ assert.ok(stadium.includes('href="/games">ENTER THE FIVE GOAT GAMES'));
+ assert.ok(stadium.includes('<h3 class="gpi-logo">GPI</h3>'));
+ assert.ok(stadium.includes('href="gpi.html">EXPLORE THE GOAT POWER INDEX'));
+ assert.ok(stadium.includes('YOUR BLOCK. YOUR COUNTY. YOUR STATE. YOUR REGION. THE UNIVERSE.'));
+ assert.ok(publicFiles.has('gpi.html'));
+});
+test('Media keeps editorial content separate from local playback and never auto-plays founder theme',()=>{
+ assert.equal((media.match(/class="media-shelf(?: featured)?"/g)||[]).length,4);
+ assert.match(media,/<audio controls preload="none" src="assets\/goatville\/official-theme\.mp4"/);
+ assert.doesNotMatch(media,/<(?:audio|video)[^>]*autoplay/);
+ for(const id of ['screen-video','video-file','audio-file','music','play','pause','restart','sound'])
+  assert.match(media,new RegExp('id="'+id+'"'));
+ assert.match(mediaCss,/\.media-shelves/);
+});
+test('Founder-supplied opt-in theme is a real destination from City and Stadium',()=>{
+ assert.ok(media.includes('class="media-audio-section" id="theme"'));
+ assert.ok(city.includes('href="goatville-cinema.html#theme"'));
+ assert.ok(stadium.includes('href="goatville-cinema.html#theme"'));
+ assert.ok(media.includes('src="assets/goatville/official-theme.mp4"'));
+ assert.ok(!media.includes('autoplay'));
+ const elementIds=[...media.matchAll(/\\bid="([^"]+)"/g)].map(m=>m[1]);
+ assert.equal(elementIds.length,new Set(elementIds).size,'Media must not reuse the audio player id');
+ assert.ok(media.includes('<audio id="music"'),'Keep cinema player controls intact');
+});
+test('All internal links resolve to exposed files, the games workspace or guarded account routes',()=>{
+ const files=['index.html',...publicFiles];
+ for(const [label,html] of Object.entries(pages)){
+  for(const match of html.matchAll(/href="([^"]+)"/g)){
+   const href=match[1];
+   if(href.startsWith('#')||href.startsWith('https://')||href.startsWith('mailto:')||href.startsWith('tel:'))continue;
+   if(href==='/games'||href==='/manage'||games.some(id=>href==='/games/'+id))continue;
+   const file=href.split('#')[0].split('?')[0];
+   assert.ok(files.includes(file),'Unlisted internal link on '+label+': '+href);
+   assert.ok(existsSync(new URL('../'+file,import.meta.url)),'Missing internal target on '+label+': '+href);
+  }
+ }
+});
+test('City, Stadium and Media display one existing DST-safe GST clock implementation',()=>{
+ for(const [name,html] of Object.entries(pages)){
+  assert.ok(html.includes('href="experience/gst-clock.css"'),name+' clock style missing');
+  assert.ok(html.includes('type="module" src="experience/gst-clock.js"'),name+' clock script missing');
+ }
+ assert.ok(publicFiles.has('experience/gst-clock.js'));
+ assert.ok(publicFiles.has('experience/gst-clock.css'));
+ assert.ok(publicFiles.has('experience/gst-time.js'));
+});
+test('Pope pages preserve correct brand and protected public media assets',()=>{
+ for(const file of ['goatville-city.html','goatville-stadium.html','goatville-cinema.html','assets/goatville/founder-arrival-gate.jpg','assets/goatville/official-theme.mp4'])
+  assert.ok(publicFiles.has(file),'Missing published allowlist asset: '+file);
+ assert.match(stadium,/GOATVERSE HOLDINGS INC\./);
+ assert.match(media,/GOATVERSE HOLDINGS INC\./);
+ for(const html of Object.values(pages))assert.doesNotMatch(html,/GOATVILLE USA|DOWNTOWN SPORTS NATION/);
+ assert.match(stadium,/DOWNTOWN SPORTS NETWORK/);
+ assert.match(media,/DOWNTOWN SPORTS NETWORK/);
+ assert.doesNotMatch(stadium,/Every point matters/);
+});

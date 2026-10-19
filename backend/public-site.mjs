@@ -7,7 +7,7 @@ const files=JSON.parse(await readFile(new URL('./public-files.json',import.meta.
 const publicFiles=new Set(files);
 const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.json':'application/json','.woff':'font/woff','.woff2':'font/woff2','.jpg':'image/jpeg','.png':'image/png','.svg':'image/svg+xml','.mp4':'video/mp4','.webm':'video/webm','.mp3':'audio/mpeg','.ogg':'audio/ogg','.txt':'text/plain; charset=utf-8'};
 export async function publicSiteAsset(req,res,baseHeaders) {
-  const raw=req.url.split('?')[0],file=raw==='/'?'index.html':raw.slice(1);
+  const raw=req.url.split('?')[0],file=raw==='/'?'arrival-experience.html':raw.slice(1);
   // Exact, reviewed paths only; never interpret encoded aliases or directories.
   if(!raw.startsWith('/')||!publicFiles.has(file))return false;
   if(!['GET','HEAD'].includes(req.method)){res.writeHead(405,{...baseHeaders,Allow:'GET, HEAD'});res.end();return true;}
