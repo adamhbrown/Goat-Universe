@@ -104,6 +104,24 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
 .block-identity .block-note{font-size:.78rem;color:#bdb4a4;margin:26px 0 0}
 @media(max-width:680px){.block-steps{grid-template-columns:1fr}.gpi-fullname{margin-bottom:35px}.gpi-wordmark{letter-spacing:-.11em!important}.block-identity{margin-top:45px}}
 
+
+/* Aspirational geographic challenges, never reported player ranks. */
+.challenge-ladder{margin:58px 0 40px}
+.challenge-ladder .challenge-heading{font:950 clamp(2.45rem,5.8vw,5.8rem)/.98 Manrope,Inter,sans-serif;letter-spacing:-.073em;text-transform:uppercase;margin:14px 0}
+.challenge-heading em{color:var(--gold);font-style:normal}
+.challenge-intro{max-width:760px;color:#d1c8b9;margin:12px 0 30px}
+.challenge-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.challenge{display:flex;flex-direction:column;justify-content:space-between;min-height:255px;padding:22px;border:1px solid #78613e;border-radius:8px;background:radial-gradient(circle at 80% 10%,#c2923422,transparent 62%),linear-gradient(150deg,#202323,#111618);transition:border-color .2s,transform .2s}
+.challenge:hover,.challenge:focus-visible{border-color:#f0c887;transform:translateY(-3px)}
+.challenge .level{font:.7rem Manrope,Inter,sans-serif;font-weight:900;color:var(--gold);letter-spacing:.16em}
+.challenge strong{display:block;font:950 clamp(1.7rem,2.7vw,3rem)/1.05 Manrope,Inter,sans-serif;letter-spacing:-.07em;margin:32px 0 18px}
+.challenge .target{display:block;font-size:.71rem;color:#d3ba8d;letter-spacing:.05em;font-weight:900}
+.challenge .disclaimer{display:block;font-size:.68rem;color:#c9c0b2;margin-top:20px}
+@media(max-width:1080px){.challenge-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.challenge-grid{grid-template-columns:1fr 1fr}.challenge{min-height:215px;padding:17px}.challenge strong{font-size:clamp(1.5rem,6vw,2.4rem)}}
+@media(max-width:360px){.challenge-grid{grid-template-columns:1fr}.challenge{min-height:155px}.challenge strong{margin:20px 0}}
+@media(prefers-reduced-motion:reduce){.challenge{transition:none}.challenge:hover{transform:none}}
+
 </style>
 </head>
 <body>
@@ -125,12 +143,22 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
 <div class="board-body"><div class="columnhead"><span>Rank</span><span>GOAT</span><span>GPI</span></div><div class="empty" role="status" aria-live="polite"><span class="glyph" aria-hidden="true">◇</span><h4>No verified rankings published</h4><p>Official competitors and scores will appear only after approved results and ranking eligibility are connected. Nothing here is a fictional leaderboard.</p></div></div>
 <div class="context"><strong id="scope-context-label">Block leaderboard:</strong> <span id="scope-context">Opted-in verified members will share a GOAT Block when their private eligible locations map to the same defined street segment. No location verification is live.</span></div>
 </div><p class="note">Status: founder-development experience · No public player directory, official results feed or geographic membership verification is enabled.</p></section>
+<section class="challenge-ladder" aria-labelledby="challenge-heading">
+<span class="label">GPI / The five challenges</span><h2 class="challenge-heading" id="challenge-heading">Are you the <em>GOAT?</em></h2>
+<p class="challenge-intro">The best on your block? Top 10 in your county? Top 100 in your state? This is the ambition behind GPI. Select a challenge to explore its leaderboard rules. These are <strong>goals, not anyone's current ranking.</strong></p>
+<div class="challenge-grid" aria-label="GPI aspirational geographic targets">
+<a class="challenge" href="#block" data-target-scope="block"><span class="level">01 / BLOCK</span><strong>#1<br>ON YOUR BLOCK?</strong><span class="target">CHALLENGE · OWN YOUR STREET</span><span class="disclaimer">Not a verified placement ↗</span></a>
+<a class="challenge" href="#county" data-target-scope="county"><span class="level">02 / COUNTY</span><strong>TOP 10<br>COUNTY?</strong><span class="target">CHALLENGE · COUNTY PRIDE</span><span class="disclaimer">Not a verified placement ↗</span></a>
+<a class="challenge" href="#state" data-target-scope="state"><span class="level">03 / STATE</span><strong>TOP 100<br>STATE?</strong><span class="target">CHALLENGE · THE BIG LEAGUES</span><span class="disclaimer">Not a verified placement ↗</span></a>
+<a class="challenge" href="#region" data-target-scope="region"><span class="level">04 / REGION</span><strong>RULE YOUR<br>REGION?</strong><span class="target">CHALLENGE · BEYOND BORDERS</span><span class="disclaimer">Not a verified placement ↗</span></a>
+<a class="challenge" href="#global" data-target-scope="global"><span class="level">05 / GLOBAL</span><strong>THE WORLD<br>AWAITS.</strong><span class="target">CHALLENGE · GLOBAL GOAT</span><span class="disclaimer">Not a verified placement ↗</span></a>
+</div></section>
 <section class="block-identity" aria-labelledby="block-heading"><span class="label">GPI LOCATION ELIGIBILITY · IN DEVELOPMENT</span><h2 id="block-heading">Same block.<br><em>Real rankings.</em></h2>
 <p>To establish who is #1, #2 or #10 on a block, eligible participants need a privately verified location, a consistent GOAT Block identifier, and approved GPI scores. Nearby phones or a shared ZIP code are not sufficient.</p>
 <div class="block-steps"><div><b>01 / Verify</b><span>A member opts in and privately verifies an eligible address. No public street addresses.</span></div><div><b>02 / Match</b><span>A secure mapping service assigns a common street-segment ID between intersections, with a reviewed fallback for unusual streets or ambiguous boundaries. This is not necessarily a Census block.</span></div><div><b>03 / Rank</b><span>Only verified participating members with eligible official results appear. A rank never claims to represent neighbors who have not joined.</span></div></div>
 <p class="block-note">No GPS tracking, background geofencing, geocoding service, verified address enrollment, or public neighborhood leaderboard is enabled in this candidate.</p></section>
 <div class="featuregrid"><article class="feature"><b>01</b><h3>Earn your standing</h3><p>Play the five GOAT Games. Eligible, verified performance builds your competitive history; a score is never awarded for a practice drill.</p></article><article class="feature"><b>02</b><h3>Represent your community</h3><p>Opt into an approved location tier when the system supports it. Local ranking must respect player privacy and consent.</p></article><article class="feature"><b>03</b><h3>Chase the Global Championship</h3><p>From your league to the wider world, rankings will become a way to celebrate real achievement across the universe.</p></article></div>
-<section class="more"><div class="label">Keep exploring</div><h2>Your next move is yours.</h2><p>Explore the five competitions, return to the city or open your league workspace. Practice activities are available elsewhere in Goatville, but they do not affect GPI.</p><div class="links"><a class="action" href="/games">Explore GOAT Games →</a><a class="action secondary" href="./goatville-city.html">Explore Goatville ↗</a></div></section>
+<section class="more"><div class="label">Keep exploring</div><h2>Your next move is yours.</h2><p>Explore the five competitions, return to the city or open your league workspace. Practice activities are available elsewhere in Goatville, but they do not affect GPI.</p><div class="links"><a class="action" href="/games">Explore GOAT Games →</a><a class="action secondary" href="./goatville-city.html">Explore Goatville ↗</a><a class="action secondary" href="./championships.html">2027 Championship Roadmap ↗</a></div></section>
 </div></main>
 <footer><div class="wrap"><span>GOAT Universe · Goatverse Holdings Inc.</span><span>Founder candidate · No public launch or paid competitions</span></div></footer>
 <script>
@@ -165,6 +193,16 @@ tabs.forEach(function(tab,index){
   if(e.key==='Home')next=0;else if(e.key==='End')next=tabs.length-1;else next=(index+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
   selectScope(tabs[next].dataset.scope,true);
  });
+});
+document.querySelectorAll('[data-target-scope]').forEach(link=>{
+ link.addEventListener('click',function(event){
+  event.preventDefault();
+  selectScope(link.dataset.targetScope,true);
+ });
+});
+window.addEventListener('hashchange',function(){
+ const hash=location.hash.slice(1).toLowerCase();
+ if(Object.prototype.hasOwnProperty.call(data,hash))selectScope(hash,false);
 });
 const selected=location.hash.slice(1).toLowerCase();
 if(Object.prototype.hasOwnProperty.call(data,selected))selectScope(selected,false);

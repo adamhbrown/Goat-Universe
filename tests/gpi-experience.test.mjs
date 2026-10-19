@@ -67,3 +67,29 @@ test('GPI provides working navigation to existing local competition and account 
  assert.match(html,/role="tablist"/);
  assert.match(html,/aria-live="polite"/);
 });
+
+
+test('five founder-approved GPI challenges link to correct accessible scope without inventing member placements', () => {
+ const dom=render();
+ const doc=dom.window.document;
+ const cards=[...doc.querySelectorAll('.challenge[data-target-scope]')];
+ assert.deepEqual(cards.map(c=>c.dataset.targetScope),['block','county','state','region','global']);
+ assert.match(doc.getElementById('challenge-heading').textContent,/Are you the GOAT/);
+ assert.match(doc.querySelector('.challenge-ladder').textContent,/Top 10 in your county/);
+ assert.match(doc.querySelector('.challenge-ladder').textContent,/Top 100 in your state/);
+ assert.ok(cards.every(card=>card.textContent.includes('Not a verified placement')));
+ cards[1].click();
+ assert.equal(doc.getElementById('scope-county').getAttribute('aria-selected'),'true');
+ assert.equal(doc.getElementById('scope-title').textContent,'Make your county proud.');
+ assert.equal(dom.window.location.hash,'#county');
+ assert.match(doc.getElementById('ranking-panel').textContent,/No verified rankings published/);
+ dom.window.close();
+});
+test('deep-link changes from GPI challenge links update the geographic board',()=>{
+ const dom=render();
+ dom.window.location.hash='#region';
+ dom.window.dispatchEvent(new dom.window.Event('hashchange'));
+ assert.equal(dom.window.document.getElementById('scope-region').getAttribute('aria-selected'),'true');
+ assert.equal(dom.window.document.getElementById('scope-title').textContent,'Rule your region.');
+ dom.window.close();
+});

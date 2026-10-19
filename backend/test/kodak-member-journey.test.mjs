@@ -77,7 +77,24 @@ test('member journey: signup, five GOAT Games, actor isolation, token rotation a
   assert.equal(theirGames.data.competitions.length, 5);
   assert.equal(myGames.data.competitions.reduce((n, c) => n + c.leagues.length, 0), 5);
   assert.equal(theirGames.data.competitions.reduce((n, c) => n + c.leagues.length, 0), 0);
-  assert.equal((await post('/query', { op: 'league', league_id: owned[0] }, accessTwo)).status, 403);
+  // Independently enforce private-league access across ALL five engines.
+  // A member's accessible catalog cannot be used to infer or retrieve
+  // another commissioner's teams, standings, entries or history.
+  for (const league_id of owned) {
+    for (const op of ['league', 'standings', 'history']) {
+      const attempt = await post('/query', { op, league_id }, accessTwo);
+      assert.equal(attempt.status, 403, op + ' must deny other members for ' + league_id);
+      assert.equal(attempt.data.error, 'league_access_denied');
+    }
+    const impersonatedCommissioner = await post('/commands', {
+      op: 'league_rules', league_id, owner_id: idOne,
+      rules: { approved: true, source_reference: 'FICTIONAL-TEST-RULES', unresolved: [] }
+    }, accessTwo);
+    assert.equal(impersonatedCommissioner.status, 403);
+    assert.equal(impersonatedCommissioner.data.error, 'commissioner_required');
+  }
+  assert.deepEqual((await post('/query', { op: 'member_history', user_id: idOne }, accessTwo)).data, [],
+    'A caller-supplied user_id must not expose another account history.');
   assert.equal((await post('/bullpen/query', { op: 'snapshot' }, accessOne)).status, 403);
 
   // A caller-supplied user_id cannot redirect profile updates to another member.

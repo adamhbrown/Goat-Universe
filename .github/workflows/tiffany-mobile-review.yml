@@ -4,6 +4,7 @@ on:
     paths:
       - 'arrival-experience.html'
       - 'gpi.html'
+      - 'championships.html'
       - 'scripts/capture-tiffany-mobile.py'
       - '.github/workflows/tiffany-mobile-review.yml'
 permissions:

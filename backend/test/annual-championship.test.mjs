@@ -124,3 +124,36 @@ test('member dashboards represent five competitions; performance history and ann
  await assert.rejects(scoped(tx=>tx.query('update public.goat_championships set policy=\'{}\'')),/permission denied/);
  await assert.rejects(scoped(tx=>tx.query('select public.goat_annual_standings($1)',[championship.id])),/permission denied/);
 });
+
+// Separate commissioner leagues may legitimately have overlapping members.
+// One annual championship, however, can attach only ONE certified finishing
+// snapshot per official GOAT Game, preventing duplicated BAAS allocations.
+// Two deliberately fabricated FINAL snapshots isolate that DB invariant.
+test('two certified commissioner leagues of one GOAT Game cannot double award annual BAAS',async()=>{
+ const c=await command({op:'annual_create',name:'SYNTHETIC DUPLICATE-GAME PROTECTION',season:2027});
+ await command({op:'annual_policy_set',championship_id:c.id,policy:policy()});
+ const member=members[0],fixtureFinishes=[{user_id:member,display_name:'ANNUAL TEST MEMBER',place:1,rank:1}];
+ const leagueIds=[];
+ for(let i=0;i<2;i++){
+  const l=await command({op:'game_draft_create',game_key:'first-and-baa',name:'PRIVATE COMMISSIONER FIXTURE '+i,season:'2027'});
+  await db.db.query("update public.goat_leagues set status='final' where id=$1",[l.id]);
+  await db.db.query("insert into public.goat_entries(league_id,user_id,status) values($1,$2,'approved')",[l.id,member]);
+  await db.db.query("insert into public.goat_finish_certifications(league_id,snapshot,source_url,source_reference,certified_by) values($1,$2::jsonb,$3,$4,$5)",[
+    l.id,JSON.stringify(fixtureFinishes),source,'SYNTHETIC TEST CERTIFICATION ONLY',owner
+  ]);
+  leagueIds.push(l.id);
+ }
+ await command({op:'annual_competition_attach',championship_id:c.id,league_id:leagueIds[0]});
+ const before=await query({op:'annual_standings',championship_id:c.id});
+ assert.equal(before.length,1);
+ assert.equal(Number(before[0].baas),120);
+ assert.equal(Number(before[0].competitions),1);
+ await assert.rejects(command({op:'annual_competition_attach',championship_id:c.id,league_id:leagueIds[1]}),
+   /annual_game_already_attached/);
+ const after=await query({op:'annual_standings',championship_id:c.id});
+ assert.deepEqual(after,before,'failed second official attachment must roll back without changing BAAS');
+ const recorded=await query({op:'annual',championship_id:c.id});
+ assert.equal(recorded.competitions.length,1);
+ assert.equal(recorded.competitions[0].league_id,leagueIds[0]);
+ assert.equal(recorded.baas_awarded,false);
+});

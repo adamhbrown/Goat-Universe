@@ -18,7 +18,10 @@ async function main() {
   // assuming that calendar-year and sports-season labels coincide.
   const snapshots=Array.isArray(input)?input:input?.snapshots;
   const seasonByGame=Array.isArray(input)?undefined:input?.season_by_game;
-  const report=auditFiveGameCandidate(snapshots,{seasonByGame});
+  // Optional founder-reviewed source record. Omitting it leaves overlapping
+  // memberships as policy questions, not invented exclusive-entry violations.
+  const eligibilityPolicy=Array.isArray(input)?undefined:input?.eligibility_policy;
+  const report=auditFiveGameCandidate(snapshots,{seasonByGame,eligibilityPolicy});
   process.stdout.write(JSON.stringify(report,null,2)+'\n');
   // Manual approval can never be achieved by this local file check:
   // code 2 = prepared for external review; code 1 = blocked.
