@@ -75,6 +75,10 @@ export function auditFiveGameCandidate(snapshots, {seasonByGame,eligibilityPolic
   const expectedSeasons = validateSeasonMap(seasonByGame);
   const membershipMode=validateEligibilityPolicy(eligibilityPolicy);
   const eligibility=auditApprovedEntryCollisions(snapshots);
+  // Exclusive membership can never be certified from incomplete or partial
+  // snapshots. Count all malformed evidence, including unknown leagues.
+  const exclusiveAuditIncomplete=membershipMode==='one_league_per_game_season' &&
+    (eligibility.incomplete_entry_records>0 || !eligibility.absence_of_collisions_certified);
   const grouped = new Map(KEYS.map(key => [key, []]));
   let unknown = 0;
   for (const snap of snapshots) {
@@ -133,7 +137,7 @@ export function auditFiveGameCandidate(snapshots, {seasonByGame,eligibilityPolic
     });
   });
   const data_prepared = unknown === 0 && snapshots.length === KEYS.length &&
-    games.every(game => game.saved_setup_complete);
+    !exclusiveAuditIncomplete && games.every(game => game.saved_setup_complete);
   // The distinction is intentional: even perfectly populated records are NOT
   // permissions to enroll, score, award currency, deploy, or activate payments.
   return Object.freeze({
@@ -144,6 +148,7 @@ export function auditFiveGameCandidate(snapshots, {seasonByGame,eligibilityPolic
     season_mapping_checked:Boolean(expectedSeasons),
     eligibility_policy_reviewed:Boolean(membershipMode),
     eligibility_policy_mode:membershipMode||'not_decided',
+    exclusive_membership_evidence_incomplete:exclusiveAuditIncomplete,
     // Counts only: never return raw profiles or member identifiers.
     member_eligibility_audit:eligibility,
     games:Object.freeze(games),
