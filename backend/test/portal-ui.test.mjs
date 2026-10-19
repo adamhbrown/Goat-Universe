@@ -26,6 +26,11 @@ test('member portal exposes the founder-approved mobile journey without implying
   assert.match(html, /Public inquiry routing is not yet open/);
   assert.doesNotMatch(html, /<form[^>]+(?:contact|partner)|mailto:/i);
   assert.match(html, /id="my-league"/);
+  assert.match(html, /id="game-journey"/);
+  assert.match(html, /id="game-journey-member-link" href="#my-league"/);
+  assert.match(html, /href="\/manage"/);
+  assert.match(script, /function openGameJourney\(game\)/);
+  assert.match(script, /Rules and scoring are pending approval/);
   for (const scope of ['Global', 'Block', 'County', 'State', 'Region']) assert.match(script, new RegExp(scope, 'i'));
   assert.match(html, /Verified results only/);
   assert.match(html, /Development portal · No live competition or purchases/);
@@ -140,6 +145,19 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
   await ids['account-form'].fire('submit', { submitter: { value: 'login' } });
   assert.equal(ids['goat-games-catalog'].children.length, 5);
   assert.equal(ids['goat-games-catalog'].children[2].children[1].textContent, 'GOAT Crossover');
+  for (const card of ids['goat-games-catalog'].children)
+    assert.ok(find(card, 'BUTTON'), 'Each of the five competition cards has an actionable journey');
+  await find(ids['goat-games-catalog'].children[2], 'BUTTON').fire('click');
+  assert.equal(ids['game-journey'].hidden, false);
+  assert.equal(ids['game-journey-title'].textContent, 'GOAT Crossover');
+  assert.match(ids['game-journey-status'].textContent, /Rules and scoring are pending approval/);
+  assert.equal(ids['game-journey-member-link'].textContent, 'View my leagues');
+  await find(ids['goat-games-catalog'].children[0], 'BUTTON').fire('click');
+  assert.equal(ids['game-journey-title'].textContent, '1st & BAA');
+  assert.match(ids['game-journey-status'].textContent, /No live competition/);
+  await find(ids['goat-games-catalog'].children[3], 'BUTTON').fire('click');
+  assert.equal(ids['game-journey-title'].textContent, 'League of Greatness');
+  assert.match(ids['game-journey-status'].textContent, /Hosted play and automated scoring are not open/);
   assert.equal(ids['account-panel'].hidden, true);
   assert.equal(ids['member-panel'].hidden, false);
   assert.equal(ids['member-name'].textContent, 'Welcome, Fixture Member');
