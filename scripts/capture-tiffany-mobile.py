@@ -55,6 +55,21 @@ def capture(browser, label: str, viewport: dict, base: str) -> None:
     assert page.url.endswith("#state")
     assert_fits(page, "state GPI " + label)
     page.screenshot(path=str(OUTPUT / f"gpi-state-{label}.png"), full_page=True)
+    # Newly connected annual season: real GOAT Games only, paired GST/NYC clocks, working filter.
+    page.goto(base + "/championships.html", wait_until="networkidle")
+    assert page.locator(".event:visible").count() == 5
+    gst = page.locator("#gst-clock")
+    nyc = page.locator("#nyc-clock")
+    assert gst.inner_text() == nyc.inner_text(), "GST and New York clocks are out of sync"
+    assert gst.get_attribute("datetime") == nyc.get_attribute("datetime")
+    assert_fits(page, "2027 championship journey " + label)
+    page.screenshot(path=str(OUTPUT / f"championship-season-{label}.png"), full_page=True)
+    page.get_by_role("button", name="Apr", exact=True).click()
+    assert page.locator(".event:visible").count() == 1
+    assert page.get_by_role("heading", name="GOAT Crossover").is_visible()
+    assert_fits(page, "2027 April season filter " + label)
+    page.screenshot(path=str(OUTPUT / f"championship-april-{label}.png"), full_page=True)
+
     # The primary gateway must actually open Pope's existing City, not a dead end.
     page.goto(base + "/arrival-experience.html#universe", wait_until="networkidle")
     page.locator(".goatville-portal-link").click()
@@ -87,4 +102,4 @@ if __name__ == "__main__":
                 browser.close()
     finally:
         server.shutdown()
-    print(f"Validated both viewports. Ten screenshots saved in {OUTPUT}")
+    print(f"Validated both viewports. Fourteen screenshots saved in {OUTPUT}")
