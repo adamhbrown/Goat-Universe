@@ -80,6 +80,32 @@ def capture(browser, label: str, viewport: dict, base: str) -> None:
     assert page.url.endswith("/goatville-city.html"), page.url
     assert page.get_by_text("WELCOME TO").count() >= 1
     assert_fits(page, "City handoff " + label)
+    assert page.locator("article.district").count() == 7
+    assert page.locator("#gv-gst-clock time").is_visible()
+    page.screenshot(path=str(OUTPUT / f"city-{label}.png"), full_page=True)
+
+    page.goto(base + "/goatville-stadium.html", wait_until="networkidle")
+    assert page.locator("a.games-card-link[href^='/games/']").count() == 5
+    assert page.locator("#gv-gst-clock time").is_visible()
+    assert_fits(page, "stadium " + label)
+    page.screenshot(path=str(OUTPUT / f"stadium-{label}.png"), full_page=True)
+
+    page.goto(base + "/goatville-cinema.html", wait_until="networkidle")
+    assert page.locator("article.media-shelf").count() == 4
+    assert page.locator("#gv-gst-clock time").is_visible()
+    assert_fits(page, "creative media " + label)
+    page.screenshot(path=str(OUTPUT / f"creative-media-{label}.png"), full_page=True)
+
+    page.goto(base + "/commerce.html", wait_until="networkidle")
+    assert page.locator("article.collection").count() == 7
+    assert page.locator("#gst-time").inner_text() != "--:--:--"
+    assert page.locator("#gst-time").inner_text() == page.locator("#ny-time").inner_text()
+    assert_fits(page, "luxury concepts " + label)
+    page.screenshot(path=str(OUTPUT / f"collections-{label}.png"), full_page=True)
+    page.get_by_role("button", name="GST", exact=True).click()
+    assert page.locator("article.collection:visible").count() == 1
+    page.get_by_role("button", name="All Collections").click()
+    assert page.locator("article.collection:visible").count() == 7
     assert not errors, f"Browser script errors: {errors}"
     context.close()
 
@@ -106,4 +132,4 @@ if __name__ == "__main__":
                 browser.close()
     finally:
         server.shutdown()
-    print(f"Validated both viewports. Fourteen screenshots saved in {OUTPUT}")
+    print(f"Validated both viewports. Twenty-two screenshots saved in {OUTPUT}")
