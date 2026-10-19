@@ -16,6 +16,14 @@ test('Pope City uses reviewed media and keeps its seven working districts and ci
  assert.match(city,/href="goatville-stadium\.html"/);
  assert.match(city,/href="\/games"/);
 });
+test('City, Stadium and Creative Media return to one latest founder gateway; City market has a real destination',()=>{
+ assert.match(city,/href="arrival-experience\\.html#universe"/);
+ assert.match(stadium,/href="arrival-experience\\.html#universe"/);
+ assert.match(media,/href="arrival-experience\\.html#media"/);
+ assert.match(city,/data-district="market"[\\s\\S]*?href="commerce\\.html#collections"/);
+ assert.ok(publicFiles.has('commerce.html'));
+ assert.ok(publicFiles.has('commerce/collections.js'));
+});
 test('Stadium leads into the five actual competition workspaces and retains optional game details',()=>{
  for(const game of games)assert.ok(stadium.includes('class="games-card-link" href="/games/'+game+'"'),game);
  assert.equal((stadium.match(/<details class="game-detail"/g)||[]).length,5);
