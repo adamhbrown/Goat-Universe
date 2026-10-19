@@ -5,13 +5,16 @@ import { runInNewContext } from 'node:vm';
 import { GOAT_GAMES } from '../rules/goat-games.mjs';
 
 test('member portal exposes the founder-approved mobile journey without implying launch', async () => {
-  const [html, css] = await Promise.all([
+  const [html, css, script] = await Promise.all([
     readFile(new URL('../console/play.html', import.meta.url), 'utf8'),
-    readFile(new URL('../console/play.css', import.meta.url), 'utf8')
+    readFile(new URL('../console/play.css', import.meta.url), 'utf8'),
+    readFile(new URL('../console/play.mjs', import.meta.url), 'utf8')
   ]);
   assert.match(html, /aria-label="GOAT Universe"/);
   for (const label of ['Goatville', 'Games', 'Media', 'My League', 'Enter the Universe']) assert.match(html, new RegExp('>' + label + '<', 'i'));
   assert.match(html, /id="my-league"/);
+  for (const scope of ['Global', 'Block', 'County', 'State', 'Region']) assert.match(script, new RegExp(scope, 'i'));
+  assert.match(html, /Verified results only/);
   assert.match(html, /Development portal · No live competition or purchases/);
   assert.match(css, /@media\(max-width:600px\)[\s\S]*\.universe-nav/);
   assert.match(css, /\.enter-universe\{[\s\S]*text-transform:uppercase/);
@@ -93,7 +96,16 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
       expireOnce = false;
       return { ok: false, status: 401, json: async () => ({ error: 'authentication_required' }) };
     }
-    else if (url === '/query' && payload.op === 'me') result = { profile: { user_id: 'user-fixture', display_name: 'Fixture Member' } };
+    else if (url === '/query' && payload.op === 'me') result = {
+      profile: { user_id: 'user-fixture', display_name: 'Fixture Member' },
+      gpi: { verified: true, ranks: {
+        global: { rank: 42, total: 1250, label: 'Global GPI' },
+        block: { rank: 1, total: 18, label: 'Parkside Avenue' },
+        county: { rank: 7, total: 320, label: 'Kings County' },
+        state: { rank: 81, total: 6400, label: 'New York' },
+        region: { rank: 109, total: 9800, label: 'Northeast' }
+      } }
+    };
     else if (url === '/query' && payload.op === 'leagues') result = [details.league];
     else if (url === '/query' && payload.op === 'league') result = details;
     else if (url === '/query' && payload.op === 'standings') result = [{ display_name: 'Fixture Member', points: 7, wins: 1 }];
@@ -110,6 +122,10 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
   assert.equal(ids['account-panel'].hidden, true);
   assert.equal(ids['member-panel'].hidden, false);
   assert.equal(ids['member-name'].textContent, 'Welcome, Fixture Member');
+  assert.equal(ids['gpi-rankings'].children.length, 5);
+  assert.equal(ids['gpi-rankings'].children[0].children[1].textContent, '#42');
+  assert.equal(ids['gpi-rankings'].children[1].children[2].textContent, 'Parkside Avenue · of 18');
+  assert.match(ids['gpi-status'].textContent, /authenticated, verified/);
   assert.equal(api.filter(x => x.url === '/auth/refresh').length, 1, 'Expired sessions refresh only once');
   assert.ok(api.some(x => x.url === '/query' && x.payload.op === 'me'), 'Profile retried after refresh');
   const open = find(ids.leagues.children[0], 'BUTTON');
