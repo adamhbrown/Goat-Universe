@@ -74,6 +74,21 @@ async function send(path, payload, authenticated = true, allowRefresh = true) {
   if (!response.ok) throw new Error(result.error || 'request_failed');
   return result;
 }
+function openGameJourney(game) {
+  // Display the status supplied by the public catalog, never a simulated launch.
+  const status = game.local_scoring_status === 'implemented_development'
+    ? 'Development engine available. No live competition or public entries are open.'
+    : game.local_scoring_status === 'verified_structure'
+      ? 'League structure documented. Hosted play and automated scoring are not open.'
+      : 'Rules and scoring are pending approval. Real entries and picks are not open.';
+  el('game-journey-title').textContent = game.name;
+  el('game-journey-mechanics').textContent = game.mechanics;
+  el('game-journey-status').textContent = status;
+  el('game-journey-member-link').textContent = accessToken ? 'View my leagues' : 'Sign in or view my leagues';
+  const journey = el('game-journey');
+  journey.hidden = false;
+  journey.scrollIntoView?.({ behavior: 'auto', block: 'start' });
+}
 async function loadGoatGamesCatalog() {
   const list = el('goat-games-catalog');
   try {
@@ -90,7 +105,13 @@ async function loadGoatGamesCatalog() {
         node('p', game.mechanics),
         node('p', game.local_scoring_status === 'implemented_development'
           ? 'Development engine available · Not live'
-          : 'Rulebook and scoring under development', 'small'));
+          : game.local_scoring_status === 'verified_structure'
+            ? 'Verified format · Hosted play not live'
+            : 'Rulebook and scoring under development', 'small'));
+      const explore = node('button', 'Explore ' + game.name, 'game-explore');
+      explore.type = 'button';
+      explore.addEventListener('click', () => openGameJourney(game));
+      card.append(explore);
       list.append(card);
     }
   } catch {
