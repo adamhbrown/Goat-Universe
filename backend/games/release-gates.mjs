@@ -46,6 +46,17 @@ function validateSeasonMap(seasonByGame) {
   return seasonByGame;
 }
 
+// Global commissioner-league exclusivity is a business policy, not an implied
+// technical rule. Accept only an explicitly founder-reviewed decision.
+function validateEligibilityPolicy(policy) {
+  if(policy === undefined) return null;
+  if(!policy || policy.approved!==true ||
+     !['allow_multiple_leagues','one_league_per_game_season'].includes(policy.mode) ||
+     typeof policy.source_reference!=='string' || policy.source_reference.trim().length<4)
+    throw new Error('eligibility_policy_approval_required');
+  return policy.mode;
+}
+
 function recordedRulesAreComplete(rules) {
   return Boolean(rules && rules.approved === true &&
     Array.isArray(rules.unresolved) && rules.unresolved.length === 0 &&
@@ -58,10 +69,11 @@ function recordedRulesAreComplete(rules) {
  * @returns {{status: string, data_prepared: boolean, can_launch: false,
  *            games: Array<object>, external_approvals_required: Array<string>}}
  */
-export function auditFiveGameCandidate(snapshots, {seasonByGame} = {}) {
+export function auditFiveGameCandidate(snapshots, {seasonByGame,eligibilityPolicy} = {}) {
   if (!Array.isArray(snapshots) || snapshots.length > 100)
     throw new Error('invalid_competition_candidate');
   const expectedSeasons = validateSeasonMap(seasonByGame);
+  const membershipMode=validateEligibilityPolicy(eligibilityPolicy);
   const eligibility=auditApprovedEntryCollisions(snapshots);
   const grouped = new Map(KEYS.map(key => [key, []]));
   let unknown = 0;
@@ -78,15 +90,22 @@ export function auditFiveGameCandidate(snapshots, {seasonByGame} = {}) {
     const issues = [];
     if (records.length !== 1) {
       issues.push(records.length === 0 ? 'missing_competition_snapshot' : 'duplicate_competition_snapshot');
-      if(eligibility.conflicts_by_game[game_key]>0)
+      if(eligibility.conflicts_by_game[game_key]>0 && !membershipMode)
+        issues.push('eligibility_policy_review_required');
+      if(eligibility.conflicts_by_game[game_key]>0 && membershipMode==='one_league_per_game_season')
         issues.push('duplicate_approved_game_season_entry');
       return Object.freeze({game_key, saved_setup_complete:false, issues:Object.freeze(issues)});
     }
     const data = records[0];
-    if(eligibility.conflicts_by_game[game_key]>0)
+    if(eligibility.conflicts_by_game[game_key]>0 && !membershipMode)
+      issues.push('eligibility_policy_review_required');
+    if(eligibility.conflicts_by_game[game_key]>0 && membershipMode==='one_league_per_game_season')
       issues.push('duplicate_approved_game_season_entry');
-    if(eligibility.incomplete_entry_records>0 && Array.isArray(data.entries) &&
-       data.entries.some(e=>e?.status==='approved' && (!e.user_id || !data.league.id)))
+    // Only an approved exclusive-membership policy makes completeness a
+    // blocking rule, and even complete snapshots never certify all users.
+    if(membershipMode==='one_league_per_game_season' &&
+       (!Array.isArray(data.entries) || data.entries.some(e=>!e || e.status==='approved' &&
+         (typeof e.user_id!=='string'||!e.user_id.trim()||!data.league.id))))
       issues.push('entry_audit_incomplete');
     if (!seasonIsValid(data.league.season)) issues.push('invalid_season');
     if (expectedSeasons && seasonIsValid(data.league.season) &&
@@ -123,6 +142,8 @@ export function auditFiveGameCandidate(snapshots, {seasonByGame} = {}) {
     can_launch:false,
     unknown_snapshots:unknown,
     season_mapping_checked:Boolean(expectedSeasons),
+    eligibility_policy_reviewed:Boolean(membershipMode),
+    eligibility_policy_mode:membershipMode||'not_decided',
     // Counts only: never return raw profiles or member identifiers.
     member_eligibility_audit:eligibility,
     games:Object.freeze(games),
