@@ -109,3 +109,25 @@ test('absent membership collections do not masquerade as verified zero entries',
   assert.equal(r.approved_entries_inspected,0);
   assert.equal(r.absence_of_collisions_certified,false);
 });
+
+test('exclusive membership policy never treats a partial census as verified',()=>{
+ const five=[
+   league('a','first-and-baa',2027,[approved('member')]),
+   league('b','horns-and-hoops',2027,[approved('member')]),
+   league('c','goat-crossover',2027,[approved('member')]),
+   league('d','league-of-greatness',2027,[approved('member')]),
+   league('e','goat-classic',2027,[approved('member')])
+ ];
+ const approvedPolicy={mode:'one_league_per_game_season',approved:true,
+   source_reference:'SYNTHETIC FIXTURE NOT FOUNDER APPROVAL'};
+ const report=auditFiveGameCandidate(five,{eligibilityPolicy:approvedPolicy});
+ assert.equal(report.member_eligibility_audit.duplicate_game_season_entry_groups,0);
+ assert.equal(report.exclusive_membership_evidence_incomplete,true);
+ assert.equal(report.data_prepared,false);
+ assert.equal(report.can_launch,false);
+ const permissive=auditFiveGameCandidate(five,{eligibilityPolicy:{
+   mode:'allow_multiple_leagues',approved:true,source_reference:'SYNTHETIC FIXTURE'
+ }});
+ assert.equal(permissive.exclusive_membership_evidence_incomplete,false);
+ assert.equal(permissive.can_launch,false);
+});
