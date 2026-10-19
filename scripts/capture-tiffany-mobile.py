@@ -24,7 +24,7 @@ def assert_fits(page, label: str) -> None:
 
 
 def capture(browser, label: str, viewport: dict, base: str) -> None:
-    context = browser.new_context(viewport=viewport, device_scale_factor=2, is_mobile=label == "mobile", has_touch=label == "mobile")
+    context = browser.new_context(viewport=viewport, device_scale_factor=2, is_mobile=label != "desktop", has_touch=label != "desktop")
     page = context.new_page()
     errors = []
     page.on("pageerror", lambda err: errors.append(str(err)))
@@ -64,6 +64,9 @@ def capture(browser, label: str, viewport: dict, base: str) -> None:
     assert page.locator("article.district").count() == 7
     assert page.locator("#gv-gst-clock time").is_visible()
     page.screenshot(path=str(OUTPUT / f"city-{label}.png"), full_page=True)
+    page.locator('article.district[data-district="market"] a[href="commerce.html#collections"]').click()
+    assert page.url.endswith("/commerce.html#collections"), page.url
+    assert page.get_by_role("heading", name="GOATVILLE WEAR THE UNIVERSE.").is_visible()
 
     page.goto(base + "/goatville-stadium.html", wait_until="networkidle")
     assert page.locator("a.games-card-link[href^='/games/']").count() == 5
@@ -107,10 +110,11 @@ if __name__ == "__main__":
         with sync_playwright() as p:
             browser = p.chromium.launch()
             try:
+                capture(browser, "small-mobile", {"width": 320, "height": 694}, base)
                 capture(browser, "mobile", {"width": 390, "height": 844}, base)
                 capture(browser, "desktop", {"width": 1440, "height": 900}, base)
             finally:
                 browser.close()
     finally:
         server.shutdown()
-    print(f"Validated both viewports. Eighteen screenshots saved in {OUTPUT}")
+    print(f"Validated three viewports. Twenty-seven screenshots saved in {OUTPUT}")
