@@ -13,6 +13,21 @@ const node = (tag, text, className) => {
 const GPI_SCOPES = Object.freeze([
   ['global', 'Global'], ['block', 'Block'], ['county', 'County'], ['state', 'State'], ['region', 'Region']
 ]);
+const GST_TIME_ZONE = 'America/New_York';
+const gstClockFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: GST_TIME_ZONE, weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
+  hour: 'numeric', minute: '2-digit', second: '2-digit', timeZoneName: 'short'
+});
+const gstDeadlineFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: GST_TIME_ZONE, month: 'short', day: 'numeric', year: 'numeric',
+  hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+});
+function renderGstClock(now = new Date()) {
+  const clock = el('gst-clock');
+  if (!clock || Number.isNaN(now.getTime())) return;
+  clock.dateTime = now.toISOString();
+  clock.textContent = gstClockFormatter.format(now);
+}
 function renderGpi(gpi) {
   const list = el('gpi-rankings');
   const verified = gpi?.verified === true && gpi.ranks && typeof gpi.ranks === 'object' && !Array.isArray(gpi.ranks);
@@ -137,7 +152,7 @@ async function loadLeagues() {
 function addCell(row, value) { row.append(node('td', value)); }
 function formatDeadline(value) {
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? 'TBD' : date.toLocaleString();
+  return Number.isNaN(date.getTime()) ? 'TBD' : gstDeadlineFormatter.format(date) + ' GST';
 }
 async function openLeague(id) {
   const [details, standings] = await Promise.all([query('league', { league_id: id }), query('standings', { league_id: id })]);
@@ -340,4 +355,6 @@ el('signout').addEventListener('click', async () => {
   finally { showSignedOut(); notice('Signed out. See you at the next game.'); }
 });
 showSignedOut();
+renderGstClock();
+if (typeof setInterval === 'function') setInterval(renderGstClock, 1000);
 loadGoatGamesCatalog();
