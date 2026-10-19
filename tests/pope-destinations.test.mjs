@@ -20,7 +20,7 @@ test('City, Stadium and Creative Media return to one latest founder gateway; Cit
  assert.ok(city.includes('href="arrival-experience.html#universe"'));
  assert.ok(stadium.includes('href="arrival-experience.html#universe"'));
  assert.ok(media.includes('href="arrival-experience.html#media"'));
- const market=city.split('data-district="market"')[1]?.split('</article>')[0];
+ const market=city.split('<article class="district" data-district="market">')[1]?.split('</article>')[0];
  assert.ok(market?.includes('href="commerce.html#collections"'));
  assert.ok(publicFiles.has('commerce.html'));
  assert.ok(publicFiles.has('commerce/collections.js'));
