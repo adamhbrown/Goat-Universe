@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0a0a0b">
+<meta name="description" content="Explore the developing GOATVILLE luxury apparel collections and licensing opportunities within GOAT Universe.">
+<title>GOATVILLE | Collections & Licensing · GOAT Universe</title>
+<style>
+:root{color-scheme:dark;--bg:#090a0b;--paper:#f8f5ee;--gold:#e8c47d;--line:#ac895553;--muted:#ccc5b8;--panel:#141519}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--paper);font:16px/1.65 system-ui,-apple-system,sans-serif}
+a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}a:focus-visible,button:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.skip{position:absolute;left:12px;top:-70px;z-index:30;padding:10px 14px;background:var(--gold);color:#15120b}.skip:focus{top:12px}
+.wrap{width:min(1250px,calc(100% - 40px));margin:auto}
+.site-header{position:relative;z-index:3;background:#090a0bee;border-bottom:1px solid var(--line)}
+.header-inner{display:flex;justify-content:space-between;align-items:center;gap:24px;min-height:85px}
+.logo{font-weight:1000;letter-spacing:.09em;font-size:.87rem}.logo span{color:var(--gold)}.nav{display:flex;flex-wrap:wrap;gap:13px 27px;align-items:center;font-size:.75rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+.nav a:hover,.subnav a:hover{color:var(--gold)}
+.eyebrow{font-size:.69rem;letter-spacing:.25em;color:var(--gold);font-weight:900;text-transform:uppercase}
+.hero{min-height:clamp(500px,72vh,800px);display:flex;align-items:end;position:relative;isolation:isolate;background:linear-gradient(90deg,#08090bf5 5%,#08090ba0 48%,#08090b71),linear-gradient(0deg,#08090b,transparent 35%),url('./assets/goatville/founder-arrival-gate.jpg') center 43%/cover no-repeat}
+.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#090a0b,transparent 35%)}
+.hero-inner{padding:100px 0 100px}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(4.1rem,12vw,10rem);letter-spacing:-.09em;line-height:.93;margin:20px 0 18px;font-weight:1000}
+h1 small{display:block;color:var(--gold);font-size:clamp(1.35rem,4vw,3.2rem);letter-spacing:-.05em;line-height:1.2;margin-top:17px}
+.hero p{max-width:670px;font-size:clamp(1rem,2.5vw,1.3rem);color:#ece6d8;line-height:1.8}.status{display:inline-block;border:1px solid #c8a4657e;border-radius:99px;padding:7px 13px;font-size:.64rem;font-weight:800;letter-spacing:.13em;color:#f6da9e;text-transform:uppercase}
+.actions{display:flex;flex-wrap:wrap;gap:12px 22px;margin-top:31px}.action{display:inline-flex;align-items:center;justify-content:center;min-height:51px;padding:13px 22px;background:var(--gold);color:#111;font-size:.76rem;font-weight:1000;letter-spacing:.1em;text-transform:uppercase;border-radius:4px}
+.action.alt{background:#070708a8;color:var(--paper);border:1px solid var(--gold)}
+section.section{padding:clamp(65px,9vw,115px) 0}.section-title{font-weight:1000;font-size:clamp(2.2rem,6vw,5.3rem);letter-spacing:-.065em;line-height:1.05;margin:15px 0 20px}.section-intro{color:var(--muted);max-width:760px;line-height:1.9}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin:35px 0 28px}.filter{border:1px solid #a38657a8;background:#191b1d;color:#e8e2d8;padding:11px 15px;border-radius:100px;font-size:.72rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;min-height:44px}.filter[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#10100e}
+.collection-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.collection{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#121417;display:flex;flex-direction:column;min-width:0}
+.collection[hidden]{display:none}
+.art{min-height:270px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:17px;padding:34px 16px;background:radial-gradient(ellipse at 50% 25%,#d9a65530,transparent 57%),linear-gradient(155deg,#242321,#0b0d10 75%);border-bottom:1px solid #c1a06854;position:relative}
+.art:after{content:"";position:absolute;inset:15px;border:1px solid #c6a26735;pointer-events:none}
+.art .mark{font-family:Georgia,serif;font-size:clamp(4rem,9vw,7.2rem);line-height:1;color:#efcd84;letter-spacing:-.1em;text-shadow:0 6px 26px #ab793e75}
+.art .mark.word{font-size:clamp(2.4rem,5vw,4.5rem);font-weight:850;letter-spacing:-.06em}
+.art .mark.crown:before{content:"♛";display:block;font-size:1.65rem;line-height:1;margin-bottom:3px;letter-spacing:0}
+.art .edition{font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:#e7d3a8;font-weight:850;max-width:90%}
+.collection-body{padding:27px;display:flex;flex:1;flex-direction:column}
+.collection-body small{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:800}
+.collection-body h3{font-size:1.55rem;letter-spacing:-.04em;line-height:1.15;margin:14px 0 12px}
+.collection-body p{color:var(--muted);font-size:.87rem;line-height:1.75;flex:1;margin-bottom:20px}
+.collection-foot{padding-top:15px;border-top:1px solid #b99c5d44;color:#ead1a0;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.note{margin-top:25px;padding:18px 20px;border-left:2px solid var(--gold);background:#19191a;color:#d8d2c8;font-size:.86rem;line-height:1.8}
+.gst{padding:clamp(65px,9vw,120px) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:radial-gradient(ellipse at right,#9a713923,transparent 62%),#111317}
+.gst-layout{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.gst-logo{font:bold clamp(6rem,19vw,16rem)/.8 Georgia,serif;letter-spacing:-.13em;color:var(--gold);text-shadow:0 7px 50px #a16d2c3b}
+.gst-caption{font-size:.73rem;letter-spacing:.21em;text-transform:uppercase;color:#edd5a6;margin-top:22px}
+.clock-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:25px}.clock{padding:18px 12px;border:1px solid #dcb47670;text-align:center;border-radius:7px;background:#06080b}.clock span{display:block;color:var(--gold);font-size:.65rem;font-weight:900;letter-spacing:.15em}.clock strong{display:block;font-variant-numeric:tabular-nums;font-size:clamp(1.3rem,3.3vw,2rem);letter-spacing:.02em;white-space:nowrap;margin-top:8px}
+.divisions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px;margin-top:30px}
+.division{border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#202021,#111216);padding:clamp(25px,3vw,40px);display:flex;flex-direction:column}
+.division h3{font-size:clamp(1.5rem,2.6vw,2.2rem);line-height:1.08;letter-spacing:-.06em;margin:18px 0}
+.division p{color:var(--muted);line-height:1.85;flex:1}
+.division a{font-size:.78rem;font-weight:900;letter-spacing:.08em;color:var(--gold);text-transform:uppercase;text-decoration:underline;text-underline-offset:5px}
+.foot{border-top:1px solid var(--line);padding:29px 0 44px;color:#b9afa0;font-size:.76rem;line-height:1.8}.subnav{display:flex;gap:25px;flex-wrap:wrap}.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:850px){.collection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.divisions{grid-template-columns:1fr}.gst-layout{grid-template-columns:1fr;gap:24px}}
+@media(max-width:590px){.wrap{width:min(100% - 30px,1250px)}.header-inner{flex-direction:column;justify-content:center;align-items:start;padding:16px 0;gap:12px}.nav{gap:11px 20px}.hero-inner{padding:75px 0}.hero{min-height:540px}.collection-grid{grid-template-columns:1fr}.art{min-height:260px}.clock-pair{gap:8px}.clock strong{font-size:1.23rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to collections</a>
+<header class="site-header"><div class="wrap header-inner"><a class="logo" href="./arrival-experience.html">GOAT <span>UNIVERSE</span> <span aria-hidden="true">/</span> GOATVERSE HOLDINGS</a><nav class="nav" aria-label="Commerce navigation"><a href="./arrival-experience.html#games">GOAT Games</a><a href="./goatville-city.html">Goatville</a><a href="./gpi.html">GPI</a><a href="#collections" aria-current="page">Collections</a><a href="#partnerships">Licensing</a></nav></div></header>
+<main id="main">
+<section class="hero" aria-labelledby="hero-title"><div class="wrap hero-inner"><div class="eyebrow">GOATVILLE / WORLDWIDE BRAND DEVELOPMENT</div><h1 id="hero-title">GOATVILLE <small>WEAR THE UNIVERSE.</small></h1><p>Luxury identity. Championship attitude. A growing world of original collections from GOAT Universe.</p><span class="status">Founder preview · Design concepts, not live merchandise</span><div class="actions"><a class="action" href="#collections">Explore the Collections ↗</a><a class="action alt" href="#partnerships">Explore Licensing ↗</a></div></div></section>
+<section class="section" id="collections" aria-labelledby="collections-title"><div class="wrap"><div class="eyebrow">GOATVERSE HOLDINGS / LIFESTYLE & APPAREL</div><h2 id="collections-title" class="section-title">THE COLLECTIONS.</h2><p class="section-intro">Build the brand before the first sale. These are proposed design families for apparel and accessories—not stocked items or an open store. Final artwork, rights, pricing, suppliers and launch dates require approval.</p>
+<div class="filters" role="group" aria-label="Filter collections"><button class="filter" type="button" data-filter="all" aria-pressed="true">All Collections</button><button class="filter" type="button" data-filter="monogram" aria-pressed="false">Monograms</button><button class="filter" type="button" data-filter="time" aria-pressed="false">GST</button><button class="filter" type="button" data-filter="sport" aria-pressed="false">Sport & Culture</button></div>
+<div class="collection-grid" id="collection-grid">
+<article class="collection" data-category="monogram"><div class="art"><div class="mark crown" aria-hidden="true">G</div><div class="edition">THE CROWNED G</div></div><div class="collection-body"><small>01 / Monogram concept</small><h3>GOATVILLE SIGNATURE</h3><p>Our bold central monogram envisioned for premium caps, knits, outerwear and leather accessories.</p><div class="collection-foot">Concept / Not yet available</div></div></article>
+<article class="collection" data-category="monogram"><div class="art"><div class="mark" aria-hidden="true">V</div><div class="edition">THE HORNED V</div></div><div class="collection-body"><small>02 / Monogram concept</small><h3>GOATVILLE ATELIER</h3><p>A quieter geometric signature envisioned for understated embroidered apparel and accessories.</p><div class="collection-foot">Concept / Not yet available</div></div></article>
+<article class="collection" data-category="time"><div class="art"><div class="mark" aria-hidden="true">GST</div><div class="edition">SAME TIME. DIFFERENT UNIVERSE.</div></div><div class="collection-body"><small>03 / Time identity</small><h3>GOATVILLE STANDARD TIME</h3><p>The New York-synchronized world clock becomes an original fashion and lifestyle identity.</p><div class="collection-foot">Concept / Not yet available</div></div></article>
+<article class="collection" data-category="sport"><div class="art"><div class="mark word" aria-hidden="true">BAA</div><div class="edition">CAN’T STOP THE BAA</div></div><div class="collection-body"><small>04 / Culture concept</small><h3>CAN’T STOP THE BAA</h3><p>Our unmistakable rallying cry, interpreted for streetwear, championship gear and everyday accessories.</p><div class="collection-foot">Concept / Not yet available</div></div></article>
+<article class="collection" data-category="sport"><div class="art"><div class="mark word" aria-hidden="true">GOAT</div><div class="edition">PLAY LIKE A GOAT</div></div><div class="collection-body"><small>05 / Sport concept</small><h3>PLAY LIKE A GOAT</h3><p>Competition-first apparel with an ambitious global athletic identity.</p><div class="collection-foot">Concept / Not yet available</div></div></article>
+<article class="collection" data-category="sport"><div class="art"><div class="mark word" aria-hidden="true">BAA.</div><div class="edition">BAA COUNTRY</div></div><div class="collection-body"><small>06 / Global lifestyle concept</small><h3>BAA COUNTRY</h3><p>A community-led collection inspired by the international GOAT Universe audience.</p><div class="collection-foot">Concept / Not yet available</div></div></article>
+<article class="collection" data-category="monogram"><div class="art"><div class="mark word" aria-hidden="true">GV</div><div class="edition">WHERE THE GOATS PLAY</div></div><div class="collection-body"><small>07 / Destination concept</small><h3>GOATVILLE ORIGINALS</h3><p>Our city identity in a refined collection of destination graphics and everyday essentials.</p><div class="collection-foot">Concept / Not yet available</div></div></article>
+</div><p class="note" id="filter-status" role="status" aria-live="polite">Showing all 7 proposed collections. This is a design gallery, not a checkout.</p></div></section>
+<section class="gst" id="gst" aria-labelledby="gst-heading"><div class="wrap gst-layout"><div><div class="eyebrow">A PROPRIETARY WORLD IDENTITY / PROPOSED</div><h2 class="section-title" id="gst-heading">NEW YORK TIME.<br>GOATVILLE MINDSET.</h2><p class="section-intro">GOATVILLE STANDARD TIME is synchronized with New York, following the same Eastern Time and daylight saving transitions. Not a separate civil time zone. Its identity is a cultural brand.</p></div><div><div class="gst-logo" aria-hidden="true">GST</div><div class="gst-caption">GOATVILLE STANDARD TIME</div><div class="clock-pair" aria-label="Live synchronized local time for Goatville and New York"><div class="clock"><span>GOATVILLE</span><strong id="gst-time">--:--:--</strong></div><div class="clock"><span>NEW YORK</span><strong id="ny-time">--:--:--</strong></div></div></div></div></section>
+<section class="section" id="partnerships" aria-labelledby="partner-title"><div class="wrap"><div class="eyebrow">MULTIPLE BUSINESSES / ONE UNIVERSE</div><h2 class="section-title" id="partner-title">LET’S BUILD <span style="color:var(--gold)">TOGETHER.</span></h2><p class="section-intro">GOATVERSE Holdings is developing distinct commercial tracks with shared brands and audiences. These inquiries are for discussion only; no offer or partnership is created by browsing this page.</p><div class="divisions">
+<article class="division"><div class="eyebrow">01 / THE COMPETITIONS</div><h3>GOAT GAMES</h3><p>Five signature sports competitions with a global community and personalized GOAT media for every hosted league.</p><a href="./arrival-experience.html#games">Explore the GOAT Games ↗</a></article>
+<article class="division"><div class="eyebrow">02 / THE COLLECTIONS</div><h3>APPAREL & COMMERCE</h3><p>Developing GOATVILLE premium monograms, fashion collections and accessories. Suppliers and distribution partnerships can start a conversation with the founder.</p><a href="./founder.html#contact">Discuss apparel partnership ↗</a></article>
+<article class="division"><div class="eyebrow">03 / THE RIGHTS</div><h3>BRAND LICENSING</h3><p>Explore responsible licensing and collaborations involving GOATVILLE, GST, GOAT Games and future cleared designs. Rights and terms require individual review.</p><a href="./founder.html#contact">Discuss licensing ↗</a></article>
+</div><p class="note">No logo, slogan, artwork or design shown here is represented as a registered trademark or cleared for third-party manufacturing. All rights and licensing proposals are subject to review.</p></div></section>
+</main>
+<footer class="foot"><div class="wrap footer-inner"><div>© GOATVERSE HOLDINGS INC. · GOAT UNIVERSE · FOUNDER DEVELOPMENT CANDIDATE</div><nav class="subnav" aria-label="Footer"><a href="./arrival-experience.html">Universe</a><a href="./gpi.html">GPI</a><a href="./founder.html#contact">Contact Founder</a></nav></div></footer>
+<script src="./commerce/collections.js" defer></script>
+</body></html>
