@@ -58,10 +58,14 @@ def capture(browser, label: str, viewport: dict, base: str) -> None:
     # Newly connected annual season: real GOAT Games only, paired GST/NYC clocks, working filter.
     page.goto(base + "/championships.html", wait_until="networkidle")
     assert page.locator(".event:visible").count() == 5
-    gst = page.locator("#gst-clock")
-    nyc = page.locator("#nyc-clock")
-    assert gst.inner_text() == nyc.inner_text(), "GST and New York clocks are out of sync"
-    assert gst.get_attribute("datetime") == nyc.get_attribute("datetime")
+    clocks = page.evaluate("""() => {
+        const gst = document.querySelector('#gst-clock');
+        const nyc = document.querySelector('#nyc-clock');
+        return {gst: gst.textContent, nyc: nyc.textContent,
+                gstInstant: gst.getAttribute('datetime'), nycInstant: nyc.getAttribute('datetime')};
+    }""")
+    assert clocks["gst"] == clocks["nyc"], f"GST and New York disagree: {clocks}"
+    assert clocks["gstInstant"] == clocks["nycInstant"], f"Clock instants disagree: {clocks}"
     assert_fits(page, "2027 championship journey " + label)
     page.screenshot(path=str(OUTPUT / f"championship-season-{label}.png"), full_page=True)
     page.get_by_role("button", name="Apr", exact=True).click()
