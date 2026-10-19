@@ -85,7 +85,14 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
       expireOnce = false;
       return { ok: false, status: 401, json: async () => ({ error: 'authentication_required' }) };
     }
-    else if (url === '/query' && payload.op === 'me') result = { profile: { user_id: 'user-fixture', display_name: 'Fixture Member' } };
+    else if (url === '/query' && payload.op === 'me') result = {
+      profile: { user_id: 'user-fixture', display_name: 'Fixture Member' },
+      gpi: { verified: true, ranks: {
+        block: { rank: 1, total: 18, label: 'Downtown block' },
+        county: { rank: 7, total: 420, label: 'County standing' },
+        state: { rank: 82, total: 2400, label: 'New York' }
+      } }
+    };
     else if (url === '/query' && payload.op === 'leagues') result = [details.league];
     else if (url === '/query' && payload.op === 'league') result = details;
     else if (url === '/query' && payload.op === 'standings') result = [{ display_name: 'Fixture Member', points: 7, wins: 1 }];
@@ -102,8 +109,28 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
   assert.equal(ids['account-panel'].hidden, true);
   assert.equal(ids['member-panel'].hidden, false);
   assert.equal(ids['member-name'].textContent, 'Welcome, Fixture Member');
+  assert.equal(ids['gpi-rankings'].children.length, 5);
+  assert.equal(ids['gpi-rankings'].children[0].children[1].textContent, '#1');
+  assert.equal(ids['gpi-rankings'].children[2].children[1].textContent, '#82');
+  assert.equal(ids['gpi-rankings'].children[3].children[1].textContent, '—');
+  assert.match(ids['gpi-status'].textContent, /authenticated, verified/);
   assert.equal(api.filter(x => x.url === '/auth/refresh').length, 1, 'Expired sessions refresh only once');
   assert.ok(api.some(x => x.url === '/query' && x.payload.op === 'me'), 'Profile retried after refresh');
+
+  const exploreFootball = find(ids['goat-games-catalog'].children[0], 'BUTTON');
+  await exploreFootball.fire('click');
+  assert.equal(ids['game-journey'].hidden, false);
+  assert.equal(ids['game-journey-title'].textContent, '1st & BAA');
+  assert.match(ids['game-journey-status'].textContent, /No live competition/);
+  assert.equal(ids['game-journey-member-link'].textContent, 'View all my leagues');
+  assert.equal(ids['game-journey-member-leagues'].children[0].textContent, 'Your 1st & BAA competitions');
+  const contextualOpen = find(ids['game-journey-member-leagues'], 'BUTTON');
+  assert.equal(contextualOpen.textContent, 'Open GOAT TEST LEAGUE');
+  await contextualOpen.fire('click');
+  assert.equal(ids['league-panel'].hidden, false);
+  assert.ok(api.some(x => x.url === '/query' && x.payload.op === 'league' && x.payload.league_id === leagueId));
+
+  await ids.back.fire('click');
   const open = find(ids.leagues.children[0], 'BUTTON');
   await open.fire('click');
   assert.equal(ids['league-panel'].hidden, false);
