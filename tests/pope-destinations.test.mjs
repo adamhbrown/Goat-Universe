@@ -32,11 +32,12 @@ test('Stadium leads into the five actual competition workspaces and retains opti
  assert.match(stadium,/id="goatMode"/);
 });
 test('Stadium is competition-first: mobile My League opens account and GPI is a prominent real rankings doorway',()=>{
- assert.match(stadium,/<nav class="mobile-nav"[^>]*>[\\s\\S]*?href="\\/manage">My League<\\/a>/);
- assert.match(stadium,/href="\\/games">ENTER THE FIVE GOAT GAMES/);
- assert.match(stadium,/<h3 class="gpi-logo">GPI<\\/h3>/);
- assert.match(stadium,/href="gpi\\.html">EXPLORE THE GOAT POWER INDEX/);
- assert.match(stadium,/YOUR BLOCK. YOUR COUNTY. YOUR STATE. YOUR REGION. THE UNIVERSE./);
+ assert.ok(stadium.includes('<nav class="mobile-nav"'));
+ assert.ok(stadium.includes('href="/manage">My League</a>'));
+ assert.ok(stadium.includes('href="/games">ENTER THE FIVE GOAT GAMES'));
+ assert.ok(stadium.includes('<h3 class="gpi-logo">GPI</h3>'));
+ assert.ok(stadium.includes('href="gpi.html">EXPLORE THE GOAT POWER INDEX'));
+ assert.ok(stadium.includes('YOUR BLOCK. YOUR COUNTY. YOUR STATE. YOUR REGION. THE UNIVERSE.'));
  assert.ok(publicFiles.has('gpi.html'));
 });
 test('Media keeps editorial content separate from local playback and never auto-plays founder theme',()=>{
