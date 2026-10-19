@@ -21,28 +21,28 @@ test('Pope: founder City -> five Games -> Media -> Market links resolve on the i
   const view = async route => {
     const res = await fetch(origin + route);
     assert.equal(res.status,200,'Broken founder journey HTTP route: ' + route);
-    assert.match(res.headers.get('content-type')||'',/text\\/html/);
-    assert.match(res.headers.get('content-security-policy')||'',/script-src 'self'/);
+    assert.ok((res.headers.get('content-type')||'').includes('text/html'));
+    assert.ok((res.headers.get('content-security-policy')||'').includes("script-src 'self'"));
     return res.text();
   };
   const home = await view('/');
   assert.match(home,/GOATVILLE/);
-  assert.match(home,/href="\\.\\/commerce\\.html#collections"/);
+  assert.ok(home.includes('href="./commerce.html#collections"'));
   for(const route of founderPages) await view(route);
   const city = await view('/goatville-city.html');
-  assert.match(city,/href="commerce\\.html#collections"/);
-  assert.match(city,/href="goatville-stadium\\.html"/);
+  assert.ok(city.includes('href="commerce.html#collections"'));
+  assert.ok(city.includes('href="goatville-stadium.html"'));
   const stadium = await view('/goatville-stadium.html');
-  assert.match(stadium,/class="mobile-nav"[\\s\\S]*?href="\\/manage">My League<\\/a>/);
-  assert.match(stadium,/href="\\/games">ENTER THE FIVE GOAT GAMES/);
+  assert.ok(stadium.includes('<nav class="mobile-nav"') && stadium.includes('href="/manage">My League</a>'));
+  assert.ok(stadium.includes('href="/games">ENTER THE FIVE GOAT GAMES'));
   for(const slug of fiveGames){
     assert.ok(stadium.includes('href="/games/'+slug+'"'),'Missing Stadium competition: '+slug);
     await view('/games/'+slug);
   }
   const media = await view('/goatville-cinema.html');
   assert.match(media,/GOATVERSE CREATIVE MEDIA/);
-  assert.match(media,/href="arrival-experience\\.html#media"/);
-  assert.match(media,/href="\\/games\\/league-of-greatness"/);
+  assert.ok(media.includes('href="arrival-experience.html#media"'));
+  assert.ok(media.includes('href="/games/league-of-greatness"'));
   await view('/manage');
   const collections = await view('/commerce.html');
   assert.match(collections,/id="gst-time"/);
