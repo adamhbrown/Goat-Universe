@@ -172,7 +172,7 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
   assert.equal(ids['game-journey'].hidden, false);
   assert.equal(ids['game-journey-title'].textContent, 'GOAT Crossover');
   assert.match(ids['game-journey-status'].textContent, /Rules and scoring are pending approval/);
-  assert.equal(ids['game-journey-member-link'].textContent, 'View my leagues');
+  assert.equal(ids['game-journey-member-link'].textContent, 'View all my leagues');
   await find(ids['goat-games-catalog'].children[0], 'BUTTON').fire('click');
   assert.equal(ids['game-journey-title'].textContent, '1st & BAA');
   assert.match(ids['game-journey-status'].textContent, /No live competition/);
