@@ -104,6 +104,21 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
   assert.equal(ids['member-name'].textContent, 'Welcome, Fixture Member');
   assert.equal(api.filter(x => x.url === '/auth/refresh').length, 1, 'Expired sessions refresh only once');
   assert.ok(api.some(x => x.url === '/query' && x.payload.op === 'me'), 'Profile retried after refresh');
+
+  const exploreFootball = find(ids['goat-games-catalog'].children[0], 'BUTTON');
+  await exploreFootball.fire('click');
+  assert.equal(ids['game-journey'].hidden, false);
+  assert.equal(ids['game-journey-title'].textContent, '1st & BAA');
+  assert.match(ids['game-journey-status'].textContent, /No live competition/);
+  assert.equal(ids['game-journey-member-link'].textContent, 'View all my leagues');
+  assert.equal(ids['game-journey-member-leagues'].children[0].textContent, 'Your 1st & BAA competitions');
+  const contextualOpen = find(ids['game-journey-member-leagues'], 'BUTTON');
+  assert.equal(contextualOpen.textContent, 'Open GOAT TEST LEAGUE');
+  await contextualOpen.fire('click');
+  assert.equal(ids['league-panel'].hidden, false);
+  assert.ok(api.some(x => x.url === '/query' && x.payload.op === 'league' && x.payload.league_id === leagueId));
+
+  await ids.back.fire('click');
   const open = find(ids.leagues.children[0], 'BUTTON');
   await open.fire('click');
   assert.equal(ids['league-panel'].hidden, false);
