@@ -4,6 +4,19 @@ import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
 import { GOAT_GAMES } from '../rules/goat-games.mjs';
 
+test('member portal exposes the founder-approved mobile journey without implying launch', async () => {
+  const [html, css] = await Promise.all([
+    readFile(new URL('../console/play.html', import.meta.url), 'utf8'),
+    readFile(new URL('../console/play.css', import.meta.url), 'utf8')
+  ]);
+  assert.match(html, /aria-label="GOAT Universe"/);
+  for (const label of ['Goatville', 'Games', 'Media', 'My League', 'Enter the Universe']) assert.match(html, new RegExp('>' + label + '<', 'i'));
+  assert.match(html, /id="my-league"/);
+  assert.match(html, /Development portal · No live competition or purchases/);
+  assert.match(css, /@media\(max-width:600px\)[\s\S]*\.universe-nav/);
+  assert.match(css, /\.enter-universe\{[\s\S]*text-transform:uppercase/);
+});
+
 class FakeElement {
   constructor(tag = 'div') {
     this.tagName = tag.toUpperCase();
