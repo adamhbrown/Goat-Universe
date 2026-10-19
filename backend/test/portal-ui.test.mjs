@@ -29,6 +29,12 @@ test('member portal exposes the founder-approved mobile journey without implying
   for (const scope of ['Global', 'Block', 'County', 'State', 'Region']) assert.match(script, new RegExp(scope, 'i'));
   assert.match(html, /Verified results only/);
   assert.match(html, /Development portal · No live competition or purchases/);
+  assert.match(html, /GOATVILLE STANDARD TIME/);
+  assert.match(html, /id="gst-clock"/);
+  assert.match(html, /America\/New_York · automatic EDT\/EST/);
+  assert.match(script, /timeZone:\s*GST_TIME_ZONE/);
+  assert.match(script, /America\/New_York/);
+  assert.doesNotMatch(script, /getTimezoneOffset|(?:EST|EDT)\s*[+-]?\d/);
   assert.match(css, /@media\(max-width:600px\)[\s\S]*\.universe-nav/);
   assert.match(css, /\.enter-universe\{[\s\S]*text-transform:uppercase/);
 });
@@ -127,6 +133,8 @@ test('member portal handles login, view, ranked picks, join requests, and entry 
     return { ok: true, status: 200, json: async () => result };
   };
   runInNewContext(script, { document, fetch, console });
+  assert.match(ids['gst-clock'].textContent, /(?:EST|EDT)$/);
+  assert.match(ids['gst-clock'].dateTime, /^\d{4}-\d{2}-\d{2}T/);
   document.getElementById('email').value = 'fixture@example.invalid';
   document.getElementById('password').value = 'Fixture-Password-1234';
   await ids['account-form'].fire('submit', { submitter: { value: 'login' } });
