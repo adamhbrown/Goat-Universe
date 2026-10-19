@@ -49,6 +49,20 @@ def capture(browser, label: str, viewport: dict, base: str) -> None:
     assert page.url.endswith("#state")
     assert_fits(page, "state GPI " + label)
     page.screenshot(path=str(OUTPUT / f"gpi-state-{label}.png"), full_page=True)
+    # Commerce is part of the same site: no disconnected mockup or pretend checkout.
+    page.goto(base + "/commerce.html", wait_until="networkidle")
+    assert page.get_by_role("heading", name="GOATVILLE WEAR THE UNIVERSE.").is_visible()
+    assert page.locator("article.collection").count() == 7
+    assert_fits(page, "commerce " + label)
+    assert page.evaluate("document.querySelector('#gst-time').textContent === document.querySelector('#ny-time').textContent")
+    assert page.locator("#gst-time").inner_text() != "--:--:--"
+    page.screenshot(path=str(OUTPUT / f"commerce-{label}.png"), full_page=True)
+    page.get_by_role("button", name="GST", exact=True).click()
+    assert page.locator("article.collection:visible").count() == 1
+    page.get_by_role("button", name="All Collections").click()
+    assert page.locator("article.collection:visible").count() == 7
+    assert page.get_by_role("link", name="Discuss licensing").get_attribute("href") == "./founder.html#contact"
+    assert_fits(page, "commerce filters " + label)
     assert not errors, f"Browser script errors: {errors}"
     context.close()
 
@@ -75,4 +89,4 @@ if __name__ == "__main__":
                 browser.close()
     finally:
         server.shutdown()
-    print(f"Validated both viewports. Eight screenshots saved in {OUTPUT}")
+    print(f"Validated both viewports. Ten screenshots saved in {OUTPUT}")
