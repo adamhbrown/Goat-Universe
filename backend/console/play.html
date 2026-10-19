@@ -148,6 +148,15 @@
     <h3>Rounds &amp; picks</h3><div id="rounds" class="cards"></div>
   </section>
 </main>
+<aside id="soundtrack-player" class="soundtrack-player" aria-label="GOAT Universe soundtrack" hidden>
+  <div class="soundtrack-copy"><strong>GOAT UNIVERSE SOUNDTRACK</strong><span id="soundtrack-title">Soundtrack available when approved music is connected</span></div>
+  <div class="soundtrack-actions">
+    <button id="soundtrack-toggle" type="button" aria-label="Play soundtrack" aria-pressed="false">Play</button>
+    <label for="soundtrack-volume">Volume <input id="soundtrack-volume" type="range" min="0" max="100" value="55"></label>
+    <button id="soundtrack-mute" type="button" aria-label="Mute soundtrack" aria-pressed="false">Mute</button>
+  </div>
+  <audio id="soundtrack-audio" preload="none" loop></audio>
+</aside>
 <footer>GOAT UNIVERSE · WHERE THE GOATS PLAY</footer>
 <script type="module" src="/play.mjs"></script>
 </body>
