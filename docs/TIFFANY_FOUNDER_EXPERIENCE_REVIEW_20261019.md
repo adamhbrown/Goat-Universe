@@ -57,3 +57,7 @@ The business is GOAT Universe: five signature competitive sports games, a propri
 | Integration | Exact head passes One Universe and backend suites | Private hosted synchronization and complete click path |
 
 *Do not infer a pass from an earlier commit. Record the GitHub Actions results on the exact PR #56 head, then merge to the designated nightly candidate only after review and conflict reconciliation.*
+
+## October 19 source synchronization
+
+Merged latest inspected nightly candidate commit `14a882bc0fa154a35981f3801f0918db7cb86d84` into Tiffany's draft while preserving Pope's live-navigation and full 320px browser suite. The combined 390px, desktop, and 320px browser capture now also includes the 2027 season page and filter interactions. CI results must refer to the exact final draft HEAD, never to a prior revision. This synchronization is a **source-only** draft, not a hosted Sites update.
